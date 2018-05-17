@@ -51,6 +51,14 @@ public class MainFrame {
     private JButton resume;
     private JButton cancel;
     private JButton remove;
+    private JButton sort;
+    private JToolBar toolBar;
+    private JMenuItem byDate;
+    private JMenuItem byStatus;
+    private JMenuItem byName;
+    private JMenuItem bySize;
+    private JPopupMenu sortPopUp;
+
     private JButton setting;
 
     private JPanel rightPanel;
@@ -122,15 +130,35 @@ public class MainFrame {
         setting.setIcon(new ImageIcon("setting.png"));
         setting.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
         setting.addActionListener(actionListener);
-        topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
-        topPanel.add(title);
-        topPanel.add(newDownload);
-        topPanel.add(pause);
-        topPanel.add(resume);
-        topPanel.add(cancel);
-        topPanel.add(remove);
-        topPanel.add(setting);
+        sort = new JButton(new ImageIcon("sort.png"));
+        sortPopUp = new JPopupMenu();
+        sort.setToolTipText("Sort Via ...");
+        sort.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        sort.addActionListener(actionListener);
+        sortPopUp.add( byDate = new JMenuItem("By Date"));
+        sortPopUp.add( bySize = new JMenuItem("By Size"));
+        sortPopUp.add( byName = new JMenuItem("By Name"));
+        sortPopUp.add( byStatus = new JMenuItem("By Status"));
+
+        toolBar = new JToolBar();
+        toolBar.add(title);
+        toolBar.add(newDownload);
+        toolBar.add(pause);
+        toolBar.add(resume);
+        toolBar.add(cancel);
+        toolBar.add(remove);
+        toolBar.add(setting);
+        toolBar.add(sort);
+//        toolBar.add()
+//        topPanel = new JPanel();
+//        topPanel.setLayout(new FlowLayout());
+//        topPanel.add(title);
+//        topPanel.add(newDownload);
+//        topPanel.add(pause);
+//        topPanel.add(resume);
+//        topPanel.add(cancel);
+//        topPanel.add(remove);
+//        topPanel.add(setting);
 
         // Designing menuBar
         menuBar = new JMenuBar();
@@ -179,13 +207,14 @@ public class MainFrame {
 
         // Central Panel
         centralPanel = new JPanel();
+        centralPanel.setLayout(new BoxLayout(centralPanel,BoxLayout.Y_AXIS));
         scrollPane = new JScrollPane(centralPanel);
         background.add(scrollPane);
 
 
         // setting to frame
         background.setJMenuBar(menuBar);
-        background.add(topPanel,BorderLayout.NORTH);
+        background.add(toolBar,BorderLayout.NORTH);
         background.add(leftPanel,BorderLayout.WEST);
 
 
@@ -302,6 +331,7 @@ public class MainFrame {
 
     public void setNewDownload(NewDownloadPanel newDownload) {
         centralPanel.add(newDownload.getPanel());
+        background.revalidate();
     }
 
 //    public static MainFrame getInstance(){

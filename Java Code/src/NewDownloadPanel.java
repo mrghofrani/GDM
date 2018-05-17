@@ -6,7 +6,7 @@ public class NewDownloadPanel {
 
     // top part of the newDownload Panel
     private JPanel textArea;
-    private JTextField nameField;
+    private JLabel nameField;
 
     // central part  of the NewDownloadPanel
     private JPanel centralPart;
@@ -24,11 +24,11 @@ public class NewDownloadPanel {
 
     public NewDownloadPanel(String name, String volume) {
         newDownloadPanel = new JPanel();
-        newDownloadPanel.setLayout(new BoxLayout(newDownloadPanel,BoxLayout.X_AXIS));
+        newDownloadPanel.setLayout(new BoxLayout(newDownloadPanel,BoxLayout.Y_AXIS));
 
         // TextArea related Panel
         textArea = new JPanel(new FlowLayout());
-        nameField = new JTextField(name);
+        nameField = new JLabel(name);
         textArea.add(nameField);
 
 
@@ -65,6 +65,7 @@ public class NewDownloadPanel {
         newDownloadPanel.add(bottomPanel);
         newDownloadPanel.setVisible(true);
 
+        newDownloadPanel.setSize(new Dimension((int)(textArea.getPreferredSize().getWidth()+downloadImage.getPreferredSize().getWidth() + resumeButton.getPreferredSize().getWidth()),(int)newDownloadPanel.getPreferredSize().getHeight()));
     }
     public JPanel getPanel(){
         return newDownloadPanel;

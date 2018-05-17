@@ -36,9 +36,6 @@ public class NewDownloadFrame {
     private JButton downloadButton;
     private JButton cancelButton;
 
-    // Scroll Panel
-    private JPanel ScrollPanel;
-    private JScrollBar scrollBar;
 
     private ActionHandler actionHandler = new ActionHandler();
 
@@ -103,6 +100,7 @@ public class NewDownloadFrame {
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
         downloadButton = new JButton("Start Download");
+        downloadButton.addActionListener(actionHandler);
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(actionHandler);
         buttonPanel.add(downloadButton);
@@ -136,6 +134,7 @@ public class NewDownloadFrame {
             }
             else if(e.getSource().equals(downloadButton)){
                 Manager.addNewDownload(webPageAddress.getText(),volumeValue.getText());
+                downloadFrame.dispose();
 //                mainFrame.setNewDownload(new NewDownloadPanel(webPageAddress.getText(),volumeValue.getText()));
             }
         }

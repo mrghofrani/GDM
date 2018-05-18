@@ -1,20 +1,17 @@
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class MainFrame {
 //    private static MainFrame mainFrame;
     private JFrame background;
     private MainFrameActionListener actionListener;
     private MouseImplement mouseListener = new MouseImplement();
-    private ArrayList<NewDownloadPanel> downloadOrder = new ArrayList<>();
-    private HashMap<Date,NewDownloadPanel> downloado = new HashMap<>();
+    private ArrayList<NewDownloadPanel> downloadQueue = new ArrayList<>();
+    private HashMap<String,FileProperties > downloadOrder = new HashMap<>();
 
     //SystemTray and its related components
     SystemTray systemTray = SystemTray.getSystemTray();
@@ -154,16 +151,6 @@ public class MainFrame {
         toolBar.add(remove);
         toolBar.add(setting);
         toolBar.add(sort);
-//        toolBar.add()
-//        topPanel = new JPanel();
-//        topPanel.setLayout(new FlowLayout());
-//        topPanel.add(title);
-//        topPanel.add(newDownload);
-//        topPanel.add(pause);
-//        topPanel.add(resume);
-//        topPanel.add(cancel);
-//        topPanel.add(remove);
-//        topPanel.add(setting);
 
         // Designing menuBar
         menuBar = new JMenuBar();
@@ -226,16 +213,10 @@ public class MainFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-                if(downloadOrder.isEmpty())
-                    System.out.println("here");
-                else {
-                    System.out.println("there");
-                    setDownload();
-                }
+                if(!downloadOrder.isEmpty())
+                    updateCentralPanel();
             }
         });
-
-
     }
 
     public void show(){
@@ -365,7 +346,10 @@ public class MainFrame {
     }
 
     public void setNewDownload(FileProperties fileProperties) {
-        downloado.put(file)
+        downloadOrder.put(fileProperties.getCreated(),fileProperties);
+        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,centralPanel.getSize());
+        centralPanel.add(tmp.getPanel());
+        downloadQueue.add(tmp);
         background.revalidate();
     }
 
@@ -374,28 +358,16 @@ public class MainFrame {
         return centralPanel.getSize();
     }
 
-    public void setDownload(){
-        for (NewDownloadPanel item: downloadOrder) {
+//    public void setDownload(){
+//        for (FileProperties item: downloadOrder.values()) {
+//
+//        }
+//    }
+
+    private void updateCentralPanel(){
+        for (NewDownloadPanel item: downloadQueue) {
             item.setSize(centralPanel.getWidth());
-            centralPanel.add(item.getPanel());
         }
     }
 
-
-//    public static MainFrame getInstance(){
-//        if(mainFrame == null){
-//            try {
-//                mainFrame = new MainFrame();
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (UnsupportedLookAndFeelException e) {
-//                e.printStackTrace();
-//            } catch (InstantiationException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return mainFrame;
-//    }
 }

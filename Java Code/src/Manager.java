@@ -1,7 +1,4 @@
 import javax.swing.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Manager {
 
@@ -35,14 +32,12 @@ public class Manager {
         // class finder switch case
         switch( part[0] ){
 
-
             case "main":
                 switch( part[1] ){
                     case "show":
                         main.show();
                 }
             break;
-
 
 
             case "setting":
@@ -55,7 +50,6 @@ public class Manager {
                 break;
 
 
-
             case "newDownload":
                 switch( part[1] ){
                     case "show":
@@ -63,9 +57,6 @@ public class Manager {
                         break;
                 }
                 break;
-
-
-
 
         }
     }
@@ -80,8 +71,6 @@ public class Manager {
     }
 
 
-
-
     public static String getNumberOfDownloads(){
         return numberOfDownloads;
     }
@@ -89,8 +78,6 @@ public class Manager {
     public static void setNumberOfDownloads(String number){
         numberOfDownloads = number;
     }
-
-
 
 
     public static Manager getInstance(){
@@ -101,6 +88,6 @@ public class Manager {
     }
 
     public static void addNewDownload(FileProperties fileProperties){
-        main.setNewDownload(new NewDownloadPanel(fileProperties));
+        main.setNewDownload(fileProperties);
     }
 }

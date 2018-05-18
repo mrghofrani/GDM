@@ -1,4 +1,7 @@
 import javax.swing.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Manager {
 
@@ -10,6 +13,17 @@ public class Manager {
     private static String numberOfDownloads = "Infinitive";
 
     private Manager() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         main = new MainFrame();
         newDownload = new NewDownloadFrame();
         setting = new SettingFrame();
@@ -86,7 +100,7 @@ public class Manager {
         return instance;
     }
 
-    public static void addNewDownload(String name, String volume){
-        main.setNewDownload(new NewDownloadPanel(name,volume,main.getCentralPanelSize()));
+    public static void addNewDownload(FileProperties fileProperties){
+        main.setNewDownload(new NewDownloadPanel(fileProperties));
     }
 }

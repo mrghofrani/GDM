@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NewDownloadFrame {
     // Main Basis
@@ -133,7 +136,9 @@ public class NewDownloadFrame {
                 downloadFrame.dispose();
             }
             else if(e.getSource().equals(downloadButton)){
-                Manager.addNewDownload(webPageAddress.getText(),volumeValue.getText());
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                Manager.addNewDownload(new FileProperties(webPageAddress.getText(),"not completed",volumeValue.getText(),dateFormat.format(date),locationText.getText()));
                 downloadFrame.dispose();
 //                mainFrame.setNewDownload(new NewDownloadPanel(webPageAddress.getText(),volumeValue.getText()));
             }

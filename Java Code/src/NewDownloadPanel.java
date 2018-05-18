@@ -36,13 +36,14 @@ public class NewDownloadPanel {
     private JLabel downloadImage;
 
 
-    public NewDownloadPanel(String name, String volume,Dimension dimension) {
+    public NewDownloadPanel(FileProperties properties, Dimension dimension) {
+        fileProperties = properties;
         newDownloadPanel = new JPanel();
         newDownloadPanel.setLayout(new BorderLayout(5,5));
 
         // TextArea related Panel
         textArea = new JPanel(new BorderLayout(5,5));
-        nameField = new JLabel(name);
+        nameField = new JLabel(properties.getFileName());
         nameField.setAlignmentY(Component.LEFT_ALIGNMENT);
         textArea.add(nameField);
 
@@ -109,9 +110,6 @@ public class NewDownloadPanel {
         leftPanel.add(downloadImage);
 
 
-
-
-
         newDownloadPanel.add(textArea,BorderLayout.NORTH);
         newDownloadPanel.add(rightPanel,BorderLayout.EAST);
         newDownloadPanel.add(centralPanel,BorderLayout.CENTER);
@@ -128,6 +126,10 @@ public class NewDownloadPanel {
 
     public void setFileProperties(FileProperties fileProperties) {
         this.fileProperties = fileProperties;
+    }
+
+    public void setSize(int width){
+        newDownloadPanel.setMaximumSize(new Dimension(width,(int)newDownloadPanel.getPreferredSize().getHeight()));
     }
 
     public JPanel getPanel(){

@@ -3,7 +3,10 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class MainFrame {
 //    private static MainFrame mainFrame;
@@ -11,6 +14,7 @@ public class MainFrame {
     private MainFrameActionListener actionListener;
     private MouseImplement mouseListener = new MouseImplement();
     private ArrayList<NewDownloadPanel> downloadOrder = new ArrayList<>();
+    private HashMap<Date,NewDownloadPanel> downloado = new HashMap<>();
 
     //SystemTray and its related components
     SystemTray systemTray = SystemTray.getSystemTray();
@@ -72,18 +76,6 @@ public class MainFrame {
 
 
     public MainFrame() {
-        // initializing Frame
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
         background = new JFrame("GDM");
         background.setLayout(new BorderLayout(5,5));
 //        settingFrame = SettingFrame.getInstanceOf();
@@ -127,9 +119,10 @@ public class MainFrame {
         cancel.setToolTipText("Hit me if you want to cancel your donwload.");
         cancel.setIcon(new ImageIcon("cancel.png"));
         cancel.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        cancel.addActionListener(actionListener);
         remove = new JButton();
         remove.setToolTipText("Hit me if you want to remove your downloaded file.");
-        remove.setIcon(new ImageIcon("remove.jpeg"));
+        remove.setIcon(new ImageIcon("remove.png"));
         remove.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
         setting = new JButton();
         setting.setToolTipText("Hit me if you want to change your setting.");
@@ -155,8 +148,8 @@ public class MainFrame {
         toolBar = new JToolBar();
         toolBar.add(title);
         toolBar.add(newDownload);
-        toolBar.add(pause);
         toolBar.add(resume);
+        toolBar.add(pause);
         toolBar.add(cancel);
         toolBar.add(remove);
         toolBar.add(setting);
@@ -233,7 +226,12 @@ public class MainFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-
+                if(downloadOrder.isEmpty())
+                    System.out.println("here");
+                else {
+                    System.out.println("there");
+                    setDownload();
+                }
             }
         });
 
@@ -321,6 +319,10 @@ public class MainFrame {
             else if(e.getSource().equals(queue)){
                 centralPanel.setVisible(false);
             }
+            else if(e.getSource().equals(cancel)){
+                JOptionPane.showMessageDialog(background,"Are you sure?","Delete",JOptionPane.WARNING_MESSAGE);
+
+            }
         }
 
 //        @Override
@@ -343,7 +345,6 @@ public class MainFrame {
         public void mousePressed(MouseEvent e) {
             if(e.getSource().equals(sort)){
                 sortPopUp.show(e.getComponent(),e.getX(),e.getY());
-                System.out.println("Catch");
             }
         }
 
@@ -363,8 +364,8 @@ public class MainFrame {
         }
     }
 
-    public void setNewDownload(NewDownloadPanel newDownload) {
-        downloadOrder.add(newDownload);
+    public void setNewDownload(FileProperties fileProperties) {
+        downloado.put(file)
         background.revalidate();
     }
 
@@ -373,7 +374,12 @@ public class MainFrame {
         return centralPanel.getSize();
     }
 
-    
+    public void setDownload(){
+        for (NewDownloadPanel item: downloadOrder) {
+            item.setSize(centralPanel.getWidth());
+            centralPanel.add(item.getPanel());
+        }
+    }
 
 
 //    public static MainFrame getInstance(){

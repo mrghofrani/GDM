@@ -34,7 +34,10 @@ public class NewDownloadPanel {
 
     // right Panel
     private JPanel rightPanel;
-    private JButton showDirectoryButton;
+    private JButton informationButton;
+    private ImageIcon right;
+    private ImageIcon left;
+
 
     // Left side
     private JPanel leftPanel;
@@ -97,11 +100,14 @@ public class NewDownloadPanel {
 
         // Right Panel
         rightPanel = new JPanel();
-        showDirectoryButton = new JButton();
-        showDirectoryButton.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
-        showDirectoryButton.setIcon(new ImageIcon("right-arrow.png"));
-        showDirectoryButton.setVisible(true);
-        rightPanel.add(showDirectoryButton);
+        informationButton = new JButton();
+        informationButton.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        right = new ImageIcon("right-arrow.png");
+        left = new ImageIcon("left-arrow.png");
+        informationButton.setIcon(left);
+        informationButton.setVisible(true);
+        informationButton.addActionListener(actionHandler);
+        rightPanel.add(informationButton);
 
         //Left Panel
         leftPanel = new JPanel();
@@ -115,7 +121,6 @@ public class NewDownloadPanel {
         newDownloadPanel.add(rightPanel,BorderLayout.EAST);
         newDownloadPanel.add(centralPanel,BorderLayout.CENTER);
         newDownloadPanel.add(leftPanel,BorderLayout.WEST);
-//        newDownloadPanel.add(bottomSideOfCentral,BorderLayout.SOUTH);
         newDownloadPanel.setVisible(true);
         newDownloadPanel.setMaximumSize(dimension);
         newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,2));
@@ -156,6 +161,17 @@ public class NewDownloadPanel {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                }
+            }
+            else if(e.getSource().equals(informationButton)){
+                if(informationButton.getIcon() == left){
+                    informationButton.setIcon(right);
+                    Manager.showRightPanel(fileProperties);
+                }
+                else {
+                    System.out.println("hide");
+                    informationButton.setIcon(left);
+                    Manager.hideRightPanel();
                 }
             }
         }

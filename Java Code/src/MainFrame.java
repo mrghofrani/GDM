@@ -3,11 +3,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class MainFrame {
 //    private static MainFrame mainFrame;
     private JFrame background;
+    private JPanel mainPanel;
     private MainFrameActionListener actionListener;
     private MouseImplement mouseListener = new MouseImplement();
     private ArrayList<NewDownloadPanel> downloadQueue = new ArrayList<>();
@@ -62,7 +62,34 @@ public class MainFrame {
 
     private JButton setting;
 
+
+    // right Panel's elements
     private JPanel rightPanel;
+    private JScrollPane rightScrollPane;
+
+    private JPanel fileNamePanel;
+    private JLabel fileNameLabel;
+    private JLabel fileName;
+
+    private JPanel statusPanel;
+    private JLabel statusLabel;
+    private JLabel status;
+
+    private JPanel sizePanel;
+    private JLabel sizeLabel;
+    private JLabel size;
+
+    private JPanel createdPanel;
+    private JLabel createdLabel;
+    private JLabel created;
+
+    private JPanel modifiedPanel;
+    private JLabel modifiedLabel;
+    private JLabel modified;
+
+    private JPanel addressPanel;
+    private JLabel addressLabel;
+    private JLabel address;
 
 
     // Main Panel
@@ -74,9 +101,8 @@ public class MainFrame {
 
     public MainFrame() {
         background = new JFrame("GDM");
-        background.setLayout(new BorderLayout(5,5));
-//        settingFrame = SettingFrame.getInstanceOf();
-//        downloadFrame = NewDownloadFrame.getInstance();
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout(5,5));
         actionListener = new MainFrameActionListener();
 
         // initializing leftPanel
@@ -200,16 +226,70 @@ public class MainFrame {
         // Central Panel
         centralPanel = new JPanel();
         centralPanel.setLayout(new BoxLayout(centralPanel,BoxLayout.Y_AXIS));
-        processingList = new JList<>();
         scrollPane = new JScrollPane(centralPanel);
-        background.add(scrollPane);
 
+
+        // right Panel
+        rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
+        rightScrollPane = new JScrollPane(rightPanel);
+
+        fileNamePanel  = new JPanel(new BorderLayout());
+        fileNameLabel = new JLabel("File name : ");
+        fileNameLabel.setBackground(Color.GRAY);
+        fileName = new JLabel();
+        fileNamePanel.add(fileNameLabel,BorderLayout.WEST);
+        fileNamePanel.add(fileName,BorderLayout.CENTER);
+
+        statusPanel = new JPanel(new BorderLayout());
+        statusLabel = new JLabel("Status : ");
+        statusLabel.setBackground(Color.GRAY);
+        status = new JLabel();
+        statusPanel.add(statusLabel,BorderLayout.WEST);
+        statusPanel.add(status,BorderLayout.CENTER);
+
+        sizePanel = new JPanel(new BorderLayout());
+        sizeLabel = new JLabel("Size : ");
+        sizeLabel.setBackground(Color.GRAY);
+        size = new JLabel();
+        sizePanel.add(sizeLabel,BorderLayout.WEST);
+        sizePanel.add(size,BorderLayout.CENTER);
+
+        createdPanel = new JPanel(new BorderLayout());
+        createdLabel = new JLabel("Created : ");
+        createdLabel.setBackground(Color.GRAY);
+        created = new JLabel();
+        createdPanel.add(createdLabel,BorderLayout.WEST);
+        createdPanel.add(created,BorderLayout.CENTER);
+
+        modifiedPanel = new JPanel(new BorderLayout());
+        modifiedLabel = new JLabel("Modified : ");
+        modifiedLabel.setBackground(Color.GRAY);
+        modified = new JLabel();
+        modifiedPanel.add(modifiedLabel,BorderLayout.WEST);
+        modifiedPanel.add(modified,BorderLayout.CENTER);
+
+        addressPanel = new JPanel(new BorderLayout());
+        addressLabel = new JLabel("Address : ");
+        addressLabel.setBackground(Color.GRAY);
+        address = new JLabel();
+        addressPanel.add(addressLabel,BorderLayout.WEST);
+        addressPanel.add(address,BorderLayout.CENTER);
+
+        rightPanel.add(fileNamePanel);
+        rightPanel.add(statusPanel);
+        rightPanel.add(sizePanel);
+        rightPanel.add(createdPanel);
+        rightPanel.add(modifiedPanel);
+        rightPanel.add(addressPanel);
 
         // setting to frame
         background.setJMenuBar(menuBar);
-        background.add(toolBar,BorderLayout.NORTH);
-        background.add(leftPanel,BorderLayout.WEST);
-        background.addComponentListener(new ComponentAdapter() {
+        mainPanel.add(toolBar,BorderLayout.NORTH);
+        mainPanel.add(leftPanel,BorderLayout.WEST);
+        mainPanel.add(scrollPane,BorderLayout.CENTER);
+        background.add(mainPanel);
+        mainPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
@@ -306,13 +386,6 @@ public class MainFrame {
             }
         }
 
-//        @Override
-//        public void mouseClicked(MouseEvent e) {
-////            if (e.equals(setting)) {
-////                settingFrame.show();
-////                System.out.println("Pressed");
-////            }
-//        }
     }
 
     private class MouseImplement implements MouseListener{
@@ -351,6 +424,7 @@ public class MainFrame {
         centralPanel.add(tmp.getPanel());
         downloadQueue.add(tmp);
         background.revalidate();
+        mainPanel.revalidate();
     }
 
 
@@ -364,6 +438,26 @@ public class MainFrame {
 //        }
 //    }
 
+
+    public void showRightPanel (FileProperties fileProperties){
+        fileName.setText(fileProperties.getFileName());
+        status.setText(fileProperties.getStatus());
+        size.setText(fileProperties.getSize());
+        created.setText(fileProperties.getCreated());
+        modified.setText(fileProperties.getModified());
+        address.setText(fileProperties.getAddress());
+        mainPanel.add(rightScrollPane,BorderLayout.EAST);
+        background.revalidate();
+        mainPanel.revalidate();
+    }
+
+    public void hideRightPanel(){
+        BorderLayout layout = (BorderLayout) mainPanel.getLayout();
+        mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
+        background.revalidate();
+        mainPanel.revalidate();
+        updateCentralPanel();
+    }
     private void updateCentralPanel(){
         for (NewDownloadPanel item: downloadQueue) {
             item.setSize(centralPanel.getWidth());

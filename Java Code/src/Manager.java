@@ -36,6 +36,7 @@ public class Manager {
                 switch( part[1] ){
                     case "show":
                         main.show();
+                        break;
                 }
             break;
 
@@ -61,6 +62,12 @@ public class Manager {
         }
     }
 
+    public static void showRightPanel(FileProperties fileProperties){
+        main.showRightPanel(fileProperties);
+    }
+    public static void hideRightPanel(){
+        main.hideRightPanel();
+    }
 
     public static String getDownloadPath(){
         return downloadPath;

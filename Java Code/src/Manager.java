@@ -6,7 +6,7 @@ public class Manager {
     private static MainFrame  main;
     private static NewDownloadFrame newDownload;
     private static SettingFrame setting;
-    private static String downloadPath = "/Desktop/";
+    private static String downloadPath = "C:\\Users\\KimiaSe7en\\Desktop";
     private static String numberOfDownloads = "Infinitive";
 
     private Manager() {

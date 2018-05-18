@@ -1,9 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class NewDownloadPanel {
     private FileProperties fileProperties;
     private JPanel newDownloadPanel;
+    private ActionHandler actionHandler = new ActionHandler();
 
     // top part of the newDownload Panel
     private JPanel textArea;
@@ -48,9 +53,6 @@ public class NewDownloadPanel {
         textArea.add(nameField);
 
 
-
-
-
         // central part of the NewDownloadPanel
         centralPanel = new JPanel();
         centralPanel.setLayout(new BoxLayout(centralPanel,BoxLayout.Y_AXIS));
@@ -64,23 +66,22 @@ public class NewDownloadPanel {
 
         // bottom Part of the NewDownloadPanel
         bottomSideOfCentral = new JPanel(new BorderLayout());
-//        bottomSideOfCentral.setLayout(new BoxLayout(bottomSideOfCentral,BoxLayout.X_AXIS));
-
         rightBottomSideOfCentral = new JPanel();
         rightBottomSideOfCentral.setLayout(new BoxLayout(rightBottomSideOfCentral,BoxLayout.X_AXIS));
         resumeButton = new JButton(new ImageIcon("resume.png"));
         resumeButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
-//        resumeButton.setAlignmentY(Component.LEFT_ALIGNMENT);
+        resumeButton.addActionListener(actionHandler);
         cancelButton = new JButton(new ImageIcon("cancel.png"));
         cancelButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        cancelButton.addActionListener(actionHandler);
         directoryButton = new JButton(new ImageIcon("folder.png"));
         directoryButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        directoryButton.addActionListener(actionHandler);
         rightBottomSideOfCentral.add(resumeButton);
         rightBottomSideOfCentral.add(Box.createRigidArea(new Dimension(5,0)));
         rightBottomSideOfCentral.add(cancelButton);
         rightBottomSideOfCentral.add(Box.createRigidArea(new Dimension(5,0)));
         rightBottomSideOfCentral.add(directoryButton);
-//        rightBottomSideOfCentral.add(Box.createRigidArea(new Dimension(0,5)));
 
         leftSideOftOfCentral = new JPanel();
         leftSideOftOfCentral.setLayout(new BoxLayout(leftSideOftOfCentral,BoxLayout.X_AXIS));
@@ -134,5 +135,29 @@ public class NewDownloadPanel {
 
     public JPanel getPanel(){
         return newDownloadPanel;
+    }
+
+    private class ActionHandler implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource().equals(resumeButton)){
+                JOptionPane.showMessageDialog(null,"File Opened","open",JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(e.getSource().equals(cancelButton)){
+
+            }
+            else if(e.getSource().equals(directoryButton)){
+                if(Desktop.isDesktopSupported()){
+                    Desktop desktop = Desktop.getDesktop();
+                    File file = new File(fileProperties.getAddress());
+                    try {
+                        desktop.open(file);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 }

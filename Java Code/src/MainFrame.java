@@ -8,10 +8,9 @@ import java.util.ArrayList;
 public class MainFrame {
 //    private static MainFrame mainFrame;
     private JFrame background;
-    private SettingFrame settingFrame;
-    private NewDownloadFrame downloadFrame;
     private MainFrameActionListener actionListener;
-    private ArrayList<NewDownloadPanel> arrayList = new ArrayList<>();
+    private MouseImplement mouseListener = new MouseImplement();
+    private ArrayList<NewDownloadPanel> downloadOrder = new ArrayList<>();
 
     //SystemTray and its related components
     SystemTray systemTray = SystemTray.getSystemTray();
@@ -53,10 +52,11 @@ public class MainFrame {
     private JButton remove;
     private JButton sort;
     private JToolBar toolBar;
-    private JMenuItem byDate;
-    private JMenuItem byStatus;
-    private JMenuItem byName;
-    private JMenuItem bySize;
+    private JRadioButton byDate;
+    private JRadioButton byStatus;
+    private JRadioButton byName;
+    private JRadioButton bySize;
+    private ButtonGroup sortBy;
     private JPopupMenu sortPopUp;
 
     private JButton setting;
@@ -67,6 +67,7 @@ public class MainFrame {
     // Main Panel
     private JPanel centralPanel;
     private JScrollPane scrollPane;
+    private JList<NewDownloadPanel> processingList;
 
 
 
@@ -93,11 +94,14 @@ public class MainFrame {
         leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.Y_AXIS));
         processing = new JButton("Processing");
+        processing.addActionListener(actionListener);
         int buttonWidth = processing.getPreferredSize().width + 100;
         completed = new JButton("completed");
         completed.setMaximumSize(new Dimension(buttonWidth,completed.getPreferredSize().height));
+        completed.addActionListener(actionListener);
         queue = new JButton("Queue");
         queue.setMaximumSize(new Dimension(buttonWidth,queue.getPreferredSize().height));
+        queue.addActionListener(actionListener);
         leftPanel.add(processing);
         leftPanel.add(Box.createRigidArea(new Dimension(0,5)));// for having a gap to
         leftPanel.add(completed);
@@ -112,7 +116,9 @@ public class MainFrame {
         newDownload.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
         newDownload.addActionListener(actionListener);
         pause = new JButton();
-        pause.setToolTipText("Hit me if you want to pause your donwload.");
+        pause.setIcon(new ImageIcon("pause.png"));
+        pause.setToolTipText("Hit me if you want to pause your download.");
+        pause.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
         resume = new JButton();
         resume.setToolTipText("Hit me if you want to resume your download.");
         resume.setIcon(new ImageIcon("resume.png"));
@@ -131,14 +137,20 @@ public class MainFrame {
         setting.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
         setting.addActionListener(actionListener);
         sort = new JButton(new ImageIcon("sort.png"));
+        sort.addActionListener(actionListener);
         sortPopUp = new JPopupMenu();
         sort.setToolTipText("Sort Via ...");
         sort.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
-        sort.addActionListener(actionListener);
-        sortPopUp.add( byDate = new JMenuItem("By Date"));
-        sortPopUp.add( bySize = new JMenuItem("By Size"));
-        sortPopUp.add( byName = new JMenuItem("By Name"));
-        sortPopUp.add( byStatus = new JMenuItem("By Status"));
+        sort.addMouseListener(mouseListener);
+        sortPopUp.add( byDate = new JRadioButton("By Date"));
+        sortPopUp.add( bySize = new JRadioButton("By Size"));
+        sortPopUp.add( byName = new JRadioButton("By Name"));
+        sortPopUp.add( byStatus = new JRadioButton("By Status"));
+        sortBy = new ButtonGroup();
+        sortBy.add(byDate);
+        sortBy.add(bySize);
+        sortBy.add(byName);
+        sortBy.add(byStatus);
 
         toolBar = new JToolBar();
         toolBar.add(title);
@@ -208,6 +220,7 @@ public class MainFrame {
         // Central Panel
         centralPanel = new JPanel();
         centralPanel.setLayout(new BoxLayout(centralPanel,BoxLayout.Y_AXIS));
+        processingList = new JList<>();
         scrollPane = new JScrollPane(centralPanel);
         background.add(scrollPane);
 
@@ -216,7 +229,13 @@ public class MainFrame {
         background.setJMenuBar(menuBar);
         background.add(toolBar,BorderLayout.NORTH);
         background.add(leftPanel,BorderLayout.WEST);
+        background.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
 
+            }
+        });
 
 
     }
@@ -234,8 +253,6 @@ public class MainFrame {
         }
         Image image = Toolkit.getDefaultToolkit().getImage("Java Code/favicon (1).ico");
         newDownloadPop.addActionListener(actionListener);
-
-
         settingPop.addActionListener(actionListener);
         exitPop.addActionListener(actionListener);
         trayPopupMenu.addActionListener(actionListener);
@@ -252,13 +269,12 @@ public class MainFrame {
         try{
             systemTray.add(trayIcon);
         }catch(AWTException awtException){
-            JOptionPane.showMessageDialog(background,"Opps.. Something went wrong","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(background,"Ops.. Something went wrong","Error",JOptionPane.ERROR_MESSAGE);
         }
-        System.out.println("end of main");
     }
 
 
-    private class MainFrameActionListener implements ActionListener,MouseListener {
+    private class MainFrameActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(setting) ) {
@@ -296,20 +312,38 @@ public class MainFrame {
             else if(e.getSource().equals(trayIcon) || e.getSource().equals(systemTray) || e.getSource().equals(trayPopupMenu)){
                 background.setVisible(true);
             }
+            else if(e.getSource().equals(processing)){
+                centralPanel.setVisible(true);
+            }
+            else if(e.getSource().equals(completed)){
+                centralPanel.setVisible(false);
+            }
+            else if(e.getSource().equals(queue)){
+                centralPanel.setVisible(false);
+            }
         }
+
+//        @Override
+//        public void mouseClicked(MouseEvent e) {
+////            if (e.equals(setting)) {
+////                settingFrame.show();
+////                System.out.println("Pressed");
+////            }
+//        }
+    }
+
+    private class MouseImplement implements MouseListener{
 
         @Override
         public void mouseClicked(MouseEvent e) {
-//            if (e.equals(setting)) {
-//                settingFrame.show();
-//                System.out.println("Pressed");
-//            }
+
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if(e.getSource().equals(systemTray) && e.getClickCount() > 1){
-                background.setVisible(true);
+            if(e.getSource().equals(sort)){
+                sortPopUp.show(e.getComponent(),e.getX(),e.getY());
+                System.out.println("Catch");
             }
         }
 
@@ -320,19 +354,27 @@ public class MainFrame {
 
         @Override
         public void mouseEntered(MouseEvent e) {
+
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
 
         }
-
     }
 
     public void setNewDownload(NewDownloadPanel newDownload) {
-        centralPanel.add(newDownload.getPanel());
+        downloadOrder.add(newDownload);
         background.revalidate();
     }
+
+
+    public Dimension getCentralPanelSize(){
+        return centralPanel.getSize();
+    }
+
+    
+
 
 //    public static MainFrame getInstance(){
 //        if(mainFrame == null){

@@ -2,71 +2,134 @@ import javax.swing.*;
 import java.awt.*;
 
 public class NewDownloadPanel {
+    private FileProperties fileProperties;
     private JPanel newDownloadPanel;
 
     // top part of the newDownload Panel
     private JPanel textArea;
     private JLabel nameField;
+    private final int BUTTON_SIZE_ON_TOP_PANEL = 20;
 
     // central part  of the NewDownloadPanel
-    private JPanel centralPart;
-    private JLabel downloadImage;
+    private JPanel centralPanel;
+
+    private JPanel topSideOfCentral;
     private JProgressBar progressBar;
-    private JButton showDirectoryButton;
-    private JTextField percent;
 
     //bottom part of the NewDownloadPanel
-    private JPanel bottomPanel;
+    private JPanel bottomSideOfCentral;
+
+    private JPanel rightBottomSideOfCentral;
     private JButton resumeButton;
     private JButton cancelButton;
     private JButton directoryButton;
+
+    private JPanel leftSideOftOfCentral;
     private JLabel volumeField;
 
-    public NewDownloadPanel(String name, String volume) {
+    // right Panel
+    private JPanel rightPanel;
+    private JButton showDirectoryButton;
+
+    // Left side
+    private JPanel leftPanel;
+    private JLabel downloadImage;
+
+
+    public NewDownloadPanel(String name, String volume,Dimension dimension) {
         newDownloadPanel = new JPanel();
-        newDownloadPanel.setLayout(new BoxLayout(newDownloadPanel,BoxLayout.Y_AXIS));
+        newDownloadPanel.setLayout(new BorderLayout(5,5));
 
         // TextArea related Panel
-        textArea = new JPanel(new FlowLayout());
+        textArea = new JPanel(new BorderLayout(5,5));
         nameField = new JLabel(name);
+        nameField.setAlignmentY(Component.LEFT_ALIGNMENT);
         textArea.add(nameField);
 
 
-        // central part of the NewDownloadPanel
-        centralPart = new JPanel(new FlowLayout());
-        downloadImage = new JLabel(new ImageIcon("database-downloaded.png"));
-        progressBar = new JProgressBar();
-        showDirectoryButton = new JButton();
-        showDirectoryButton.setIcon(new ImageIcon("right-arrow.png"));
-        showDirectoryButton.setVisible(false);
-        percent = new JTextField(Double.toString(progressBar.getPercentComplete()));
-        percent.setEditable(false);
-        centralPart.add(downloadImage);
-        centralPart.add(progressBar);
-        centralPart.add(showDirectoryButton);
-        centralPart.add(percent);
 
+
+
+        // central part of the NewDownloadPanel
+        centralPanel = new JPanel();
+        centralPanel.setLayout(new BoxLayout(centralPanel,BoxLayout.Y_AXIS));
+
+        // top side of central panel
+        topSideOfCentral = new JPanel();
+        progressBar = new JProgressBar(JProgressBar.HORIZONTAL,0,100);
+        progressBar.setStringPainted(true);
+        progressBar.setAlignmentY(Component.LEFT_ALIGNMENT);
+        centralPanel.add(progressBar);
 
         // bottom Part of the NewDownloadPanel
-        bottomPanel = new JPanel();
-        resumeButton = new JButton(new ImageIcon("play-button.png"));
+        bottomSideOfCentral = new JPanel(new BorderLayout());
+//        bottomSideOfCentral.setLayout(new BoxLayout(bottomSideOfCentral,BoxLayout.X_AXIS));
+
+        rightBottomSideOfCentral = new JPanel();
+        rightBottomSideOfCentral.setLayout(new BoxLayout(rightBottomSideOfCentral,BoxLayout.X_AXIS));
+        resumeButton = new JButton(new ImageIcon("resume.png"));
+        resumeButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+//        resumeButton.setAlignmentY(Component.LEFT_ALIGNMENT);
         cancelButton = new JButton(new ImageIcon("cancel.png"));
-//        pauseButton = new JButton(new ImageIcon("pause.png"));
-        directoryButton = new JButton(new ImageIcon("right-arrow.png"));
-        volumeField = new JLabel("0");
-        bottomPanel.add(resumeButton);
-        bottomPanel.add(cancelButton);
-        bottomPanel.add(directoryButton);
-        bottomPanel.add(volumeField);
+        cancelButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        directoryButton = new JButton(new ImageIcon("folder.png"));
+        directoryButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        rightBottomSideOfCentral.add(resumeButton);
+        rightBottomSideOfCentral.add(Box.createRigidArea(new Dimension(5,0)));
+        rightBottomSideOfCentral.add(cancelButton);
+        rightBottomSideOfCentral.add(Box.createRigidArea(new Dimension(5,0)));
+        rightBottomSideOfCentral.add(directoryButton);
+//        rightBottomSideOfCentral.add(Box.createRigidArea(new Dimension(0,5)));
+
+        leftSideOftOfCentral = new JPanel();
+        leftSideOftOfCentral.setLayout(new BoxLayout(leftSideOftOfCentral,BoxLayout.X_AXIS));
+        volumeField = new JLabel("Size Part");
+        leftSideOftOfCentral.add(volumeField);
+
+        bottomSideOfCentral.add(rightBottomSideOfCentral,BorderLayout.WEST);
+        bottomSideOfCentral.add(leftSideOftOfCentral,BorderLayout.CENTER);
 
 
-        newDownloadPanel.add(textArea);
-        newDownloadPanel.add(centralPart);
-        newDownloadPanel.add(bottomPanel);
+        centralPanel.add(topSideOfCentral);
+        centralPanel.add(bottomSideOfCentral);
+
+        // Right Panel
+        rightPanel = new JPanel();
+        showDirectoryButton = new JButton();
+        showDirectoryButton.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        showDirectoryButton.setIcon(new ImageIcon("right-arrow.png"));
+        showDirectoryButton.setVisible(true);
+        rightPanel.add(showDirectoryButton);
+
+        //Left Panel
+        leftPanel = new JPanel();
+        downloadImage = new JLabel();
+        downloadImage.setIcon(new ImageIcon("database-downloaded.png"));
+        downloadImage.setPreferredSize(new Dimension(downloadImage.getIcon().getIconWidth(),downloadImage.getIcon().getIconHeight()));
+        leftPanel.add(downloadImage);
+
+
+
+
+
+        newDownloadPanel.add(textArea,BorderLayout.NORTH);
+        newDownloadPanel.add(rightPanel,BorderLayout.EAST);
+        newDownloadPanel.add(centralPanel,BorderLayout.CENTER);
+        newDownloadPanel.add(leftPanel,BorderLayout.WEST);
+//        newDownloadPanel.add(bottomSideOfCentral,BorderLayout.SOUTH);
         newDownloadPanel.setVisible(true);
-
-        newDownloadPanel.setSize(new Dimension((int)(textArea.getPreferredSize().getWidth()+downloadImage.getPreferredSize().getWidth() + resumeButton.getPreferredSize().getWidth()),(int)newDownloadPanel.getPreferredSize().getHeight()));
+        newDownloadPanel.setMaximumSize(dimension);
+        newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,2));
     }
+
+    public FileProperties getFileProperties() {
+        return fileProperties;
+    }
+
+    public void setFileProperties(FileProperties fileProperties) {
+        this.fileProperties = fileProperties;
+    }
+
     public JPanel getPanel(){
         return newDownloadPanel;
     }

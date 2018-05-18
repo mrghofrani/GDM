@@ -87,6 +87,6 @@ public class Manager {
     }
 
     public static void addNewDownload(String name, String volume){
-        main.setNewDownload(new NewDownloadPanel(name,volume));
+        main.setNewDownload(new NewDownloadPanel(name,volume,main.getCentralPanelSize()));
     }
 }

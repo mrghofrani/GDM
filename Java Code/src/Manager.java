@@ -7,7 +7,7 @@ public class Manager {
     private static NewDownloadFrame newDownload;
     private static SettingFrame setting;
     private static String downloadPath = "C:\\Users\\KimiaSe7en\\Desktop";
-    private static String numberOfDownloads = "Infinitive";
+    private static String numberOfDownloads = "infinitive";
 
     private Manager() {
         try {
@@ -96,5 +96,9 @@ public class Manager {
 
     public static void addNewDownload(FileProperties fileProperties){
         main.setNewDownload(fileProperties);
+    }
+
+    public static void addNewDownloadQueue(FileProperties fileProperties){
+        main.setNewDownloadQueue(fileProperties);
     }
 }

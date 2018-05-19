@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -9,11 +12,13 @@ public class NewDownloadPanel {
     private FileProperties fileProperties;
     private JPanel newDownloadPanel;
     private ActionHandler actionHandler = new ActionHandler();
+    private boolean selected = false;
 
     // top part of the newDownload Panel
     private JPanel textArea;
     private JLabel nameField;
     private final int BUTTON_SIZE_ON_TOP_PANEL = 20;
+
 
     // central part  of the NewDownloadPanel
     private JPanel centralPanel;
@@ -123,7 +128,44 @@ public class NewDownloadPanel {
         newDownloadPanel.add(leftPanel,BorderLayout.WEST);
         newDownloadPanel.setVisible(true);
         newDownloadPanel.setMaximumSize(dimension);
-        newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,2));
+        newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
+        newDownloadPanel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(!selected) {
+                    selected = true;
+                    newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+                }
+                else {
+                    selected = false;
+                    newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 
     public FileProperties getFileProperties() {
@@ -141,6 +183,11 @@ public class NewDownloadPanel {
     public JPanel getPanel(){
         return newDownloadPanel;
     }
+
+    public void deleteFileProperties(){
+        fileProperties = null;
+    }
+
 
     private class ActionHandler implements ActionListener{
 
@@ -173,6 +220,9 @@ public class NewDownloadPanel {
                     informationButton.setIcon(left);
                     Manager.hideRightPanel();
                 }
+            }
+            else if(e.getSource().equals(newDownloadPanel) || e.getSource().equals(rightPanel) || e.getSource().equals(progressBar)){
+
             }
         }
     }

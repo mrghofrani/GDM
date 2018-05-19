@@ -11,10 +11,7 @@ import java.util.Date;
 public class NewDownloadFrame {
     // Main Basis
     private static NewDownloadFrame instance;
-//    private MainFrame mainFrame = MainFrame.getInstance();
     private JFrame downloadFrame;
-    private Border border;
-//    private Setting setting = Setting.getInstanceOf();
 
     // Web Page Part
     private JPanel webPagePanel;
@@ -37,6 +34,7 @@ public class NewDownloadFrame {
     //
     private JPanel buttonPanel;
     private JButton downloadButton;
+    private JButton addToQueueButton;
     private JButton cancelButton;
 
 
@@ -52,15 +50,13 @@ public class NewDownloadFrame {
     public NewDownloadFrame(){
         downloadFrame = new JFrame("New Download");
         downloadFrame.setLayout(new BoxLayout(downloadFrame.getContentPane(),BoxLayout.Y_AXIS));
-        border = BorderFactory.createLineBorder(Color.BLACK);
 
         webPagePanel = new JPanel();
         webPagePanel.setLayout(new BoxLayout(webPagePanel,BoxLayout.X_AXIS));
         webPageTitle = new JLabel("Address:");
-        webPageTitle.setBorder(border);
         webPageTitle.setAlignmentY(Component.LEFT_ALIGNMENT);
         webPageAddress = new JTextField("https://google.com");
-        webPageAddress.setEditable(false);
+        webPageAddress.setEditable(true);
         webPageAddress.setBackground(Color.WHITE);
         webPagePanel.add(webPageTitle);
         webPagePanel.add(webPageAddress);
@@ -70,7 +66,6 @@ public class NewDownloadFrame {
         volumePanel = new JPanel();
         volumePanel.setLayout(new BoxLayout(volumePanel,BoxLayout.X_AXIS));
         volumeTitle = new JLabel("Volume:");
-        volumeTitle.setBorder(border);
         volumeTitle.setAlignmentY(Component.LEFT_ALIGNMENT);
         volumeValue = new JTextField("100 GB");
         volumeValue.setBackground(Color.WHITE);
@@ -104,9 +99,12 @@ public class NewDownloadFrame {
         buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
         downloadButton = new JButton("Start Download");
         downloadButton.addActionListener(actionHandler);
+        addToQueueButton = new JButton("Add to Queue");
+        addToQueueButton.addActionListener(actionHandler);
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(actionHandler);
         buttonPanel.add(downloadButton);
+        buttonPanel.add(addToQueueButton);
         buttonPanel.add(cancelButton);
         downloadFrame.add(buttonPanel);
 
@@ -117,10 +115,12 @@ public class NewDownloadFrame {
         downloadFrame.pack();
         downloadFrame.setVisible(true);
     }
+
     private void reset(){
         locationText.setText(Manager.getDownloadPath());
         locationChooser.setCurrentDirectory(new File(Manager.getDownloadPath()));
     }
+
     private class ActionHandler implements ActionListener{
 
         @Override
@@ -140,7 +140,12 @@ public class NewDownloadFrame {
                 Date date = new Date();
                 Manager.addNewDownload(new FileProperties(webPageAddress.getText(),"not completed",volumeValue.getText(),dateFormat.format(date),locationText.getText()));
                 downloadFrame.dispose();
-//                mainFrame.setNewDownload(new NewDownloadPanel(webPageAddress.getText(),volumeValue.getText()));
+            }
+            else if(e.getSource().equals(addToQueueButton)){
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                Manager.addNewDownloadQueue(new FileProperties(webPageAddress.getText(),"not completed",volumeValue.getText(),dateFormat.format(date),locationText.getText()));
+                downloadFrame.dispose();
             }
         }
     }

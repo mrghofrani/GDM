@@ -1,4 +1,9 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Manager {
 
@@ -8,6 +13,18 @@ public class Manager {
     private static SettingFrame setting;
     private static String downloadPath = "C:\\Users\\KimiaSe7en\\Desktop";
     private static String numberOfDownloads = "infinitive";
+
+    //SystemTray and its related components
+    private SystemTray systemTray = SystemTray.getSystemTray();
+    private TrayIcon trayIcon;
+    private PopupMenu trayPopupMenu = new PopupMenu();
+    private MenuItem newDownloadPop = new MenuItem("new download");
+    private MenuItem pausePop = new MenuItem("Pause all downloads");
+    private MenuItem resumePop = new MenuItem("resume all downloads");
+    private MenuItem settingPop = new MenuItem("settings");
+    private MenuItem exitPop = new MenuItem("exit");
+
+    private ActionHandler actionListener = new ActionHandler();
 
     private Manager() {
         try {
@@ -25,6 +42,35 @@ public class Manager {
         newDownload = new NewDownloadFrame();
         setting = new SettingFrame();
         getAction("main.show");
+        SystemTrayHandler();
+    }
+
+    private void SystemTrayHandler(){
+        if(!SystemTray.isSupported()){
+            JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Image image = Toolkit.getDefaultToolkit().getImage("pin.png");
+        newDownloadPop.addActionListener(actionListener);
+        settingPop.addActionListener(actionListener);
+        exitPop.addActionListener(actionListener);
+        trayPopupMenu.addActionListener(actionListener);
+
+
+        // adding elements to trayPopupMenu
+        trayPopupMenu.add(newDownloadPop);
+        trayPopupMenu.add(pausePop);
+        trayPopupMenu.add(resumePop);
+        trayPopupMenu.add(settingPop);
+        trayPopupMenu.add(exitPop);
+        trayIcon = new TrayIcon(image,"GDM",trayPopupMenu);
+        trayIcon.setImageAutoSize(true);
+        trayIcon.addMouseListener(actionListener);
+        try{
+            systemTray.add(trayIcon);
+        }catch(AWTException awtException){
+            JOptionPane.showMessageDialog(null,"Ops.. Something went wrong","Error",JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void getAction(String action){
@@ -61,6 +107,46 @@ public class Manager {
 
         }
     }
+
+    private class ActionHandler implements ActionListener,MouseListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource().equals(newDownloadPop)){
+                Manager.getAction("newDownload.show");
+            }
+            else if(e.getSource().equals(settingPop)){
+                Manager.getAction("setting.show");
+            }
+            else if(e.getSource().equals(exitPop)) {
+                System.exit(0);
+            }
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getSource().equals(trayIcon) && e.getClickCount() > 1){
+                main.show();
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(e.getSource().equals(trayIcon) && e.getClickCount() > 1){
+                main.show();
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+
+        @Override
+        public void mouseExited(MouseEvent e) {}
+    }
+
 
     public static void showRightPanel(FileProperties fileProperties){
         main.showRightPanel(fileProperties);

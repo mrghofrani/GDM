@@ -16,15 +16,15 @@ public class MainFrame {
     private ArrayList<NewDownloadPanel> queueNewDownload = new ArrayList<>();
     private int numberOfAddedToProcessing = 0;
 
-    //SystemTray and its related components
-    SystemTray systemTray = SystemTray.getSystemTray();
-    TrayIcon trayIcon;
-    PopupMenu trayPopupMenu = new PopupMenu();
-    MenuItem newDownloadPop = new MenuItem("new download");
-    MenuItem pausePop = new MenuItem("Pause all downloads");
-    MenuItem resumePop = new MenuItem("resume all downloads");
-    MenuItem settingPop = new MenuItem("settings");
-    MenuItem exitPop = new MenuItem("exit");
+//    //SystemTray and its related components
+//    SystemTray systemTray = SystemTray.getSystemTray();
+//    TrayIcon trayIcon;
+//    PopupMenu trayPopupMenu = new PopupMenu();
+//    MenuItem newDownloadPop = new MenuItem("new download");
+//    MenuItem pausePop = new MenuItem("Pause all downloads");
+//    MenuItem resumePop = new MenuItem("resume all downloads");
+//    MenuItem settingPop = new MenuItem("settings");
+//    MenuItem exitPop = new MenuItem("exit");
 
     //menuBar and its related elements
     private JMenuBar menuBar;
@@ -316,37 +316,37 @@ public class MainFrame {
     }
 
     public void show(){
-        SystemTrayHandler();
+//        SystemTrayHandler();
         background.pack();
         background.setVisible(true);
     }
 
-    private void SystemTrayHandler(){
-        if(!SystemTray.isSupported()){
-            JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        Image image = Toolkit.getDefaultToolkit().getImage("Java Code/favicon (1).ico");
-        newDownloadPop.addActionListener(actionListener);
-        settingPop.addActionListener(actionListener);
-        exitPop.addActionListener(actionListener);
-        trayPopupMenu.addActionListener(actionListener);
-
-
-        // adding elements to trayPopupMenu
-        trayPopupMenu.add(newDownloadPop);
-        trayPopupMenu.add(pausePop);
-        trayPopupMenu.add(resumePop);
-        trayPopupMenu.add(settingPop);
-        trayPopupMenu.add(exitPop);
-        trayIcon = new TrayIcon(image,"GDM The Fastest Download Manager",trayPopupMenu);
-        trayIcon.setImageAutoSize(true);
-        try{
-            systemTray.add(trayIcon);
-        }catch(AWTException awtException){
-            JOptionPane.showMessageDialog(background,"Ops.. Something went wrong","Error",JOptionPane.ERROR_MESSAGE);
-        }
-    }
+//    private void SystemTrayHandler(){
+//        if(!SystemTray.isSupported()){
+//            JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
+//            return;
+//        }
+//        Image image = Toolkit.getDefaultToolkit().getImage("Java Code/favicon (1).ico");
+//        newDownloadPop.addActionListener(actionListener);
+//        settingPop.addActionListener(actionListener);
+//        exitPop.addActionListener(actionListener);
+//        trayPopupMenu.addActionListener(actionListener);
+//
+//
+//        // adding elements to trayPopupMenu
+//        trayPopupMenu.add(newDownloadPop);
+//        trayPopupMenu.add(pausePop);
+//        trayPopupMenu.add(resumePop);
+//        trayPopupMenu.add(settingPop);
+//        trayPopupMenu.add(exitPop);
+//        trayIcon = new TrayIcon(image,"GDM The Fastest Download Manager",trayPopupMenu);
+//        trayIcon.setImageAutoSize(true);
+//        try{
+//            systemTray.add(trayIcon);
+//        }catch(AWTException awtException){
+//            JOptionPane.showMessageDialog(background,"Ops.. Something went wrong","Error",JOptionPane.ERROR_MESSAGE);
+//        }
+//    }
 
 
     private class MainFrameActionListener implements ActionListener {
@@ -370,23 +370,23 @@ public class MainFrame {
             else if (e.getSource().equals(exitItem)){
                 System.exit(0);
             }
-            else if(e.getSource().equals(trayIcon)){
-                background.setVisible(true);
-            }
-            else if(e.getSource().equals(newDownloadPop)){
-//                NewDownloadFrame.getInstance().show();
-                Manager.getAction("newDownload.show");
-            }
-            else if(e.getSource().equals(settingPop)){
-//                SettingFrame.getInstanceOf().show();
-                Manager.getAction("setting.show");
-            }
-            else if(e.getSource().equals(exitPop)) {
-                System.exit(0);
-            }
-            else if(e.getSource().equals(trayIcon) || e.getSource().equals(systemTray) || e.getSource().equals(trayPopupMenu)){
-                background.setVisible(true);
-            }
+//            else if(e.getSource().equals(trayIcon)){
+//                background.setVisible(true);
+//            }
+//            else if(e.getSource().equals(newDownloadPop)){
+////                NewDownloadFrame.getInstance().show();
+//                Manager.getAction("newDownload.show");
+//            }
+//            else if(e.getSource().equals(settingPop)){
+////                SettingFrame.getInstanceOf().show();
+//                Manager.getAction("setting.show");
+//            }
+//            else if(e.getSource().equals(exitPop)) {
+//                System.exit(0);
+//            }
+//            else if(e.getSource().equals(trayIcon) || e.getSource().equals(systemTray) || e.getSource().equals(trayPopupMenu)){
+//                background.setVisible(true);
+//            }
             else if(e.getSource().equals(processing)){
                 mainPanel.remove(queueScrollPane);
                 mainPanel.add(processingScrollPane,BorderLayout.CENTER);

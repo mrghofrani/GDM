@@ -49,7 +49,7 @@ public class NewDownloadPanel {
     private JLabel downloadImage;
 
 
-    public NewDownloadPanel(FileProperties properties, Dimension dimension) {
+    public NewDownloadPanel(FileProperties properties, int width) {
         fileProperties = properties;
         newDownloadPanel = new JPanel();
         newDownloadPanel.setLayout(new BorderLayout(5,5));
@@ -127,7 +127,7 @@ public class NewDownloadPanel {
         newDownloadPanel.add(centralPanel,BorderLayout.CENTER);
         newDownloadPanel.add(leftPanel,BorderLayout.WEST);
         newDownloadPanel.setVisible(true);
-        newDownloadPanel.setMaximumSize(dimension);
+        newDownloadPanel.setMaximumSize(new Dimension(width,(int)newDownloadPanel.getPreferredSize().getHeight()));
         newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
         newDownloadPanel.addMouseListener(new MouseListener() {
             @Override
@@ -196,8 +196,21 @@ public class NewDownloadPanel {
             if(e.getSource().equals(resumeButton)){
                 JOptionPane.showMessageDialog(null,"File Opened","open",JOptionPane.INFORMATION_MESSAGE);
             }
-            else if(e.getSource().equals(cancelButton)){
-
+            else if(e.getSource().equals(cancelButton)) {
+                ImageIcon tmp = new ImageIcon("cross.png");
+                Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
+                int n = JOptionPane.showOptionDialog(newDownloadPanel, "Would you like to delete this download?", "Delete", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, tmp, options,options[2]);
+                switch(n){
+                    case 0:
+                        fileProperties = null;
+                        Manager.getAction("main.update");
+                        break;
+                    case 1:
+                        // TODO: I should implement the file delete part
+                        break;
+                    case 2:
+                        break;
+                }
             }
             else if(e.getSource().equals(directoryButton)){
                 if(Desktop.isDesktopSupported()){

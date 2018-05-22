@@ -83,6 +83,9 @@ public class Manager {
                     case "show":
                         main.show();
                         break;
+                    case "update":
+                        main.updateDownloads();
+                        break;
                 }
             break;
 

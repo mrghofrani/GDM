@@ -9,8 +9,8 @@ public class MainFrame {
     private JPanel mainPanel;
     private MainFrameActionListener actionListener;
     private MouseImplement mouseListener = new MouseImplement();
-    private HashMap<String,FileProperties > processingOrder = new HashMap<>();
     private ArrayList<NewDownloadPanel> processingNewDownloads = new ArrayList<>();
+    private HashMap<String,FileProperties > processingOrder = new HashMap<>();
     private HashMap<String,FileProperties> completedOrder = new HashMap<>();
     private HashMap<String,FileProperties> queueOrder = new HashMap<>();
     private ArrayList<NewDownloadPanel> queueNewDownload = new ArrayList<>();
@@ -98,6 +98,7 @@ public class MainFrame {
     // Main Panel
     private JPanel processingPanel;
     private JScrollPane processingScrollPane;
+    private JLabel nothing;
 
     private JPanel queuePanel;
     private JScrollPane queueScrollPane;
@@ -233,8 +234,15 @@ public class MainFrame {
 
         // Processing Panel
         processingPanel = new JPanel();
+        nothing = new JLabel(" Nothing is here :) " + "\n" +  " Hit the download button.");
+        nothing.setHorizontalTextPosition(JLabel.CENTER);
+        nothing.setVerticalTextPosition(JLabel.BOTTOM);
+        nothing.setForeground(Color.GRAY);
+        nothing.setIcon(new ImageIcon("sunbed.png"));
+        nothing.setAlignmentX(Component.CENTER_ALIGNMENT);
         processingPanel.setLayout(new BoxLayout(processingPanel,BoxLayout.Y_AXIS));
         processingScrollPane = new JScrollPane(processingPanel);
+        processingPanel.add(nothing);
 
         // Queue Panel
         queuePanel = new JPanel();
@@ -310,13 +318,12 @@ public class MainFrame {
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
                 if(!processingOrder.isEmpty())
-                    updateCentralPanel();
+                    comfortableResize();
             }
         });
     }
 
     public void show(){
-//        SystemTrayHandler();
         background.pack();
         background.setVisible(true);
     }
@@ -353,46 +360,28 @@ public class MainFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(setting) ) {
-//                settingFrame.show();
                 Manager.getAction("setting.show");
             }
             else if (e.getSource().equals(settingItem)){
-//                settingFrame.show();
                 Manager.getAction("setting.show");
             }
             else if (e.getSource().equals(newDownload)){
                 Manager.getAction("newDownload.show");
             }
             else if(e.getSource().equals(newDownloadItem)){
-//                downloadFrame.show();
                 Manager.getAction("newDownload.show");
             }
             else if (e.getSource().equals(exitItem)){
                 System.exit(0);
             }
-//            else if(e.getSource().equals(trayIcon)){
-//                background.setVisible(true);
-//            }
-//            else if(e.getSource().equals(newDownloadPop)){
-////                NewDownloadFrame.getInstance().show();
-//                Manager.getAction("newDownload.show");
-//            }
-//            else if(e.getSource().equals(settingPop)){
-////                SettingFrame.getInstanceOf().show();
-//                Manager.getAction("setting.show");
-//            }
-//            else if(e.getSource().equals(exitPop)) {
-//                System.exit(0);
-//            }
-//            else if(e.getSource().equals(trayIcon) || e.getSource().equals(systemTray) || e.getSource().equals(trayPopupMenu)){
-//                background.setVisible(true);
-//            }
+
             else if(e.getSource().equals(processing)){
                 mainPanel.remove(queueScrollPane);
                 mainPanel.add(processingScrollPane,BorderLayout.CENTER);
-                updateCentralPanel();
                 background.revalidate();
                 mainPanel.revalidate();
+//                comfortableResize();
+//                comfortableResize();
             }
             else if(e.getSource().equals(completed)){
                 queuePanel.setVisible(false);
@@ -407,14 +396,15 @@ public class MainFrame {
             else if(e.getSource().equals(cancel)){
                 ListIterator<NewDownloadPanel> iterator = processingNewDownloads.listIterator();
                 while(iterator.hasNext()){
-                    if(iterator.next().isSelected()) {
+                    NewDownloadPanel tmp = (NewDownloadPanel) iterator.next();
+                    if(tmp.isSelected()) {
                         iterator.next().deleteFileProperties();
                         iterator.remove();
                     }
                 }
                 mainPanel.revalidate();
                 background.revalidate();
-                updateCentralPanel();
+                comfortableResize();
             }
         }
 
@@ -451,8 +441,12 @@ public class MainFrame {
     }
 
     public void setNewDownload(FileProperties fileProperties) {
-        processingOrder.put(fileProperties.getCreated(),fileProperties);
-        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, processingPanel.getSize());
+        if(processingPanel.isAncestorOf(nothing)){
+            processingPanel.remove(nothing);
+            SwingUtilities.updateComponentTreeUI(processingPanel);
+        }
+        processingOrder.put(fileProperties.getCreated(), fileProperties);
+        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, (int)processingPanel.getSize().getWidth());
         processingPanel.add(tmp.getPanel());
         processingNewDownloads.add(tmp);
         background.revalidate();
@@ -467,7 +461,7 @@ public class MainFrame {
         else if ( numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads())){
             setNewDownload(fileProperties);
         }
-        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,processing.getSize());
+        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processing.getSize().getWidth());
         queuePanel.add(tmp.getPanel());
         queueNewDownload.add(tmp);
         background.revalidate();
@@ -478,12 +472,6 @@ public class MainFrame {
     public Dimension getCentralPanelSize(){
         return processingPanel.getSize();
     }
-
-//    public void setDownload(){
-//        for (FileProperties item: processingOrder.values()) {
-//
-//        }
-//    }
 
 
     public void showRightPanel (FileProperties fileProperties){
@@ -503,12 +491,39 @@ public class MainFrame {
         mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
         background.revalidate();
         mainPanel.revalidate();
-        updateCentralPanel();
+        comfortableResize();
     }
-    private void updateCentralPanel(){
-        for (NewDownloadPanel item: processingNewDownloads) {
+
+    private void comfortableResize(){
+        for (NewDownloadPanel item : processingNewDownloads) {
             item.setSize(processingPanel.getWidth());
         }
+        SwingUtilities.updateComponentTreeUI(processingPanel);
+    }
+
+    private void updateProcessingPanel(){
+        processingPanel.removeAll();
+        processingPanel.setLayout(new BoxLayout(processingPanel,BoxLayout.Y_AXIS));
+        SwingUtilities.updateComponentTreeUI(processingPanel);
+        if(processingNewDownloads.isEmpty()){
+            processingPanel.add(nothing);
+        }
+        else {
+            for (NewDownloadPanel item : processingNewDownloads) {
+                processingPanel.add(item.getPanel());
+            }
+        }
+    }
+
+    public void updateDownloads(){
+        Iterator iterator = processingNewDownloads.iterator();
+        while(iterator.hasNext()){
+            NewDownloadPanel tmp =(NewDownloadPanel)iterator.next();
+            if(tmp.getFileProperties() == null) {
+                iterator.remove();
+            }
+        }
+        updateProcessingPanel();
     }
 
 }

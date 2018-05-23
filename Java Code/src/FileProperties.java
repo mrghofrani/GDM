@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class FileProperties {
+public class FileProperties implements Serializable {
     private String fileName;
     private String status;
     private String size;
@@ -62,5 +63,10 @@ public class FileProperties {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return fileName + " " + status + " " + size + " " + created + " " + modified + " " + address;
     }
 }

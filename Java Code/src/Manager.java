@@ -11,6 +11,7 @@ public class Manager {
     private static MainFrame  main;
     private static NewDownloadFrame newDownload;
     private static SettingFrame setting;
+    private static HelpFrame helpFrame;
     private static String downloadPath = "C:\\Users\\KimiaSe7en\\Desktop";
     private static String numberOfDownloads = "infinitive";
 
@@ -40,7 +41,9 @@ public class Manager {
         }
         main = new MainFrame();
         newDownload = new NewDownloadFrame();
+        
         setting = new SettingFrame();
+        helpFrame = new HelpFrame();
         getAction("main.show");
         if(SystemTray.isSupported()) {
             systemTray = SystemTray.getSystemTray();
@@ -85,7 +88,7 @@ public class Manager {
                         main.show();
                         break;
                     case "update":
-                        main.updateDownloads();
+                        main.updateProcessingDownloads();
                         break;
                 }
             break;
@@ -169,7 +172,7 @@ public class Manager {
 
 
     public static String getNumberOfDownloads(){
-        return numberOfDownloads;
+        return setting.getNumberOfDownload();
     }
 
     public static void setNumberOfDownloads(String number){
@@ -191,8 +194,13 @@ public class Manager {
     public static void addNewDownloadQueue(FileProperties fileProperties){
         main.setNewDownloadQueue(fileProperties);
     }
+
     public static void safelyExit(){
+//        ObjectOutput input
         systemTray.remove(trayIcon);
         System.exit(0);
+    }
+    public static void showAbout(){
+        helpFrame.show();
     }
 }

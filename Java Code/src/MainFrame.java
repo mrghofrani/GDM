@@ -16,16 +16,6 @@ public class MainFrame {
     private ArrayList<NewDownloadPanel> queueNewDownload = new ArrayList<>();
     private int numberOfAddedToProcessing = 0;
 
-//    //SystemTray and its related components
-//    SystemTray systemTray = SystemTray.getSystemTray();
-//    TrayIcon trayIcon;
-//    PopupMenu trayPopupMenu = new PopupMenu();
-//    MenuItem newDownloadPop = new MenuItem("new download");
-//    MenuItem pausePop = new MenuItem("Pause all downloads");
-//    MenuItem resumePop = new MenuItem("resume all downloads");
-//    MenuItem settingPop = new MenuItem("settings");
-//    MenuItem exitPop = new MenuItem("exit");
-
     //menuBar and its related elements
     private JMenuBar menuBar;
     private JMenu download;
@@ -224,6 +214,7 @@ public class MainFrame {
 
         aboutItem = new JMenuItem("About");
         aboutItem.setAccelerator(KeyStroke.getKeyStroke("control A"));
+        aboutItem.addActionListener(actionListener);
 
         helpMenu.add(aboutItem);
         menuBar.add(download);
@@ -248,9 +239,7 @@ public class MainFrame {
         queuePanel = new JPanel();
         queuePanel.setLayout(new BoxLayout(queuePanel,BoxLayout.Y_AXIS));
         queueScrollPane = new JScrollPane(queuePanel);
-        queuePanel.setVisible(false);
-
-
+        queuePanel.setVisible(true);
 
         // right Panel
         rightPanel = new JPanel();
@@ -328,58 +317,27 @@ public class MainFrame {
         background.setVisible(true);
     }
 
-//    private void SystemTrayHandler(){
-//        if(!SystemTray.isSupported()){
-//            JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//        Image image = Toolkit.getDefaultToolkit().getImage("Java Code/favicon (1).ico");
-//        newDownloadPop.addActionListener(actionListener);
-//        settingPop.addActionListener(actionListener);
-//        exitPop.addActionListener(actionListener);
-//        trayPopupMenu.addActionListener(actionListener);
-//
-//
-//        // adding elements to trayPopupMenu
-//        trayPopupMenu.add(newDownloadPop);
-//        trayPopupMenu.add(pausePop);
-//        trayPopupMenu.add(resumePop);
-//        trayPopupMenu.add(settingPop);
-//        trayPopupMenu.add(exitPop);
-//        trayIcon = new TrayIcon(image,"GDM The Fastest Download Manager",trayPopupMenu);
-//        trayIcon.setImageAutoSize(true);
-//        try{
-//            systemTray.add(trayIcon);
-//        }catch(AWTException awtException){
-//            JOptionPane.showMessageDialog(background,"Ops.. Something went wrong","Error",JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-
-
     private class MainFrameActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(setting) ) {
+            if (e.getSource().equals(setting) || e.getSource().equals(settingItem) ) {
                 Manager.getAction("setting.show");
             }
-            else if (e.getSource().equals(settingItem)){
-                Manager.getAction("setting.show");
-            }
-            else if (e.getSource().equals(newDownload)){
-                Manager.getAction("newDownload.show");
-            }
-            else if(e.getSource().equals(newDownloadItem)){
+            else if (e.getSource().equals(newDownload) || e.getSource().equals(newDownloadItem)){
                 Manager.getAction("newDownload.show");
             }
             else if (e.getSource().equals(exitItem)){
                 Manager.safelyExit();
             }
-
+            else if(e.getSource().equals(aboutItem)){
+                Manager.showAbout();
+            }
             else if(e.getSource().equals(processing)){
                 BorderLayout layout = (BorderLayout)mainPanel.getLayout();
                 mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
                 mainPanel.add(processingScrollPane, BorderLayout.CENTER);
                 SwingUtilities.updateComponentTreeUI(mainPanel);
+                updateProcessingPanel();
             }
             else if(e.getSource().equals(completed)){
                 queuePanel.setVisible(false);
@@ -390,8 +348,9 @@ public class MainFrame {
                 mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
                 mainPanel.add(queueScrollPane, BorderLayout.CENTER);
                 SwingUtilities.updateComponentTreeUI(mainPanel);
+                updateQueuePanel();
             }
-            else if(e.getSource().equals(cancel)){
+            else if(e.getSource().equals(cancel)){ // TODO: I should implement the cancel button working for each panel that is open
                 Iterator iterator = processingNewDownloads.iterator();
                 Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
                 ImageIcon tmp = new ImageIcon("cross.png");
@@ -419,7 +378,7 @@ public class MainFrame {
                                         iterator.remove();
                                     }
                                 }
-                                updateDownloads();
+                                updateProcessingDownloads();
                             }
                             else {
                                 JOptionPane.showMessageDialog(background, "Nothing was selected,\n please select something then press cancel button", "Delete", JOptionPane.WARNING_MESSAGE);
@@ -433,7 +392,7 @@ public class MainFrame {
                         // Do nothing
                         break;
                 }
-                updateDownloads();
+                updateProcessingDownloads();
                 mainPanel.revalidate();
                 background.revalidate();
             }
@@ -485,18 +444,29 @@ public class MainFrame {
     }
 
     public void setNewDownloadQueue(FileProperties fileProperties){
-        queueOrder.put(fileProperties.getCreated(),fileProperties);
-        if(Manager.getNumberOfDownloads().equals("infinitive")){
-            processingOrder.put(fileProperties.getCreated(),fileProperties);
+        boolean keepGoing = false;
+        if(Manager.getNumberOfDownloads().equals("infinitive") ){
+//            queueOrder.put(fileProperties.getCreated(),fileProperties);
+            keepGoing = true;
         }
         else if ( numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads())){
-            setNewDownload(fileProperties);
+//            setNewDownload(fileProperties);
+//            queueOrder.put(fileProperties.getCreated(),fileProperties);
+            keepGoing = true;
+            numberOfAddedToProcessing++;
         }
-        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processing.getSize().getWidth());
-        queuePanel.add(tmp.getPanel());
-        queueNewDownload.add(tmp);
-        background.revalidate();
-        mainPanel.revalidate();
+//        queueOrder.put(fileProperties.getCreated(),fileProperties);
+        if(keepGoing){
+            NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
+            queuePanel.remove(nothing);
+            queuePanel.add(tmp.getPanel());
+            queueNewDownload.add(tmp);
+        }
+        else {
+            JOptionPane.showMessageDialog(background,"Maximum number of queue reached!","Queue",JOptionPane.WARNING_MESSAGE);
+        }
+        SwingUtilities.updateComponentTreeUI(mainPanel);
+        SwingUtilities.updateComponentTreeUI(queuePanel);
     }
 
 
@@ -529,7 +499,11 @@ public class MainFrame {
         for (NewDownloadPanel item : processingNewDownloads) {
             item.setSize(processingPanel.getWidth());
         }
+        for (NewDownloadPanel item: queueNewDownload) {
+            item.setSize(queuePanel.getWidth());
+        }
         SwingUtilities.updateComponentTreeUI(processingPanel);
+        SwingUtilities.updateComponentTreeUI(queuePanel);
     }
 
     private void updateProcessingPanel(){
@@ -546,7 +520,7 @@ public class MainFrame {
         }
     }
 
-    public void updateDownloads(){
+    public void updateProcessingDownloads(){
         Iterator iterator = processingNewDownloads.iterator();
         while(iterator.hasNext()){
             NewDownloadPanel tmp =(NewDownloadPanel)iterator.next();
@@ -557,4 +531,17 @@ public class MainFrame {
         updateProcessingPanel();
     }
 
+    private void updateQueuePanel(){
+        queuePanel.removeAll();
+        queuePanel.setLayout(new BoxLayout(queuePanel,BoxLayout.Y_AXIS));
+        if(queueNewDownload.isEmpty()){
+            queuePanel.add(nothing);
+        }
+        else {
+            for (NewDownloadPanel item : queueNewDownload) {
+                queuePanel.add(item.getPanel());
+            }
+        }
+        SwingUtilities.updateComponentTreeUI(queuePanel);
+    }
 }

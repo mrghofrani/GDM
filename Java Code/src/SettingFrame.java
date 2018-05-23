@@ -1,20 +1,22 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SettingFrame{
+public class SettingFrame implements Serializable {
     // Main basis
-//    private static SettingFrame instance;
     private JFrame settingFrame;
-//    private Setting setting = Setting.getInstanceOf();
 
     // Download limit Panel
     private JPanel downloadLimitPanel;
     private ButtonGroup downloadLimitButtonGroup;
     private JRadioButton infinitiveDownloads;
     private JRadioButton finiteDownloads;
+    private boolean infinitive;
     private JSpinner numberOfDownloadSpinner;
 
     //theme Panel's components
@@ -38,13 +40,6 @@ public class SettingFrame{
     private ActionHandler actionHandler = new ActionHandler();
 
 
-//    public static SettingFrame getInstanceOf(){
-//        if(instance == null){
-//            instance = new SettingFrame();
-//        }
-//        return instance;
-//    }
-
     public SettingFrame(){
         settingFrame = new JFrame("Setting");
         settingFrame.setLayout(new BoxLayout(settingFrame.getContentPane(),BoxLayout.Y_AXIS));
@@ -55,12 +50,20 @@ public class SettingFrame{
         infinitiveDownloads = new JRadioButton("Infinite number of buttons");
         infinitiveDownloads.setMnemonic(KeyEvent.VK_I);
         infinitiveDownloads.setSelected(true);
+        infinitiveDownloads.addActionListener(actionHandler);
         finiteDownloads = new JRadioButton("Number of download");
         finiteDownloads.setMnemonic(KeyEvent.VK_N);
         finiteDownloads.setSelected(false);
+        finiteDownloads.addActionListener(actionHandler);
         numberOfDownloadSpinner = new JSpinner(new SpinnerNumberModel(1,1,10,1));
         numberOfDownloadSpinner.setBackground(Color.WHITE);
         numberOfDownloadSpinner.setEditor(new JSpinner.DefaultEditor(numberOfDownloadSpinner));
+        numberOfDownloadSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                SwingUtilities.updateComponentTreeUI(numberOfDownloadSpinner);
+            }
+        });
         downloadLimitButtonGroup.add(infinitiveDownloads);
         downloadLimitButtonGroup.add(finiteDownloads);
         downloadLimitPanel.add(infinitiveDownloads);
@@ -115,10 +118,38 @@ public class SettingFrame{
 
     }
 
+    @Override
+    public String toString() {
+        String returnString = "";
+        returnString += "infinitive ";
+
+        if(infinitive) returnString += "infinitive";
+        else returnString += numberOfDownloadSpinner.getValue();
+        returnString += "\n";
+
+        returnString += "Theme ";
+        returnString += themeComboBox.getSelectedItem();
+        returnString += "\n";
+
+        returnString += "Location ";
+        returnString += locationString;
+        returnString += "\n";
+
+        return returnString;
+    }
+
     public void show(){
         settingFrame.pack();
         settingFrame.setVisible(true);
     }
+
+    public String getNumberOfDownload(){
+        if(infinitive)
+            return "infinitive";
+        else
+            return numberOfDownloadSpinner.getValue() + "";
+    }
+
     private class ActionHandler implements ActionListener {
 
         @Override
@@ -150,10 +181,12 @@ public class SettingFrame{
                 System.out.println(Manager.getDownloadPath());
             }
             else if(e.getSource().equals(finiteDownloads)){
-                numberOfDownloadSpinner.setEnabled(false);
+                numberOfDownloadSpinner.setEnabled(true);
+                infinitive = false;
             }
             else if(e.getSource().equals(infinitiveDownloads)){
-                numberOfDownloadSpinner.setEnabled(true);
+                numberOfDownloadSpinner.setEnabled(false);
+                infinitive = true;
             }
         }
     }

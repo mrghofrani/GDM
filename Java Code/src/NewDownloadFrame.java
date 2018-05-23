@@ -146,6 +146,7 @@ public class NewDownloadFrame {
                 Date date = new Date();
                 Manager.addNewDownloadQueue(new FileProperties(webPageAddress.getText(),"not completed",volumeValue.getText(),dateFormat.format(date),locationText.getText()));
                 downloadFrame.dispose();
+                System.out.println("Action");
             }
         }
     }

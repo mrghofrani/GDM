@@ -15,8 +15,8 @@ public class Manager {
     private static String numberOfDownloads = "infinitive";
 
     //SystemTray and its related components
-    private SystemTray systemTray = SystemTray.getSystemTray();
-    private TrayIcon trayIcon;
+    private static SystemTray systemTray;
+    private static TrayIcon trayIcon;
     private PopupMenu trayPopupMenu = new PopupMenu();
     private MenuItem newDownloadPop = new MenuItem("new download");
     private MenuItem pausePop = new MenuItem("Pause all downloads");
@@ -42,14 +42,15 @@ public class Manager {
         newDownload = new NewDownloadFrame();
         setting = new SettingFrame();
         getAction("main.show");
-        SystemTrayHandler();
+        if(SystemTray.isSupported()) {
+            systemTray = SystemTray.getSystemTray();
+            SystemTrayHandler();
+        }
+        else
+            JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
     }
 
     private void SystemTrayHandler(){
-        if(!SystemTray.isSupported()){
-            JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         Image image = Toolkit.getDefaultToolkit().getImage("pin.png");
         newDownloadPop.addActionListener(actionListener);
         settingPop.addActionListener(actionListener);
@@ -122,7 +123,7 @@ public class Manager {
                 Manager.getAction("setting.show");
             }
             else if(e.getSource().equals(exitPop)) {
-                System.exit(0);
+                safelyExit();
             }
         }
 
@@ -189,5 +190,9 @@ public class Manager {
 
     public static void addNewDownloadQueue(FileProperties fileProperties){
         main.setNewDownloadQueue(fileProperties);
+    }
+    public static void safelyExit(){
+        systemTray.remove(trayIcon);
+        System.exit(0);
     }
 }

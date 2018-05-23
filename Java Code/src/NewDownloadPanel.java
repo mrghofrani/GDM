@@ -208,7 +208,9 @@ public class NewDownloadPanel {
                     case 1:
                         // TODO: I should implement the file delete part
                         break;
-                    case 2:
+
+                    default:
+                        // Do nothing
                         break;
                 }
             }

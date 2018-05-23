@@ -372,39 +372,70 @@ public class MainFrame {
                 Manager.getAction("newDownload.show");
             }
             else if (e.getSource().equals(exitItem)){
-                System.exit(0);
+                Manager.safelyExit();
             }
 
             else if(e.getSource().equals(processing)){
-                mainPanel.remove(queueScrollPane);
-                mainPanel.add(processingScrollPane,BorderLayout.CENTER);
-                background.revalidate();
-                mainPanel.revalidate();
-//                comfortableResize();
-//                comfortableResize();
+                BorderLayout layout = (BorderLayout)mainPanel.getLayout();
+                mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+                mainPanel.add(processingScrollPane, BorderLayout.CENTER);
+                SwingUtilities.updateComponentTreeUI(mainPanel);
             }
             else if(e.getSource().equals(completed)){
                 queuePanel.setVisible(false);
                 processingPanel.setVisible(false);
             }
             else if(e.getSource().equals(queue)){
-                mainPanel.remove(processingScrollPane);
-                mainPanel.add(queueScrollPane,BorderLayout.CENTER);
-                background.revalidate();
-                mainPanel.revalidate();
+                BorderLayout layout = (BorderLayout)mainPanel.getLayout();
+                mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+                mainPanel.add(queueScrollPane, BorderLayout.CENTER);
+                SwingUtilities.updateComponentTreeUI(mainPanel);
             }
             else if(e.getSource().equals(cancel)){
-                ListIterator<NewDownloadPanel> iterator = processingNewDownloads.listIterator();
-                while(iterator.hasNext()){
-                    NewDownloadPanel tmp = (NewDownloadPanel) iterator.next();
-                    if(tmp.isSelected()) {
-                        iterator.next().deleteFileProperties();
-                        iterator.remove();
-                    }
+                Iterator iterator = processingNewDownloads.iterator();
+                Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
+                ImageIcon tmp = new ImageIcon("cross.png");
+                int n = JOptionPane.showOptionDialog(background, "Would you like to delete this download?", "Delete", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, tmp, options,options[2]);
+                switch(n){
+                    case 0:
+                        if (processingNewDownloads.isEmpty())
+                            JOptionPane.showMessageDialog(background, "Nothing to delete!", "Delete", JOptionPane.WARNING_MESSAGE);
+                        else {
+                            boolean found = false;
+
+                            while (iterator.hasNext()) {
+                                NewDownloadPanel item = (NewDownloadPanel) iterator.next();
+                                if (item.isSelected()) {
+                                    found = true;
+                                    iterator.remove();
+                                    break;
+                                }
+                            }
+                            if (found) {
+                                while (iterator.hasNext()) {
+                                    NewDownloadPanel item = (NewDownloadPanel) iterator.next();
+                                    if (item.isSelected()) {
+                                        item.deleteFileProperties();
+                                        iterator.remove();
+                                    }
+                                }
+                                updateDownloads();
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(background, "Nothing was selected,\n please select something then press cancel button", "Delete", JOptionPane.WARNING_MESSAGE);
+                            }
+                        }
+                        break;
+                    case 1:
+                        // TODO: I should implement the file delete
+                        break;
+                    default:
+                        // Do nothing
+                        break;
                 }
+                updateDownloads();
                 mainPanel.revalidate();
                 background.revalidate();
-                comfortableResize();
             }
         }
 

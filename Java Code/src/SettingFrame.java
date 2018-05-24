@@ -229,7 +229,14 @@ public class SettingFrame implements Serializable {
            }
         }
         else {
+            infinitive = true;
+            ArrayList<String> themes = new ArrayList<>();
+            for (UIManager.LookAndFeelInfo item: UIManager.getInstalledLookAndFeels())
+                themes.add(item.getClassName());
+            themeComboBox = new JComboBox(themes.toArray());
+            themeComboBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
 
+            
         }
     }
 

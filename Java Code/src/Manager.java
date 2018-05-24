@@ -165,12 +165,12 @@ public class Manager {
     }
 
     public static String getDownloadPath(){
-        return downloadPath;
+        return setting.getDownloadPath();
     }
 
-    public static void setDownloadPath(String path){
-        downloadPath = path;
-    }
+//    public static void setDownloadPath(String path){
+//        downloadPath = path;
+//    }
 
 
     public static String getNumberOfDownloads(){

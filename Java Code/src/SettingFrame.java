@@ -1,11 +1,12 @@
+import org.omg.CORBA.Object;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class SettingFrame implements Serializable {
     // Main basis
     private JFrame settingFrame;
+    private final String SETTING_PATH = "files/setting.gdm";
 
     // Download limit Panel
     private JPanel downloadLimitPanel;
@@ -174,24 +176,61 @@ public class SettingFrame implements Serializable {
 
     }
 
-    @Override
-    public String toString() {
-        String returnString = "";
-        returnString += "infinitive ";
+    public void initialize(){
+        File file = new File(SETTING_PATH);
+        if(file.exists()){
+           FileInputStream fileInputStream;
+           ObjectInputStream objectInputStream;
+           try{
+               fileInputStream = new FileInputStream(file);
+               objectInputStream = new ObjectInputStream(fileInputStream);
+               ArrayList<String> arrayList = (ArrayList)objectInputStream.readObject();
 
-        if(infinitive) returnString += "infinitive";
-        else returnString += numberOfDownloadSpinner.getValue();
-        returnString += "\n";
+               // Preparing number of downloads
+               int index = 0;
+               if(arrayList.get(index).equals(infinitive))
+                   infinitive = true;
+               else{
+                   infinitive = false;
+                   numberOfDownloadSpinner.setValue(arrayList.get(index));
+               }
 
-        returnString += "Theme ";
-        returnString += themeComboBox.getSelectedItem();
-        returnString += "\n";
 
-        returnString += "Location ";
-        returnString += locationString;
-        returnString += "\n";
+               // Preparing theme
+               index++;
+               ArrayList<String> themes = new ArrayList<>();
+               boolean themeFound = false;
+               for (UIManager.LookAndFeelInfo item: UIManager.getInstalledLookAndFeels()) {
+                   if(item.equals(arrayList.get(index)))
+                       themeFound = true;
+                   themes.add(item.getClassName());
+               }
+               themeComboBox = new JComboBox(themes.toArray());
+               if(themeFound)
+                   themeComboBox.setSelectedItem(arrayList.get(index));
+               else
+                   themeComboBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
 
-        return returnString;
+               // Preparing illegal websites
+               index++;
+               String[] illegalWebSites = ((String)arrayList.get(index)).split(" ");
+               for (String illegalWebSite: illegalWebSites)
+                    filterListModel.addElement(illegalWebSite);
+
+               // Preparing location of the download
+               index++;
+               locationText.setText(arrayList.get(index));
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           } catch (IOException e) {
+               e.printStackTrace();
+           } catch (ClassNotFoundException e) {
+               e.printStackTrace();
+           }
+        }
+        else {
+
+        }
     }
 
     public void show(){
@@ -205,12 +244,60 @@ public class SettingFrame implements Serializable {
         else
             return numberOfDownloadSpinner.getValue() + "";
     }
+
+    /**
+     * this method implements the
+     * serialization concept and
+     * stores the data into the file
+     */
+    public void backup(){
+        File file = new File(SETTING_PATH);
+        FileOutputStream fileOutputStream = null;
+        ObjectOutputStream objectOutputStream  = null;
+        try {
+            fileOutputStream = new FileOutputStream(file,false);
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(backupData());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * this method maintains all data and
+     * backs up them into an arrayList so
+     * back up method could write it into the file
+     * @return ArrayList of Setting fields
+     */
+    public ArrayList<String> backupData(){
+        ArrayList<String> returnValue = new ArrayList<>();
+
+        if(infinitive)returnValue.add("infinitive");
+        else returnValue.add(numberOfDownloadSpinner.getValue().toString());
+
+        returnValue.add((String)themeComboBox.getSelectedItem());
+
+        String tmp = "";
+        for (String item: getInvalidURLs())
+            tmp += item + " " ;
+        returnValue.add(tmp);
+
+        returnValue.add(locationText.getText());
+        return returnValue;
+    }
     
     public ArrayList<String> getInvalidURLs(){
         ArrayList<String> returnStrings = new ArrayList<>();
         for (int i = 0; i < filterListModel.size(); i++)
             returnStrings.add((String)filterListModel.getElementAt(i));
         return returnStrings;
+    }
+
+    public String getDownloadPath(){
+        return locationText.getText();
     }
     private class ActionHandler implements ActionListener {
 
@@ -237,7 +324,7 @@ public class SettingFrame implements Serializable {
                 locationChooser.setVisible(true);
                 locationChooser.showOpenDialog(null);
                 locationString = locationChooser.getSelectedFile().getAbsolutePath();
-                Manager.setDownloadPath(locationString);
+//                Manager.setDownloadPath(locationString);
                 locationText.setText(Manager.getDownloadPath());
                 locationText.revalidate();
                 System.out.println(Manager.getDownloadPath());

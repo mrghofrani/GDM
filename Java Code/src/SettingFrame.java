@@ -206,13 +206,12 @@ public class SettingFrame implements Serializable {
             return numberOfDownloadSpinner.getValue() + "";
     }
     
-//    public boolean contains(String input){
-//        filterListModel.
-//        for (:
-//             ) {
-//
-//        }
-//
+    public ArrayList<String> getInvalidURLs(){
+        ArrayList<String> returnStrings = new ArrayList<>();
+        for (int i = 0; i < filterListModel.size(); i++)
+            returnStrings.add((String)filterListModel.getElementAt(i));
+        return returnStrings;
+    }
     private class ActionHandler implements ActionListener {
 
         @Override

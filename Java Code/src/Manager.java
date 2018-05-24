@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 public class Manager {
 
@@ -205,8 +206,12 @@ public class Manager {
     public static void showAbout(){
         helpFrame.show();
     }
+    public static ArrayList<String> getInvalidURLs(){
+        return setting.getInvalidURLs();
+    }
 
     private void initialState(){
         main.initialize();
     }
+
 }

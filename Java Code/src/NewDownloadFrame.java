@@ -1,11 +1,17 @@
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class NewDownloadFrame {
@@ -57,6 +63,7 @@ public class NewDownloadFrame {
         webPageTitle.setAlignmentY(Component.LEFT_ALIGNMENT);
         webPageAddress = new JTextField("https://google.com");
         webPageAddress.setEditable(true);
+        webPageAddress.getDocument().addDocumentListener(actionHandler);
         webPageAddress.setBackground(Color.WHITE);
         webPagePanel.add(webPageTitle);
         webPagePanel.add(webPageAddress);
@@ -121,7 +128,7 @@ public class NewDownloadFrame {
         locationChooser.setCurrentDirectory(new File(Manager.getDownloadPath()));
     }
 
-    private class ActionHandler implements ActionListener{
+    private class ActionHandler implements ActionListener,DocumentListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -149,6 +156,41 @@ public class NewDownloadFrame {
                 System.out.println("Action");
             }
         }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLog(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLog(e);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLog(e);
+        }
+        private void updateLog(DocumentEvent e){
+            String tmp = "";
+            tmp = webPageAddress.getText();
+            if(isValid(tmp)){
+                downloadButton.setEnabled(true);
+                addToQueueButton.setEnabled(true);
+            }
+            else {
+                downloadButton.setEnabled(false);
+                addToQueueButton.setEnabled(false);
+            }
+        }
+    }
+    private boolean isValid(String url){
+        ArrayList<String> invalidURLs = Manager.getInvalidURLs();
+        for (String invalidURL:invalidURLs) {
+            if (url.startsWith(invalidURL))
+                return false;
+        }
+        return true;
     }
 
 }

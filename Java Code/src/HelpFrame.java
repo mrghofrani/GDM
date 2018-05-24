@@ -27,7 +27,7 @@ public class HelpFrame {
 
         nameLabel1 = new JLabel("Developer: ");
         nameLabel2 = new JLabel("Mohammadreza Ghofrani");
-        dateLabel1 = new JLabel("Starting Project Date: ");
+        dateLabel1 = new JLabel("Project Starting Date: ");
         dateLabel2 = new JLabel("12th Ordibehesht of 1397 year");
 
         bottomPanel.add(nameLabel1);

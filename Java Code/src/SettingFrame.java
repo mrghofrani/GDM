@@ -34,6 +34,15 @@ public class SettingFrame implements Serializable {
     private JFileChooser locationChooser;
 
     // illegal web
+    private JPanel filterPanel;
+    private JPanel westSideOfFilterPanel;
+    private JLabel filterLabel;
+    private JPanel centralSideOfFilterPanel;
+    private JList<String> filterList;
+    private JPanel eastSideOfFilterPanel;
+    private JButton addListButton;
+    private JButton deleteListButton;
+
 
     // reset button
     private JPanel setDefaultPanel;
@@ -86,6 +95,36 @@ public class SettingFrame implements Serializable {
         themePanel.add(theme);
         themePanel.add(themeComboBox);
         settingFrame.add(themePanel);
+
+        // filter Panel and its related elements
+        filterPanel = new JPanel(new BorderLayout(5,5));
+
+        westSideOfFilterPanel = new JPanel();
+        filterLabel = new JLabel("Filtered Sites: ");
+        westSideOfFilterPanel.add(filterLabel);
+        centralSideOfFilterPanel = new JPanel();
+        filterList = new JList<>();
+        filterList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        filterList.setLayoutOrientation(JList.VERTICAL);
+        filterList.setVisibleRowCount(-1);
+        filterList.setBackground(Color.ORANGE);
+        filterList.setBorder(BorderFactory.createLineBorder(Color.ORANGE,20));
+        centralSideOfFilterPanel.add(filterList);
+
+        eastSideOfFilterPanel = new JPanel();
+        eastSideOfFilterPanel.setLayout(new BoxLayout(eastSideOfFilterPanel,BoxLayout.Y_AXIS));
+        addListButton = new JButton();
+        addListButton.setText("Add");
+        deleteListButton = new JButton();
+        deleteListButton.setText("delete");
+        eastSideOfFilterPanel.add(addListButton);
+        eastSideOfFilterPanel.add(deleteListButton);
+
+        filterPanel.add(westSideOfFilterPanel,BorderLayout.WEST);
+        filterPanel.add(centralSideOfFilterPanel,BorderLayout.CENTER);
+        filterPanel.add(eastSideOfFilterPanel,BorderLayout.EAST);
+        settingFrame.add(filterPanel);
+
 
         // Default location Panel
         locationPanel = new JPanel(new FlowLayout());

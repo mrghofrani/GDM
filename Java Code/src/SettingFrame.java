@@ -1,10 +1,13 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class SettingFrame implements Serializable {
@@ -38,7 +41,9 @@ public class SettingFrame implements Serializable {
     private JPanel westSideOfFilterPanel;
     private JLabel filterLabel;
     private JPanel centralSideOfFilterPanel;
-    private JList<String> filterList;
+    private JList filterList;
+    private DefaultListModel filterListModel;
+    private JScrollPane filterScrollPane;
     private JPanel eastSideOfFilterPanel;
     private JButton addListButton;
     private JButton deleteListButton;
@@ -53,7 +58,7 @@ public class SettingFrame implements Serializable {
 
     public SettingFrame(){
         settingFrame = new JFrame("Setting");
-        settingFrame.setLayout(new BoxLayout(settingFrame.getContentPane(),BoxLayout.Y_AXIS));
+        settingFrame.setLayout(new BoxLayout(settingFrame.getContentPane(),BoxLayout.PAGE_AXIS));
 
         //download Panel
         downloadLimitPanel = new JPanel(new FlowLayout());
@@ -99,26 +104,35 @@ public class SettingFrame implements Serializable {
         // filter Panel and its related elements
         filterPanel = new JPanel(new BorderLayout(5,5));
 
-        westSideOfFilterPanel = new JPanel();
+        westSideOfFilterPanel = new JPanel(new BorderLayout());
         filterLabel = new JLabel("Filtered Sites: ");
         westSideOfFilterPanel.add(filterLabel);
         centralSideOfFilterPanel = new JPanel();
-        filterList = new JList<>();
+        filterListModel = new DefaultListModel();
+        filterList = new JList(filterListModel);
         filterList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         filterList.setLayoutOrientation(JList.VERTICAL);
-        filterList.setVisibleRowCount(-1);
-        filterList.setBackground(Color.ORANGE);
-        filterList.setBorder(BorderFactory.createLineBorder(Color.ORANGE,20));
-        centralSideOfFilterPanel.add(filterList);
+        filterList.setVisibleRowCount(5);
+        filterList.setOpaque(true);
+        filterList.setBackground(Color.WHITE);
+//        filterList.setSize(new Dimension(100,200));
+//        filterList.setBorder(BorderFactory.createLineBorder(Color.ORANGE,20));
+        filterScrollPane = new JScrollPane(filterList);
+        centralSideOfFilterPanel.add(filterScrollPane,BorderLayout.CENTER);
 
         eastSideOfFilterPanel = new JPanel();
-        eastSideOfFilterPanel.setLayout(new BoxLayout(eastSideOfFilterPanel,BoxLayout.Y_AXIS));
+        eastSideOfFilterPanel.setLayout(new GridLayout(4,1,5,5));
         addListButton = new JButton();
         addListButton.setText("Add");
+        addListButton.addActionListener(actionHandler);
         deleteListButton = new JButton();
-        deleteListButton.setText("delete");
+        deleteListButton.setText("Delete");
+        deleteListButton.setEnabled(false);
+        deleteListButton.addActionListener(actionHandler);
+        eastSideOfFilterPanel.add(new JLabel());
         eastSideOfFilterPanel.add(addListButton);
         eastSideOfFilterPanel.add(deleteListButton);
+        eastSideOfFilterPanel.add(new JLabel());
 
         filterPanel.add(westSideOfFilterPanel,BorderLayout.WEST);
         filterPanel.add(centralSideOfFilterPanel,BorderLayout.CENTER);
@@ -127,7 +141,8 @@ public class SettingFrame implements Serializable {
 
 
         // Default location Panel
-        locationPanel = new JPanel(new FlowLayout());
+        locationPanel = new JPanel();
+        locationPanel.setLayout(new BoxLayout(locationPanel,BoxLayout.LINE_AXIS));
         locationLabel = new JLabel("Location Of Downloads: ");
         locationString = new String(Manager.getDownloadPath());
         locationText = new JTextField(locationString);
@@ -190,7 +205,14 @@ public class SettingFrame implements Serializable {
         else
             return numberOfDownloadSpinner.getValue() + "";
     }
-
+    
+//    public boolean contains(String input){
+//        filterListModel.
+//        for (:
+//             ) {
+//
+//        }
+//
     private class ActionHandler implements ActionListener {
 
         @Override
@@ -228,6 +250,53 @@ public class SettingFrame implements Serializable {
             else if(e.getSource().equals(infinitiveDownloads)){
                 numberOfDownloadSpinner.setEnabled(false);
                 infinitive = true;
+            }
+            else if(e.getSource().equals(addListButton)) {
+                int state;
+                String tmp;
+                do {
+                    tmp = (String) JOptionPane.showInputDialog(settingFrame,
+                            "Enter your desired website or file \n to be filtered:",
+                            "Add to filter", JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            null);
+                    if (filterListModel.contains(tmp)) {
+                        JOptionPane.showMessageDialog(settingFrame,"Your input is already in the list");
+                        state = 4;
+                    }
+                    else {
+                        try {
+                            URL tmpUrl = new URL(tmp);
+                            state = 0;
+                        } catch (MalformedURLException e1) {
+                            if (tmp == null) state = 1;
+                            else {
+                                state = 2;
+                                JOptionPane.showMessageDialog(settingFrame, "Invalid url entered", "", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    }
+                }while (state == 2) ;
+                    if (state == 0) {
+                        filterListModel.add(filterListModel.getSize(), tmp);
+                        filterList.ensureIndexIsVisible(filterListModel.getSize());
+                        deleteListButton.setEnabled(true);
+                    }
+                }
+            else if (e.getSource().equals(deleteListButton)){
+                int[] indicies = filterList.getSelectedIndices();
+                if(indicies.length > 0){
+                    for (int i = indicies.length - 1; i >= 0 ; i--)
+                        filterListModel.removeElementAt(indicies[i]);
+
+                }
+                else{
+                    JOptionPane.showMessageDialog(settingFrame,"Select some items then click the button.","Cancel",JOptionPane.WARNING_MESSAGE);
+                }
+                if(filterListModel.isEmpty()){
+                    deleteListButton.setEnabled(false);
+                }
             }
         }
     }

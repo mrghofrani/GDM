@@ -19,7 +19,7 @@ public class HelpFrame {
         helpFrame.setLayout(new BorderLayout(5,5));
 
         topPanel = new JPanel();
-        logo = new JLabel(new ImageIcon("GDM-logo.png"));
+        logo = new JLabel(new ImageIcon("GDM-logo.jpg"));
         topPanel.add(logo);
 
         bottomPanel = new JPanel();

@@ -7,8 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class NewDownloadPanel {
+public class NewDownloadPanel implements Serializable {
     private FileProperties fileProperties;
     private JPanel newDownloadPanel;
     private ActionHandler actionHandler = new ActionHandler();
@@ -188,6 +189,10 @@ public class NewDownloadPanel {
         fileProperties = null;
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
     private class ActionHandler implements ActionListener{
 

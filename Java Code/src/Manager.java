@@ -41,7 +41,7 @@ public class Manager {
         }
         main = new MainFrame();
         newDownload = new NewDownloadFrame();
-        
+
         setting = new SettingFrame();
         helpFrame = new HelpFrame();
         getAction("main.show");
@@ -51,6 +51,7 @@ public class Manager {
         }
         else
             JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
+        initialState();
     }
 
     private void SystemTrayHandler(){
@@ -198,9 +199,14 @@ public class Manager {
     public static void safelyExit(){
 //        ObjectOutput input
         systemTray.remove(trayIcon);
+        main.backup();
         System.exit(0);
     }
     public static void showAbout(){
         helpFrame.show();
+    }
+
+    private void initialState(){
+        main.initialize();
     }
 }

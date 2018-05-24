@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 
 public class MainFrame {
@@ -10,11 +11,20 @@ public class MainFrame {
     private MainFrameActionListener actionListener;
     private MouseImplement mouseListener = new MouseImplement();
     private ArrayList<NewDownloadPanel> processingNewDownloads = new ArrayList<>();
-    private HashMap<String,FileProperties > processingOrder = new HashMap<>();
+//    private HashMap<String,FileProperties > processingOrder = new HashMap<>();
+//    private ArrayList<FileProperties> processingOrder = new ArrayList<>();
     private HashMap<String,FileProperties> completedOrder = new HashMap<>();
     private HashMap<String,FileProperties> queueOrder = new HashMap<>();
     private ArrayList<NewDownloadPanel> queueNewDownload = new ArrayList<>();
     private int numberOfAddedToProcessing = 0;
+    private FileInputStream fileInputStream;
+    private FileOutputStream fileOutputStream;
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
+    private final String PROCESSING_PATH = "files/list.gdm";
+    private final String REMOVED_PATH = "files/removed.gdm";
+    private final String QUEUE_PATH = "files/queue.gdm";
+
 
     //menuBar and its related elements
     private JMenuBar menuBar;
@@ -306,7 +316,9 @@ public class MainFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-                if(!processingOrder.isEmpty())
+//                if(!processingOrder.isEmpty())
+//                    comfortableResize();
+                if(!processingNewDownloads.isEmpty())
                     comfortableResize();
             }
         });
@@ -361,7 +373,11 @@ public class MainFrame {
                             JOptionPane.showMessageDialog(background, "Nothing to delete!", "Delete", JOptionPane.WARNING_MESSAGE);
                         else {
                             boolean found = false;
-
+                            try {
+                                BufferedWriter writer = new BufferedWriter(new FileWriter(REMOVED_PATH));
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
                             while (iterator.hasNext()) {
                                 NewDownloadPanel item = (NewDownloadPanel) iterator.next();
                                 if (item.isSelected()) {
@@ -435,7 +451,7 @@ public class MainFrame {
             processingPanel.remove(nothing);
             SwingUtilities.updateComponentTreeUI(processingPanel);
         }
-        processingOrder.put(fileProperties.getCreated(), fileProperties);
+//        processingOrder.add(fileProperties);
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, (int)processingPanel.getSize().getWidth());
         processingPanel.add(tmp.getPanel());
         processingNewDownloads.add(tmp);
@@ -544,4 +560,109 @@ public class MainFrame {
         }
         SwingUtilities.updateComponentTreeUI(queuePanel);
     }
+
+    /**
+     * when the programme is going to terminate this
+     * method is invoked by the Manager to get a backup
+     * from data that is showing to the user. The backed up
+     * data is ArrayList of FileProperties.
+     */
+    public void backup(){
+        // Backing up processing downloads
+        try{
+            FileOutputStream fileOutputStream = new FileOutputStream(PROCESSING_PATH,false);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.flush();
+//            ArrayList<FileProperties> tmp = new ArrayList<>(processingOrder.values());
+//            objectOutputStream.writeObject(processingOrder);
+            ArrayList<FileProperties> files = new ArrayList<>();
+            for (NewDownloadPanel item: processingNewDownloads)
+                files.add(item.getFileProperties());
+            objectOutputStream.writeObject(files);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Backing up queue downloads
+        try{
+            FileOutputStream fileOutputStream = new FileOutputStream(QUEUE_PATH,false);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+//            ArrayList<FileProperties> tmp = new ArrayList<>(processingOrder.values());
+//            objectOutputStream.writeObject(processingOrder);
+            ArrayList<FileProperties> files = new ArrayList<>();
+            for (NewDownloadPanel item: queueNewDownload)
+                files.add(item.getFileProperties());
+            objectOutputStream.writeObject(files);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * this method at first evaluates the whether the
+     * desired file is exists, then reads the object and
+     * build the FileProperties ArrayList and by using that
+     * creates the download panels. at the end it invokes the
+     * comfortableResize and updateProcessingPanel method to have a good GUI.
+     */
+    public void initialize(){
+        File file = new File(PROCESSING_PATH);
+        if(file.exists()) {
+            try {
+                FileInputStream fileInputStream = new FileInputStream(PROCESSING_PATH);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                ArrayList<FileProperties> downloadPanels = (ArrayList) objectInputStream.readObject();
+                for (FileProperties item : downloadPanels) {
+//                    processingNewDownloads.add(item);
+                    processingNewDownloads.add(new NewDownloadPanel(item, processingPanel.getWidth()));
+                }
+                comfortableResize();
+                updateProcessingPanel();
+                fileInputStream.close();
+                objectInputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        file = new File(QUEUE_PATH);
+        if(file.exists()){
+            try{
+                FileInputStream fileInputStream = new FileInputStream(QUEUE_PATH);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                ArrayList<FileProperties> downloadPanels = (ArrayList) objectInputStream.readObject();
+                for (FileProperties item : downloadPanels) {
+//                    processingNewDownloads.add(item);
+                    queueNewDownload.add(new NewDownloadPanel(item, processingPanel.getWidth()));
+                }
+                comfortableResize();
+                updateProcessingPanel();
+                fileInputStream.close();
+                objectInputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
+     * This method backs up the removed contents in the cancel button
+     */
+
 }

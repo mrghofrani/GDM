@@ -33,6 +33,8 @@ public class SettingFrame implements Serializable {
     private String locationString;
     private JFileChooser locationChooser;
 
+    // illegal web
+
     // reset button
     private JPanel setDefaultPanel;
     private JButton setDefaultButton;

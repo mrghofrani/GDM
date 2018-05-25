@@ -237,6 +237,12 @@ public class SettingFrame implements Serializable {
                 locationString = arrayList.get(index);
                 locationText.setText(locationString);
                 locationChooser.setCurrentDirectory(new File(locationString));
+
+                // Preparing for language
+                index++;
+                chosenLanguage = arrayList.get(index);
+                languageComboBox.setSelectedItem(chosenLanguage);
+                initializingComponentsLanguage();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -261,6 +267,8 @@ public class SettingFrame implements Serializable {
             themeComboBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
 
             locationText.setText(DEFULT_DOWNLOAD_PATH);
+            chosenLanguage = "English";
+            initializingComponentsLanguage();
         }
         initializingComponentsLanguage();
         initializingComponentsActionListener();
@@ -430,6 +438,8 @@ public class SettingFrame implements Serializable {
         for (String value: returnValue) {
             System.out.println(value);
         }
+
+        returnValue.add(chosenLanguage);
         return returnValue;
     }
     

@@ -18,8 +18,6 @@ public class SettingFrame implements Serializable {
     private JFrame settingFrame;
     private final String SETTING_PATH = "files/setting.gdm";
     private final String DEFULT_DOWNLOAD_PATH = "C:\\Users\\KimiaSe7en\\Desktop";
-    private final HashMap<String,HashMap<String,String>> language = new HashMap<>();
-    private String chosenLanguage = "Persian";
 
     // Download limit Panel
     private JPanel downloadLimitPanel;
@@ -55,6 +53,13 @@ public class SettingFrame implements Serializable {
     private JButton addListButton;
     private JButton deleteListButton;
 
+    // language Panel
+    private JPanel languagePanel;
+    private JLabel languageLabel;
+    private JComboBox languageComboBox;
+    private String chosenLanguage = "Persian";
+    private final HashMap<String,HashMap<String,String>> language = new HashMap<>();
+
 
     // reset button
     private JPanel setDefaultPanel;
@@ -63,7 +68,6 @@ public class SettingFrame implements Serializable {
     private ActionHandler actionHandler = new ActionHandler();
 
     public SettingFrame(){
-//        settingFrame = new JFrame("Setting");
         settingFrame = new JFrame();
         settingFrame.setLayout(new BoxLayout(settingFrame.getContentPane(),BoxLayout.PAGE_AXIS));
 
@@ -71,43 +75,41 @@ public class SettingFrame implements Serializable {
         downloadLimitPanel = new JPanel();
         downloadLimitPanel.setLayout(new BoxLayout(downloadLimitPanel,BoxLayout.LINE_AXIS));
         downloadLimitButtonGroup = new ButtonGroup();
-//        infinitiveDownloads = new JRadioButton("Infinite number of buttons");
         infinitiveDownloads = new JRadioButton();
         infinitiveDownloads.setMnemonic(KeyEvent.VK_I);
         infinitiveDownloads.setSelected(true);
-//        infinitiveDownloads.addActionListener(actionHandler);
-//        finiteDownloads = new JRadioButton("Number of download");
         finiteDownloads = new JRadioButton();
         finiteDownloads.setMnemonic(KeyEvent.VK_N);
         finiteDownloads.setSelected(false);
-//        finiteDownloads.addActionListener(actionHandler);
         numberOfDownloadSpinner = new JSpinner(new SpinnerNumberModel(1,1,10,1));
         numberOfDownloadSpinner.setBackground(Color.WHITE);
         numberOfDownloadSpinner.setEditor(new JSpinner.DefaultEditor(numberOfDownloadSpinner));
         downloadLimitButtonGroup.add(infinitiveDownloads);
         downloadLimitButtonGroup.add(finiteDownloads);
+        downloadLimitPanel.add(new JLabel("             "));
         downloadLimitPanel.add(infinitiveDownloads);
+        downloadLimitPanel.add(new JLabel("       "));
         downloadLimitPanel.add(finiteDownloads);
         downloadLimitPanel.add(numberOfDownloadSpinner);
+        downloadLimitPanel.add(new JLabel("              "));
         settingFrame.add(downloadLimitPanel);
 
 
         // Look And Feel Panel Code
         themePanel = new JPanel(new FlowLayout(5));
-//        theme = new JLabel("Look And Feel: ");
         theme = new JLabel();
         themeComboBox = new JComboBox();
         themeComboBox.setBackground(Color.WHITE);
-//        themeComboBox.addActionListener(actionHandler);
+        themePanel.add(new JLabel("             "));
         themePanel.add(theme);
         themePanel.add(themeComboBox);
+        themePanel.add(new JLabel("             "));
         settingFrame.add(themePanel);
 
         // filter Panel and its related elements
         filterPanel = new JPanel(new BorderLayout(5,5));
 
         westSideOfFilterPanel = new JPanel(new BorderLayout());
-//        filterLabel = new JLabel("Filtered Sites: ");
         filterLabel = new JLabel();
         westSideOfFilterPanel.add(filterLabel);
         centralSideOfFilterPanel = new JPanel();
@@ -124,12 +126,8 @@ public class SettingFrame implements Serializable {
         eastSideOfFilterPanel = new JPanel();
         eastSideOfFilterPanel.setLayout(new GridLayout(4,1,5,5));
         addListButton = new JButton();
-//        addListButton.setText("Add");
-//        addListButton.addActionListener(actionHandler);
         deleteListButton = new JButton();
-//        deleteListButton.setText("Delete");
         deleteListButton.setEnabled(false);
-//        deleteListButton.addActionListener(actionHandler);
         eastSideOfFilterPanel.add(new JLabel());
         eastSideOfFilterPanel.add(addListButton);
         eastSideOfFilterPanel.add(deleteListButton);
@@ -144,7 +142,6 @@ public class SettingFrame implements Serializable {
         // Default location Panel
         locationPanel = new JPanel();
         locationPanel.setLayout(new BoxLayout(locationPanel,BoxLayout.LINE_AXIS));
-//        locationLabel = new JLabel("Location Of Downloads: ");
         locationLabel = new JLabel();
         locationText = new JTextField();
         locationText.setEditable(false);
@@ -153,7 +150,6 @@ public class SettingFrame implements Serializable {
         locationChooser = new JFileChooser();
 //        locationChooser.setCurrentDirectory(new File(Manager.getDownloadPath())); TODO : I should add implement this part
 //        locationChooser.setCurrentDirectory(new File(locationString));
-//        locationChooser.setDialogTitle("Choose where you want to save your downloads");
         locationChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         locationChooser.setAcceptAllFileFilterUsed(false);
 //        locationText.setText(Manager.getDownloadPath()); TODO : I should add implement this part
@@ -164,9 +160,23 @@ public class SettingFrame implements Serializable {
         locationPanel.add(locationButton);
         settingFrame.add(locationPanel);
 
+
+        // language Panel
+        languagePanel = new JPanel();
+        languagePanel.setLayout(new BoxLayout(languagePanel,BoxLayout.LINE_AXIS));
+        languageLabel = new JLabel();
+        languageComboBox = new JComboBox();
+        languageComboBox.addItem("English");
+        languageComboBox.addItem("Persian");
+        languageComboBox.setSelectedItem(chosenLanguage);
+        languagePanel.add(new JLabel("             "));
+        languagePanel.add(languageLabel);
+        languagePanel.add(languageComboBox);
+        languagePanel.add(new JLabel("              "));
+        settingFrame.add(languagePanel);
+
         //default button
         setDefaultPanel = new JPanel();
-//        setDefaultButton = new JButton("reset to defaults");
         setDefaultButton = new JButton();
         setDefaultPanel.add(setDefaultButton);
         settingFrame.add(setDefaultPanel);
@@ -176,10 +186,7 @@ public class SettingFrame implements Serializable {
     }
 
     public void initialize(){
-//        createElements();
-
         File file = new File(SETTING_PATH);
-//        createElements();
         if(file.exists()){
             FileInputStream fileInputStream;
             ObjectInputStream objectInputStream;
@@ -190,40 +197,46 @@ public class SettingFrame implements Serializable {
 
                 // Preparing number of downloads
                 int index = 0;
-                if(arrayList.get(index).equals("infinitive"))
+                if(arrayList.get(index).equals("infinitive")) {
+                    infinitiveDownloads.setSelected(true);
+                    numberOfDownloadSpinner.setEnabled(false);
                     infinitive = true;
+                }
                 else{
                     infinitive = false;
+                    finiteDownloads.setSelected(true);
+                    numberOfDownloadSpinner.setEnabled(true);
                     numberOfDownloadSpinner.setValue(Integer.parseInt(arrayList.get(index)));
                 }
-
 
                 // Preparing theme
                 index++;
                 ArrayList<String> themes = new ArrayList<>();
                 boolean themeFound = false;
                 for (UIManager.LookAndFeelInfo item: UIManager.getInstalledLookAndFeels()) {
-                    if(item.equals(arrayList.get(index)))
+                    if (item.getClassName().equals(arrayList.get(index)))
                         themeFound = true;
-                    themes.add(item.getClassName());
+                    themeComboBox.addItem(item.getClassName());
                 }
-                for (String item: themes)
-                    themeComboBox.addItem(item);
-
                 if(themeFound)
                     themeComboBox.setSelectedItem(arrayList.get(index));
                 else
                     themeComboBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
+                Manager.updateUI((String)themeComboBox.getSelectedItem());
 
                 // Preparing illegal websites
                 index++;
-                String[] illegalWebSites = ((String)arrayList.get(index)).split(" ");
-                for (String illegalWebSite: illegalWebSites)
-                    filterListModel.addElement(illegalWebSite);
+                if(!arrayList.get(index).isEmpty()) {
+                    String[] illegalWebSites = ((String) arrayList.get(index)).split(" ");
+                    for (String illegalWebSite : illegalWebSites)
+                        filterListModel.addElement(illegalWebSite);
+                }
 
                 // Preparing location of the download
                 index++;
                 locationString = arrayList.get(index);
+                locationText.setText(locationString);
+                locationChooser.setCurrentDirectory(new File(locationString));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -234,6 +247,8 @@ public class SettingFrame implements Serializable {
         }
         else {
             infinitive = true;
+            numberOfDownloadSpinner.setEnabled(false);
+            infinitiveDownloads.setSelected(true);
             ArrayList<String> themes = new ArrayList<>();
             for (UIManager.LookAndFeelInfo item: UIManager.getInstalledLookAndFeels()){
                 themes.add(item.getClassName());
@@ -258,15 +273,15 @@ public class SettingFrame implements Serializable {
         languagePackageInitialize();
         settingFrame.setTitle(language.get("settingFrame").get(chosenLanguage));
         infinitiveDownloads.setText(language.get("infinitiveDownloads").get(chosenLanguage));
-        finiteDownloads.setText(language.get("infinitiveDownloads").get(chosenLanguage));
+        finiteDownloads.setText(language.get("finiteDownloads").get(chosenLanguage));
         theme.setText(language.get("theme").get(chosenLanguage));
         filterLabel.setText(language.get("filterLabel").get(chosenLanguage));
         addListButton.setText(language.get("addListButton").get(chosenLanguage));
         deleteListButton.setText(language.get("deleteListButton").get(chosenLanguage));
         locationLabel.setText(language.get("locationLabel").get(chosenLanguage));
         locationChooser.setDialogTitle(language.get("locationChooser").get(chosenLanguage));
+        languageLabel.setText(language.get("languageLabel").get(chosenLanguage));
         setDefaultButton.setText(language.get("setDefaultButton").get(chosenLanguage));
-
     }
 
     /**
@@ -285,7 +300,9 @@ public class SettingFrame implements Serializable {
         themeComboBox.addActionListener(actionHandler);
         addListButton.addActionListener(actionHandler);
         deleteListButton.addActionListener(actionHandler);
+        languageComboBox.addActionListener(actionHandler);
     }
+
     private void languagePackageInitialize(){
         HashMap<String,String> tip = new HashMap<>();
         tip.put("English","Setting");
@@ -327,6 +344,11 @@ public class SettingFrame implements Serializable {
         language.put("locationChooser",tip);
 
         tip = new HashMap<>();
+        tip.put("English","Language");
+        tip.put("Persian","زبان");
+        language.put("languageLabel",tip);
+
+        tip = new HashMap<>();
         tip.put("English","reset to defaults");
         tip.put("Persian","بازگشت به تنظیمات اولیه");
         language.put("setDefaultButton",tip);
@@ -349,11 +371,6 @@ public class SettingFrame implements Serializable {
         tip = new HashMap<>();
         tip.put("English","");
 
-    }
-    private void setComponentText(String chosenLanguage){
-        settingFrame.setTitle(language.get(settingFrame.getName()).get(chosenLanguage));
-        infinitiveDownloads.setText(language.get(finiteDownloads.getName()).get(chosenLanguage));
-        infinitiveDownloads.addActionListener(actionHandler);
     }
 
 
@@ -381,7 +398,8 @@ public class SettingFrame implements Serializable {
         try {
             fileOutputStream = new FileOutputStream(file,false);
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(backupData());
+            ArrayList<String> hello = backupData();
+            objectOutputStream.writeObject(hello);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -498,6 +516,10 @@ public class SettingFrame implements Serializable {
                 if(filterListModel.isEmpty()){
                     deleteListButton.setEnabled(false);
                 }
+            }
+            else if(e.getSource().equals(languageComboBox)){
+                chosenLanguage = (String)languageComboBox.getSelectedItem();
+                initializingComponentsLanguage();
             }
         }
     }

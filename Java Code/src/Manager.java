@@ -29,21 +29,10 @@ public class Manager {
     private ActionHandler actionListener = new ActionHandler();
 
     private Manager() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-        main = new MainFrame();
-        newDownload = new NewDownloadFrame();
 
+        main = new MainFrame();
         setting = new SettingFrame();
+        newDownload = new NewDownloadFrame();
         helpFrame = new HelpFrame();
         getAction("main.show");
         if(SystemTray.isSupported()) {
@@ -201,6 +190,7 @@ public class Manager {
 //        ObjectOutput input
         systemTray.remove(trayIcon);
         main.backup();
+        setting.backup();
         System.exit(0);
     }
     public static void showAbout(){
@@ -209,9 +199,26 @@ public class Manager {
     public static ArrayList<String> getInvalidURLs(){
         return setting.getInvalidURLs();
     }
-
+    public static void updateUI(String lookAndFeel){
+        try {
+            UIManager.setLookAndFeel(lookAndFeel);
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (InstantiationException e1) {
+            e1.printStackTrace();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e1) {
+            e1.printStackTrace();
+        }
+        for (Window window : Window.getWindows()) {
+            SwingUtilities.updateComponentTreeUI(window);
+            window.pack();
+        }
+    }
     private void initialState(){
         main.initialize();
+        setting.initialize();
     }
 
 }

@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -11,8 +13,6 @@ public class MainFrame {
     private MainFrameActionListener actionListener;
     private MouseImplement mouseListener = new MouseImplement();
     private ArrayList<NewDownloadPanel> processingNewDownloads = new ArrayList<>();
-//    private HashMap<String,FileProperties > processingOrder = new HashMap<>();
-//    private ArrayList<FileProperties> processingOrder = new ArrayList<>();
     private HashMap<String,FileProperties> completedOrder = new HashMap<>();
     private HashMap<String,FileProperties> queueOrder = new HashMap<>();
     private ArrayList<NewDownloadPanel> queueNewDownload = new ArrayList<>();
@@ -62,6 +62,7 @@ public class MainFrame {
     private JRadioButton bySize;
     private ButtonGroup sortBy;
     private JPopupMenu sortPopUp;
+    private JTextField searchText;
 
     private JButton setting;
 
@@ -96,24 +97,27 @@ public class MainFrame {
 
 
     // Main Panel
+    private JPanel parentPanel;
     private JPanel processingPanel;
+    private int counterProcessingPanel = 0;
     private JScrollPane processingScrollPane;
     private JLabel nothing;
 
     private JPanel queuePanel;
+    private int counterQueuePanel = 0;
     private JScrollPane queueScrollPane;
 
 
+        // initializing leftPanel
 
 
     public MainFrame() {
-        background = new JFrame("GDM");
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout(5,5));
-        actionListener = new MainFrameActionListener();
+            background = new JFrame("GDM");
+            mainPanel = new JPanel();
+            mainPanel.setLayout(new BorderLayout(5,5));
+            actionListener = new MainFrameActionListener();
 
-        // initializing leftPanel
-        leftPanel = new JPanel();
+            leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.Y_AXIS));
         processing = new JButton("Processing");
         processing.addActionListener(actionListener);
@@ -175,6 +179,24 @@ public class MainFrame {
         sortBy.add(byName);
         sortBy.add(byStatus);
 
+        searchText = new JTextField("Search Here ...");
+        searchText.setAlignmentY(JComponent.RIGHT_ALIGNMENT);
+        searchText.getDocument().addDocumentListener(actionListener);
+        searchText.addMouseListener(actionListener);
+        searchText.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                searchText.setText("");
+                System.out.println("hello");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                searchText.setText("Search Here");
+                System.out.println("Goodbye");
+            }
+        });
+
         toolBar = new JToolBar();
         toolBar.add(title);
         toolBar.add(newDownload);
@@ -184,6 +206,7 @@ public class MainFrame {
         toolBar.add(remove);
         toolBar.add(setting);
         toolBar.add(sort);
+        toolBar.add(searchText);
 
         // Designing menuBar
         menuBar = new JMenuBar();
@@ -234,20 +257,21 @@ public class MainFrame {
         // Central Panel
 
         // Processing Panel
-        processingPanel = new JPanel();
+        parentPanel = new JPanel(new BorderLayout());
+        processingPanel = new JPanel(new GridLayout(counterProcessingPanel,1));
         nothing = new JLabel(" Nothing is here :) " + "\n" +  " Hit the download button.");
         nothing.setHorizontalTextPosition(JLabel.CENTER);
         nothing.setVerticalTextPosition(JLabel.BOTTOM);
         nothing.setForeground(Color.GRAY);
         nothing.setIcon(new ImageIcon("sunbed.png"));
         nothing.setAlignmentX(Component.CENTER_ALIGNMENT);
-        processingPanel.setLayout(new BoxLayout(processingPanel,BoxLayout.Y_AXIS));
+//        processingPanel.setLayout(new BoxLayout(processingPanel,BoxLayout.Y_AXIS));
         processingScrollPane = new JScrollPane(processingPanel);
         processingPanel.add(nothing);
 
         // Queue Panel
         queuePanel = new JPanel();
-        queuePanel.setLayout(new BoxLayout(queuePanel,BoxLayout.Y_AXIS));
+        queuePanel.setLayout(new GridLayout(counterQueuePanel,1));
         queueScrollPane = new JScrollPane(queuePanel);
         queuePanel.setVisible(true);
 
@@ -312,12 +336,10 @@ public class MainFrame {
         mainPanel.add(processingScrollPane,BorderLayout.CENTER);
 //        mainPanel.add(queueScrollPane,BorderLayout.CENTER);
         background.add(mainPanel);
-        mainPanel.addComponentListener(new ComponentAdapter() {
+        background.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-//                if(!processingOrder.isEmpty())
-//                    comfortableResize();
                 if(!processingNewDownloads.isEmpty())
                     comfortableResize();
             }
@@ -329,7 +351,7 @@ public class MainFrame {
         background.setVisible(true);
     }
 
-    private class MainFrameActionListener implements ActionListener {
+    private class MainFrameActionListener implements ActionListener,DocumentListener,MouseListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(setting) || e.getSource().equals(settingItem) ) {
@@ -412,8 +434,147 @@ public class MainFrame {
                 mainPanel.revalidate();
                 background.revalidate();
             }
+            else if(e.getSource().equals(searchText)){
+                searchText.setText("");
+                System.out.println("set");
+            }
         }
 
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            String key = searchText.getText();
+            ArrayList<NewDownloadPanel> result = new ArrayList<>();
+            processingPanel.removeAll();
+            if(key.isEmpty()){
+                if(mainPanel.isAncestorOf(processingPanel))
+                    updateProcessingPanel();
+                else if(mainPanel.isAncestorOf(queuePanel))
+                    updateQueuePanel();
+
+            }
+            else {
+                if (mainPanel.isAncestorOf(processingPanel)) {
+                    for (NewDownloadPanel item : processingNewDownloads) {
+                        if (item.getFileProperties().getFileName().contains(key)) {
+                            result.add(item);
+                            processingPanel.add(item.getPanel());
+                        }
+                    }
+                } else if (mainPanel.isAncestorOf(queuePanel)) {
+                    for (NewDownloadPanel item : queueNewDownload) {
+                        if (item.getFileProperties().getFileName().contains(key)) {
+                            queuePanel.add(item.getPanel());
+                        }
+                    }
+                }
+            }
+//            SwingUtilities.updateComponentTreeUI(processingPanel);
+//            SwingUtilities.updateComponentTreeUI(queuePanel);
+
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+//            String key = searchText.getText();
+//            ArrayList<NewDownloadPanel> result = new ArrayList<>();
+//            System.out.println(key + " removed");
+//            processingPanel.removeAll();
+//            if(key.isEmpty()){
+//                if(mainPanel.isAncestorOf(processingPanel)) {
+//                    System.out.println("processing");
+//                    updateProcessingPanel();
+//                }
+//
+//                else if(mainPanel.isAncestorOf(queuePanel)) {
+//                    System.out.println("queue");
+//                    updateQueuePanel();
+//                }
+//
+//            }
+//            else {
+//                if (mainPanel.isAncestorOf(processingPanel)) {
+//                    for (NewDownloadPanel item : processingNewDownloads) {
+//                        if (item.getFileProperties().getFileName().contains(key)) {
+//                            result.add(item);
+//                            processingPanel.add(item.getPanel());
+//                        }
+//                    }
+//                } else if (mainPanel.isAncestorOf(queuePanel)) {
+//                    for (NewDownloadPanel item : queueNewDownload) {
+//                        if (item.getFileProperties().getFileName().contains(key)) {
+//                            queuePanel.add(item.getPanel());
+//                        }
+//                    }
+//                }
+//            }
+//            SwingUtilities.updateComponentTreeUI(processingPanel);
+//            SwingUtilities.updateComponentTreeUI(queuePanel);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+//            String key = searchText.getText();
+//            ArrayList<NewDownloadPanel> result = new ArrayList<>();
+//            System.out.println(key);
+//            processingPanel.removeAll();
+//            if(key.isEmpty()){
+//                if(mainPanel.isAncestorOf(processingPanel)) {
+//                    System.out.println("processing");
+//                    updateProcessingPanel();
+//                }
+//
+//                else if(mainPanel.isAncestorOf(queuePanel)) {
+//                    System.out.println("queue");
+//                    updateQueuePanel();
+//                }
+//            }
+//            else {
+//                if (mainPanel.isAncestorOf(processingPanel)) {
+//                    for (NewDownloadPanel item : processingNewDownloads) {
+//                        if (item.getFileProperties().getFileName().contains(key)) {
+//                            result.add(item);
+//                            processingPanel.add(item.getPanel());
+//                        }
+//                    }
+//                } else if (mainPanel.isAncestorOf(queuePanel)) {
+//                    for (NewDownloadPanel item : queueNewDownload) {
+//                        if (item.getFileProperties().getFileName().contains(key)) {
+//                            queuePanel.add(item.getPanel());
+//                        }
+//                    }
+//                }
+//            }
+//            SwingUtilities.updateComponentTreeUI(processingPanel);
+//            SwingUtilities.updateComponentTreeUI(queuePanel);
+
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+//            searchText.setText("");
+//            System.out.println("set");
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+//            searchText.setText("");
+//            System.out.println("set");
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+//            searchText.setText("Search here...");
+//            System.out.println("get");
+        }
     }
 
     private class MouseImplement implements MouseListener{
@@ -512,28 +673,34 @@ public class MainFrame {
     }
 
     private void comfortableResize(){
-        for (NewDownloadPanel item : processingNewDownloads) {
-            item.setSize(processingPanel.getWidth());
+        if(processingPanel != null) {
+            for (NewDownloadPanel item : processingNewDownloads) {
+                item.setSize(processingPanel.getWidth());
+            }
+            processingPanel.revalidate();
+//            SwingUtilities.updateComponentTreeUI(processingPanel);
         }
-        for (NewDownloadPanel item: queueNewDownload) {
-            item.setSize(queuePanel.getWidth());
+        if(queuePanel != null) {
+            for (NewDownloadPanel item : queueNewDownload) {
+                item.setSize(queuePanel.getWidth());
+            }
+            SwingUtilities.updateComponentTreeUI(queuePanel);
         }
-        SwingUtilities.updateComponentTreeUI(processingPanel);
-        SwingUtilities.updateComponentTreeUI(queuePanel);
+
     }
 
-    private void updateProcessingPanel(){
+    private void updateProcessingPanel() {
         processingPanel.removeAll();
-        processingPanel.setLayout(new BoxLayout(processingPanel,BoxLayout.Y_AXIS));
+        processingPanel.setLayout(new BoxLayout(processingPanel, BoxLayout.Y_AXIS));
         SwingUtilities.updateComponentTreeUI(processingPanel);
-        if(processingNewDownloads.isEmpty()){
-            processingPanel.add(nothing);
-        }
-        else {
-            for (NewDownloadPanel item : processingNewDownloads) {
-                processingPanel.add(item.getPanel());
+            if (processingNewDownloads.isEmpty()) {
+                processingPanel.add(nothing);
+            } else {
+                for (NewDownloadPanel item : processingNewDownloads) {
+                    processingPanel.add(item.getPanel());
+                }
             }
-        }
+
     }
 
     public void updateProcessingDownloads(){
@@ -621,7 +788,7 @@ public class MainFrame {
             try {
                 FileInputStream fileInputStream = new FileInputStream(PROCESSING_PATH);
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-                ArrayList<FileProperties> downloadPanels = (ArrayList) objectInputStream.readObject();
+                ArrayList<FileProperties> downloadPanels = (ArrayList<FileProperties>) objectInputStream.readObject();
                 for (FileProperties item : downloadPanels) {
 //                    processingNewDownloads.add(item);
                     processingNewDownloads.add(new NewDownloadPanel(item, processingPanel.getWidth()));
@@ -660,6 +827,7 @@ public class MainFrame {
                 e.printStackTrace();
             }
         }
+
     }
     /**
      * This method backs up the removed contents in the cancel button

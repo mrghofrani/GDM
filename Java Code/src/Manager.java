@@ -29,9 +29,24 @@ public class Manager {
     private ActionHandler actionListener = new ActionHandler();
 
     private Manager() {
-
-        main = new MainFrame();
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (InstantiationException e1) {
+            e1.printStackTrace();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e1) {
+            e1.printStackTrace();
+        }
+        for (Window window : Window.getWindows()) {
+            SwingUtilities.updateComponentTreeUI(window);
+            window.pack();
+        }
         setting = new SettingFrame();
+        setting.initialize();
+        main = new MainFrame();
         newDownload = new NewDownloadFrame();
         helpFrame = new HelpFrame();
         getAction("main.show");
@@ -41,7 +56,7 @@ public class Manager {
         }
         else
             JOptionPane.showMessageDialog(null,"Opps ... Your system doesn't support system tray.","System tray error",JOptionPane.WARNING_MESSAGE);
-        initialState();
+        main.initialize();
     }
 
     private void SystemTrayHandler(){

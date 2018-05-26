@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class SettingFrame implements Serializable {
@@ -193,7 +194,9 @@ public class SettingFrame implements Serializable {
             try{
                 fileInputStream = new FileInputStream(file);
                 objectInputStream = new ObjectInputStream(fileInputStream);
-                ArrayList<String> arrayList = (ArrayList)objectInputStream.readObject();
+                ArrayList<String> arrayList = (ArrayList<String>)objectInputStream.readObject();
+
+                System.out.printf(Arrays.toString(arrayList.toArray()));
 
                 // Preparing number of downloads
                 int index = 0;
@@ -217,12 +220,17 @@ public class SettingFrame implements Serializable {
                     if (item.getClassName().equals(arrayList.get(index)))
                         themeFound = true;
                     themeComboBox.addItem(item.getClassName());
+
                 }
                 if(themeFound)
                     themeComboBox.setSelectedItem(arrayList.get(index));
                 else
                     themeComboBox.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
-                Manager.updateUI((String)themeComboBox.getSelectedItem());
+                UIManager.setLookAndFeel((String)themeComboBox.getSelectedItem());
+                for (Window window : Window.getWindows()) {
+                    SwingUtilities.updateComponentTreeUI(window);
+                    window.pack();
+                }
 
                 // Preparing illegal websites
                 index++;
@@ -249,6 +257,12 @@ public class SettingFrame implements Serializable {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
             }
         }
         else {
@@ -273,7 +287,9 @@ public class SettingFrame implements Serializable {
         initializingComponentsLanguage();
         initializingComponentsActionListener();
     }
-
+    public String getUI(){
+        return (String)themeComboBox.getSelectedItem();
+    }
     /**
      * this class initialize the component's language
      */
@@ -506,8 +522,8 @@ public class SettingFrame implements Serializable {
                             }
                         }
                     }
-                }while (state == 2) ;
-                    if (state == 0) {
+                }while (state == 2);
+                    if (state == 0){
                         filterListModel.add(filterListModel.getSize(), tmp);
                         filterList.ensureIndexIsVisible(filterListModel.getSize());
                         deleteListButton.setEnabled(true);

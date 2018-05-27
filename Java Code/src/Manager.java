@@ -35,7 +35,10 @@ public class Manager {
             e1.printStackTrace();
         } catch (InstantiationException e1) {
             e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
+        } catch (NullPointerException e) {
+            System.out.println("Got it");
+        }
+        catch (IllegalAccessException e1) {
             e1.printStackTrace();
         } catch (UnsupportedLookAndFeelException e1) {
             e1.printStackTrace();

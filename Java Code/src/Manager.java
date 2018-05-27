@@ -29,6 +29,7 @@ public class Manager {
     private ActionHandler actionListener = new ActionHandler();
 
     private Manager() {
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e1) {

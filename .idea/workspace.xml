@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ee1e1db1-73ff-47b2-87d1-4052c715e8e8" name="Default" comment="Implementation of setting's language and backing up it is completed REALLY">
+    <list default="true" id="ee1e1db1-73ff-47b2-87d1-4052c715e8e8" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Java Code/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/Manager.java" afterDir="false" />
     </list>
@@ -23,8 +22,8 @@
       <file leaf-file-name="Manager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3009">
-              <caret line="193" selection-start-line="193" selection-end-line="193" />
+            <state relative-caret-position="136">
+              <caret line="31" selection-start-line="31" selection-end-line="31" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5468#5469#0" expanded="true" />
@@ -49,11 +48,10 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+            <state relative-caret-position="51">
+              <caret line="8" column="44" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
               <folding>
-                <element signature="e#238#239#0" expanded="true" />
-                <element signature="e#297#298#0" expanded="true" />
+                <element signature="e#292#293#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -83,8 +81,8 @@
       <file leaf-file-name="MainFrame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Java Code/src/MainFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="274" column="27" lean-forward="true" selection-start-line="274" selection-start-column="27" selection-end-line="274" selection-end-column="27" />
+            <state relative-caret-position="3009">
+              <caret line="185" column="71" lean-forward="true" selection-start-line="185" selection-start-column="71" selection-end-line="185" selection-end-column="71" />
               <folding>
                 <element signature="e#14120#14389#0" expanded="true" />
                 <element signature="e#14388#14389#0" expanded="true" />
@@ -168,8 +166,8 @@
         <option value="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" />
         <option value="$PROJECT_DIR$/Java Code/src/HelpFrame.java" />
         <option value="$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java" />
-        <option value="$PROJECT_DIR$/Java Code/src/Manager.java" />
         <option value="$PROJECT_DIR$/Java Code/src/SettingFrame.java" />
+        <option value="$PROJECT_DIR$/Java Code/src/Manager.java" />
         <option value="$PROJECT_DIR$/Java Code/src/Main.java" />
         <option value="$PROJECT_DIR$/Java Code/src/MainFrame.java" />
       </list>
@@ -300,7 +298,7 @@
       <workItem from="1527326434286" duration="2317000" />
       <workItem from="1527346861523" duration="4312000" />
       <workItem from="1527396337299" duration="3570000" />
-      <workItem from="1527415130364" duration="4078000" />
+      <workItem from="1527415130364" duration="5834000" />
     </task>
     <task id="LOCAL-00001" summary="top part of MainFrame changed to toolbar">
       <created>1526563709075</created>
@@ -435,11 +433,18 @@
       <option name="project" value="LOCAL" />
       <updated>1527256165966</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Implementation of search box is completed.">
+      <created>1527435519413</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1527435519413</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142543000" />
+    <option name="totallyTimeSpent" value="144299000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -532,34 +537,27 @@
     <MESSAGE value="I'm in the middle of implementation of language and settingFrame backup" />
     <MESSAGE value="Implementation of setting's language and backing up it is completed except language" />
     <MESSAGE value="Implementation of setting's language and backing up it is completed REALLY" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementation of setting's language and backing up it is completed REALLY" />
+    <MESSAGE value="Implementation of search box is completed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementation of search box is completed." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/Java Code/src/Manager.java</url>
-          <line>237</line>
+          <line>238</line>
           <properties />
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>760</line>
+          <line>718</line>
           <properties />
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>200</line>
-          <properties method="focusLost">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="73" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>531</line>
+          <line>524</line>
           <properties class="MainFrame.MainFrameActionListener" method="removeUpdate">
             <option name="EMULATED" value="true" />
           </properties>
@@ -567,7 +565,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>502</line>
+          <line>501</line>
           <properties class="MainFrame.MainFrameActionListener" method="insertUpdate">
             <option name="EMULATED" value="true" />
           </properties>
@@ -859,36 +857,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="228" column="16" selection-start-line="228" selection-start-column="16" selection-end-line="228" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3009">
-          <caret line="193" selection-start-line="193" selection-end-line="193" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5468#5469#0" expanded="true" />
-            <element signature="e#5519#5520#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-          <folding>
-            <element signature="e#238#239#0" expanded="true" />
-            <element signature="e#297#298#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -914,6 +882,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5468#5469#0" expanded="true" />
+            <element signature="e#5519#5520#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="8" column="44" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+          <folding>
+            <element signature="e#292#293#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/FileProperties.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
@@ -924,10 +914,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="228" column="16" selection-start-line="228" selection-start-column="16" selection-end-line="228" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/MainFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="274" column="27" lean-forward="true" selection-start-line="274" selection-start-column="27" selection-end-line="274" selection-end-column="27" />
+        <state relative-caret-position="3009">
+          <caret line="185" column="71" lean-forward="true" selection-start-line="185" selection-start-column="71" selection-end-line="185" selection-end-column="71" />
           <folding>
             <element signature="e#14120#14389#0" expanded="true" />
             <element signature="e#14388#14389#0" expanded="true" />

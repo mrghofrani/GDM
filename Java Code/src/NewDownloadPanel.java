@@ -1,3 +1,4 @@
+import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -5,15 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Paths;
 
 public class NewDownloadPanel implements Serializable {
     private FileProperties fileProperties;
     private JPanel newDownloadPanel;
     private ActionHandler actionHandler = new ActionHandler();
     private boolean selected = false;
+    private Worker worker;
 
     // top part of the newDownload Panel
     private JPanel textArea;
@@ -133,9 +137,7 @@ public class NewDownloadPanel implements Serializable {
         newDownloadPanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
             }
-
             @Override
             public void mousePressed(MouseEvent e) {
                 if(!selected) {
@@ -147,10 +149,8 @@ public class NewDownloadPanel implements Serializable {
                     newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
                 }
             }
-
             @Override
             public void mouseReleased(MouseEvent e) {
-
             }
 
             @Override
@@ -163,6 +163,8 @@ public class NewDownloadPanel implements Serializable {
 
             }
         });
+        worker = new Worker();
+        worker.execute();
     }
 
     public boolean isSelected() {
@@ -244,6 +246,47 @@ public class NewDownloadPanel implements Serializable {
             else if(e.getSource().equals(newDownloadPanel) || e.getSource().equals(rightPanel) || e.getSource().equals(progressBar)){
 
             }
+        }
+    }
+
+    private class Worker extends SwingWorker<Void, String>{
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            BufferedInputStream bufferedInputStream = null;
+            FileOutputStream fileOutputStream = null;
+            BufferedOutputStream bufferedOutputStream = null;
+            try {
+                URL url = new URL(fileProperties.getFileName());
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//            fileProperties.setSize(Long.toString(httpURLConnection.getContentLength()));
+                bufferedInputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+                System.out.println(fileProperties.getAddress() + "\\hello");
+                System.out.println(fileProperties.getAddress() + "\\" + fileProperties.getFileName());
+                fileOutputStream = new FileOutputStream(fileProperties.getAddress() + "\\hello" );
+                bufferedOutputStream = new BufferedOutputStream(fileOutputStream, 1024);
+                byte[] buffer = new byte[1024];
+                double downloaded = 0.00;
+                int read;
+                while ((read = bufferedInputStream.read(buffer, 0, 1024)) >= 0) {
+                    bufferedOutputStream.write(buffer, 0, read);
+                    downloaded += read;
+//                publish(Double.toString(downloaded));
+                    System.out.println(downloaded);
+                    System.out.println("here");
+
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                if(bufferedInputStream != null)
+                    bufferedInputStream.close();
+                if(bufferedOutputStream != null)
+                    bufferedOutputStream.close();
+            }
+
+            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.NoSuchElementException;
 
 public class FileProperties implements Serializable {
     private String fileName;
@@ -68,5 +69,19 @@ public class FileProperties implements Serializable {
     @Override
     public String toString() {
         return fileName + " " + status + " " + size + " " + created + " " + modified + " " + address;
+    }
+    public String get(String item){
+        switch (item){
+            case "name":
+                return fileName;
+            case "status":
+                return status;
+            case "size":
+                return size;
+            case "date":
+                return created;
+                default:
+                    throw new NoSuchElementException();
+        }
     }
 }

@@ -389,6 +389,7 @@ public class MainFrame {
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, (int)processingPanel.getSize().getWidth());
         processingPanel.add(tmp.getPanel());
         processingNewDownloads.add(tmp);
+        tmp.startDownload();
         background.revalidate();
         mainPanel.revalidate();
     }
@@ -409,7 +410,7 @@ public class MainFrame {
                 tmpString = "\n";
                 tmpString += "****** Removed On Date " + dtf.format(now) + "******" + "\n";
                 tmpString += "File Properties" + "\n";
-                tmpString += "File Name : " + item.getFileName() + "\n";
+                tmpString += "File Name : " + item.getFileUrl() + "\n";
                 tmpString += "File Created Time :" +item.getCreated() + "\n";
                 tmpString += "File Size : "    + item.getSize() + "\n";
                 tmpString += "File Download Address : " +item.getAddress() + "\n";
@@ -432,15 +433,16 @@ public class MainFrame {
             keepGoing = true;
             numberOfAddedToProcessing++;
         }
-        if(keepGoing){
-            NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
-            queuePanel.remove(nothing);
-            queuePanel.add(tmp.getPanel());
-            queueNewDownload.add(tmp);
+        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
+        queuePanel.remove(nothing);
+        queuePanel.add(tmp.getPanel());
+        queueNewDownload.add(tmp);
+        if(keepGoing) {
+            processingNewDownloads.add(tmp);
+            tmp.startDownload();
         }
-        else {
-            JOptionPane.showMessageDialog(background,"Maximum number of queue reached!","Queue",JOptionPane.WARNING_MESSAGE);
-        }
+        updateQueuePanel();
+        updateProcessingDownloads();
         SwingUtilities.updateComponentTreeUI(mainPanel);
         SwingUtilities.updateComponentTreeUI(queuePanel);
     }
@@ -452,7 +454,7 @@ public class MainFrame {
 
 
     public void showRightPanel (FileProperties fileProperties){
-        fileName.setText(fileProperties.getFileName());
+        fileName.setText(fileProperties.getFileUrl());
         status.setText(fileProperties.getStatus());
         size.setText(fileProperties.getSize());
         created.setText(fileProperties.getCreated());
@@ -484,7 +486,6 @@ public class MainFrame {
             }
             SwingUtilities.updateComponentTreeUI(queuePanel);
         }
-
     }
 
     /**
@@ -506,6 +507,16 @@ public class MainFrame {
             comfortableResize();
     }
 
+    private void updateQueueDownloads(){
+        Iterator iterator = queueNewDownload.iterator();
+        while(iterator.hasNext()){
+            NewDownloadPanel tmp =(NewDownloadPanel)iterator.next();
+            if(tmp.getFileProperties() == null) {
+                iterator.remove();
+            }
+        }
+        updateQueuePanel();
+    }
     /**
      * This method at first clears the processingNewDownloads
      * from null values then invokes the updateProcessingPanel
@@ -724,12 +735,15 @@ public class MainFrame {
                 updateQueuePanel();
                 SwingUtilities.updateComponentTreeUI(mainPanel);
             }
-            else if(e.getSource().equals(cancel)){ // TODO: I should implement the cancel button working for each panel that is open
+            else if(e.getSource().equals(cancel)){ // TODO: I should implement the cancel button working for each panel that is open DONE
+                boolean  completely = false;
                 Iterator iterator;
                 Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
                 ImageIcon tmp = new ImageIcon("cross.png");
                 int n = JOptionPane.showOptionDialog(background, "Would you like to delete this download?", "Delete", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, tmp, options,options[2]);
                 switch(n){
+                    case 1:
+                        completely = true;
                     case 0:
                         JPanel tmpPanel;
                         ArrayList<NewDownloadPanel> tmpNewDownloads = new ArrayList<>();
@@ -752,6 +766,8 @@ public class MainFrame {
                                 NewDownloadPanel item = (NewDownloadPanel) iterator.next();
                                 if (item.isSelected()) {
                                     found = true;
+                                    if(completely)
+                                        item.getFile().delete();
                                     removed.add(item.getFileProperties());
                                     (item).deleteFileProperties();
                                     iterator.remove();
@@ -763,6 +779,8 @@ public class MainFrame {
                                     NewDownloadPanel item = (NewDownloadPanel) iterator.next();
                                     if (item.isSelected()) {
                                         removed.add(item.getFileProperties());
+                                        if(completely)
+                                            item.getFile().delete();
                                         item.deleteFileProperties();
                                         iterator.remove();
                                     }
@@ -773,16 +791,13 @@ public class MainFrame {
                                 if(mainPanel.isAncestorOf(processingPanel))
                                     processingNewDownloads = tmpNewDownloads;
                                 updateProcessingDownloads();
-                                updateQueuePanel();
+                                updateQueueDownloads();
                             }
                             else {
                                 JOptionPane.showMessageDialog(background, "Nothing was selected,\n please select something then press cancel button", "Delete", JOptionPane.WARNING_MESSAGE);
                             }
                         }
 
-                        break;
-                    case 1:
-                        // TODO: I should implement the file delete
                         break;
                     default:
                         // Do nothing
@@ -797,23 +812,28 @@ public class MainFrame {
                 System.out.println("set");
             }
             else if(e.getSource().equals(remove)){
+                boolean completely = false;
                 Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
                 ImageIcon tmp = new ImageIcon("cross.png");
                 int n = JOptionPane.showOptionDialog(background, "Would you like to delete Whole download including queue and processing and completed?", "Delete", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, tmp, options,options[2]);
                 switch (n){
+                    case 1:
+                        completely = true;
                     case 0:
                         for (NewDownloadPanel item:processingNewDownloads) {
+                            if(completely)
+                                item.getFile().delete();
                             item.deleteFileProperties();
                         }
                         processingNewDownloads.clear();
                         for (NewDownloadPanel item: queueNewDownload) {
+                            if(completely)
+                                item.getFile().delete();
                             item.deleteFileProperties();
                         }
                         queueNewDownload.clear();
                         break;
-                    case 1:
-                        // TODO: I should implement this part of removing files
-                        break;
+
                     default:
                         // Do nothing
                         break;
@@ -830,7 +850,7 @@ public class MainFrame {
             if (mainPanel.isAncestorOf(processingPanel)) {
                 processingNewDownloads.clear();
                 for (NewDownloadPanel item : holder) {
-                    if (item.getFileProperties().getFileName().contains(key)) {
+                    if (item.getFileProperties().getFileUrl().contains(key)) {
                         processingNewDownloads.add(item);
                     }
                 }
@@ -838,7 +858,7 @@ public class MainFrame {
             } else if (mainPanel.isAncestorOf(queuePanel)) {
                 queueNewDownload.clear();
                 for (NewDownloadPanel item : holder) {
-                    if (item.getFileProperties().getFileName().contains(key)) {
+                    if (item.getFileProperties().getFileUrl().contains(key)) {
                         queueNewDownload.add(item);
                     }
                 }
@@ -859,7 +879,6 @@ public class MainFrame {
                     queueNewDownload = new ArrayList<>(holder);
                     updateQueuePanel();
                 }
-
             }
         }
 

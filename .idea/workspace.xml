@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ee1e1db1-73ff-47b2-87d1-4052c715e8e8" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_apache_commons_io.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java Code/Java Code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/Java Code.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/FileProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/FileProperties.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" afterDir="false" />
@@ -16,18 +18,21 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/GDM_new3$Main.ic" NAME="Main Coverage Results" MODIFIED="1527767837097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/GDM_new3$Main.ic" NAME="Main Coverage Results" MODIFIED="1527773682768" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="Manager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="201" selection-start-line="201" selection-end-line="201" />
+            <state relative-caret-position="177">
+              <caret line="204" column="28" selection-start-line="204" selection-start-column="28" selection-end-line="204" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#6215#6216#0" expanded="true" />
+                <element signature="e#6266#6267#0" expanded="true" />
+                <element signature="e#6342#6343#0" expanded="true" />
+                <element signature="e#6398#6399#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -36,7 +41,7 @@
       <file leaf-file-name="HelpFrame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/HelpFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
+            <state relative-caret-position="448">
               <caret line="39" selection-start-line="39" selection-end-line="39" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -60,14 +65,19 @@
       <file leaf-file-name="FileProperties.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/FileProperties.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="61" selection-start-line="61" selection-end-line="61" />
+            <state relative-caret-position="255">
+              <caret line="15" column="86" lean-forward="true" selection-start-line="15" selection-start-column="86" selection-end-line="15" selection-end-column="86" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#757#758#0" expanded="true" />
                 <element signature="e#788#789#0" expanded="true" />
                 <element signature="e#1116#1117#0" expanded="true" />
                 <element signature="e#1148#1149#0" expanded="true" />
+                <element signature="e#1264#1265#0" expanded="true" />
+                <element signature="e#1295#1296#0" expanded="true" />
+                <element signature="e#1343#1344#0" expanded="true" />
+                <element signature="e#1383#1384#0" expanded="true" />
+                <element signature="e#1484#1485#0" expanded="true" />
                 <element signature="e#1514#1515#0" expanded="true" />
               </folding>
             </state>
@@ -77,17 +87,21 @@
       <file leaf-file-name="SettingFrame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="447">
+            <state relative-caret-position="-148">
               <caret line="228" column="16" selection-start-line="228" selection-start-column="16" selection-end-line="228" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainFrame.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainFrame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Java Code/src/MainFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5358">
-              <caret line="371" selection-start-line="371" selection-end-line="371" />
+            <state relative-caret-position="143">
+              <caret line="487" column="9" selection-start-line="487" selection-start-column="9" selection-end-line="487" selection-end-column="9" />
+              <folding>
+                <element signature="e#18251#18252#0" expanded="true" />
+                <element signature="e#18299#18300#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -95,28 +109,36 @@
       <file leaf-file-name="NewDownloadFrame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="147" selection-start-line="147" selection-end-line="147" />
+            <state relative-caret-position="448">
+              <caret line="145" column="16" selection-start-line="145" selection-start-column="16" selection-end-line="145" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewDownloadPanel.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="NewDownloadPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="264" column="100" selection-start-line="264" selection-start-column="100" selection-end-line="264" selection-end-column="100" />
+            <state relative-caret-position="397">
+              <caret line="189" selection-start-line="189" selection-end-line="189" />
               <folding>
-                <element signature="e#6269#6270#0" expanded="true" />
-                <element signature="e#6300#6301#0" expanded="true" />
-                <element signature="e#6349#6350#0" expanded="true" />
-                <element signature="e#6386#6387#0" expanded="true" />
-                <element signature="e#6696#6697#0" expanded="true" />
-                <element signature="e#6735#6736#0" expanded="true" />
-                <element signature="e#6776#6777#0" expanded="true" />
-                <element signature="e#6813#6814#0" expanded="true" />
-                <element signature="e#6859#6860#0" expanded="true" />
-                <element signature="e#6898#6899#0" expanded="true" />
+                <element signature="e#7217#7218#0" expanded="true" />
+                <element signature="e#7249#7250#0" expanded="true" />
+                <element signature="e#6519#6520#0" expanded="true" />
+                <element signature="e#6550#6551#0" expanded="true" />
+                <element signature="e#6599#6600#0" expanded="true" />
+                <element signature="e#6636#6637#0" expanded="true" />
+                <element signature="e#6704#6705#0" expanded="true" />
+                <element signature="e#6756#6757#0" expanded="true" />
+                <element signature="e#6946#6947#0" expanded="true" />
+                <element signature="e#6985#6986#0" expanded="true" />
+                <element signature="e#7026#7027#0" expanded="true" />
+                <element signature="e#7063#7064#0" expanded="true" />
+                <element signature="e#7871#7872#0" expanded="true" />
+                <element signature="e#7898#7899#0" expanded="true" />
+                <element signature="e#7936#7937#0" expanded="true" />
+                <element signature="e#7968#7969#0" expanded="true" />
+                <element signature="e#14753#14754#0" expanded="true" />
+                <element signature="e#14793#14794#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,6 +169,8 @@
       <find>top</find>
       <find>comfortableResize</find>
       <find>insert</find>
+      <find>file</find>
+      <find>Queue</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -168,8 +192,8 @@
         <option value="$PROJECT_DIR$/Java Code/src/Manager.java" />
         <option value="$PROJECT_DIR$/Java Code/src/Main.java" />
         <option value="$PROJECT_DIR$/Java Code/src/FileProperties.java" />
-        <option value="$PROJECT_DIR$/Java Code/src/MainFrame.java" />
         <option value="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" />
+        <option value="$PROJECT_DIR$/Java Code/src/MainFrame.java" />
       </list>
     </option>
   </component>
@@ -195,12 +219,15 @@
     <panes />
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="MainFrame&#9;PSI&#9;JAVA://MainFrame.MainFrameActionListener&#10;queue&#9;PSI&#9;JAVA://MainFrame#updateQueuePanel&#10;sort&#9;PSI&#9;JAVA://MainFrame#sort&#10;sort &#9;PSI&#9;JAVA://MainFrame#sort&#10;setnew&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;initialize&#9;PSI&#9;JAVA://MainFrame#initialize&#10;initia&#9;PSI&#9;JAVA://SettingFrame#initialize&#10;init&#9;PSI&#9;JAVA://MainFrame#initialize&#10;finite&#9;PSI&#9;JAVA://SettingFrame#finiteDownloads&#10;scrollPan&#9;PSI&#9;JAVA://MainFrame#processingScrollPane&#10;initi&#9;PSI&#9;JAVA://SettingFrame#initialize&#10;getDownloadPath&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;GETdo&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;getDownload&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;setD&#9;PSI&#9;JAVA://Manager#setDownloadPath&#10;getDown&#9;PSI&#9;JAVA://Manager#getDownloadPath&#10;backup&#9;PSI&#9;JAVA://SettingFrame#backup&#10;Comfo&#9;PSI&#9;JAVA://MainFrame#comfortableResize&#10;newqueu&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;setque&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;showri&#9;PSI&#9;JAVA://MainFrame#showRightPanel&#10;setN&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;comfor&#9;PSI&#9;JAVA://MainFrame#comfortableResize&#10;setNew&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;nothing&#9;PSI&#9;JAVA://MainFrame#nothing&#10;central&#9;PSI&#9;JAVA://NewDownloadPanel#centralPanel&#10;cent&#9;PSI&#9;JAVA://NewDownloadPanel#centralPanel&#10;cen&#9;PSI&#9;JAVA://MainFrame#centralPanel" />
+    <property name="SearchEverywhereHistoryKey" value="setNewD&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;setNew&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;MainFrame&#9;PSI&#9;JAVA://MainFrame.MainFrameActionListener&#10;queue&#9;PSI&#9;JAVA://MainFrame#updateQueuePanel&#10;sort&#9;PSI&#9;JAVA://MainFrame#sort&#10;sort &#9;PSI&#9;JAVA://MainFrame#sort&#10;setnew&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;initialize&#9;PSI&#9;JAVA://MainFrame#initialize&#10;initia&#9;PSI&#9;JAVA://SettingFrame#initialize&#10;init&#9;PSI&#9;JAVA://MainFrame#initialize&#10;finite&#9;PSI&#9;JAVA://SettingFrame#finiteDownloads&#10;scrollPan&#9;PSI&#9;JAVA://MainFrame#processingScrollPane&#10;initi&#9;PSI&#9;JAVA://SettingFrame#initialize&#10;getDownloadPath&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;GETdo&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;getDownload&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;setD&#9;PSI&#9;JAVA://Manager#setDownloadPath&#10;getDown&#9;PSI&#9;JAVA://Manager#getDownloadPath&#10;backup&#9;PSI&#9;JAVA://SettingFrame#backup&#10;Comfo&#9;PSI&#9;JAVA://MainFrame#comfortableResize&#10;newqueu&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;setque&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;showri&#9;PSI&#9;JAVA://MainFrame#showRightPanel&#10;setN&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;comfor&#9;PSI&#9;JAVA://MainFrame#comfortableResize&#10;nothing&#9;PSI&#9;JAVA://MainFrame#nothing&#10;central&#9;PSI&#9;JAVA://NewDownloadPanel#centralPanel&#10;cent&#9;PSI&#9;JAVA://NewDownloadPanel#centralPanel&#10;cen&#9;PSI&#9;JAVA://MainFrame#centralPanel" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/external libraries/org.apache.commons.io.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
@@ -301,7 +328,7 @@
       <workItem from="1527484776978" duration="1916000" />
       <workItem from="1527568950987" duration="3806000" />
       <workItem from="1527673467726" duration="281000" />
-      <workItem from="1527764516503" duration="4440000" />
+      <workItem from="1527764516503" duration="24877000" />
     </task>
     <task id="LOCAL-00001" summary="top part of MainFrame changed to toolbar">
       <created>1526563709075</created>
@@ -450,11 +477,18 @@
       <option name="project" value="LOCAL" />
       <updated>1527438231822</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="initial implementation of downlaod part">
+      <created>1527769123807</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1527769123807</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="154772000" />
+    <option name="totallyTimeSpent" value="175209000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -470,7 +504,7 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.27086183" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27086183" />
       <window_info anchor="right" id="Coverage" order="4" side_tool="true" weight="0.32857144" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
@@ -482,7 +516,7 @@
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.4514364" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4514364" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -492,34 +526,34 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="3" />
+      <window_info id="Designer" order="2" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.30705395" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.39243808" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27086183" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Designer" order="2" />
-      <window_info id="UI Designer" order="5" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.33105335" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.39243808" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Capture Tool" order="4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info id="UI Designer" order="5" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4514364" />
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info anchor="right" id="Database" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.40766075" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info id="Capture Tool" order="4" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32831737" />
-      <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.3294271" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.32831737" />
+      <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.32857144" />
+      <window_info id="Favorites" order="6" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +583,8 @@
     <MESSAGE value="Implementation of setting's language and backing up it is completed REALLY" />
     <MESSAGE value="Implementation of search box is completed." />
     <MESSAGE value="starting to implement sort" />
-    <option name="LAST_COMMIT_MESSAGE" value="starting to implement sort" />
+    <MESSAGE value="initial implementation of downlaod part" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial implementation of downlaod part" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -562,13 +597,19 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>684</line>
+          <line>695</line>
           <properties />
           <option name="timeStamp" value="89" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java</url>
+          <line>295</line>
+          <properties />
+          <option name="timeStamp" value="120" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>902</line>
+          <line>921</line>
           <properties class="MainFrame.CheckListener" method="itemStateChanged">
             <option name="EMULATED" value="true" />
           </properties>
@@ -576,14 +617,14 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>878</line>
+          <line>897</line>
           <properties class="MainFrame.MouseImplement" method="mousePressed">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="90" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="114" />
+      <option name="time" value="121" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -636,6 +677,9 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#6215#6216#0" expanded="true" />
+            <element signature="e#6266#6267#0" expanded="true" />
+            <element signature="e#6342#6343#0" expanded="true" />
+            <element signature="e#6398#6399#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -845,12 +889,87 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/SwingWorker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3217">
+          <caret line="224" column="22" selection-start-line="224" selection-start-column="22" selection-end-line="224" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="204" column="28" selection-start-line="204" selection-start-column="28" selection-end-line="204" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#6215#6216#0" expanded="true" />
+            <element signature="e#6266#6267#0" expanded="true" />
+            <element signature="e#6342#6343#0" expanded="true" />
+            <element signature="e#6398#6399#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="145" column="16" selection-start-line="145" selection-start-column="16" selection-end-line="145" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="189" selection-start-line="189" selection-end-line="189" />
+          <folding>
+            <element signature="e#7217#7218#0" expanded="true" />
+            <element signature="e#7249#7250#0" expanded="true" />
+            <element signature="e#6519#6520#0" expanded="true" />
+            <element signature="e#6550#6551#0" expanded="true" />
+            <element signature="e#6599#6600#0" expanded="true" />
+            <element signature="e#6636#6637#0" expanded="true" />
+            <element signature="e#6704#6705#0" expanded="true" />
+            <element signature="e#6756#6757#0" expanded="true" />
+            <element signature="e#6946#6947#0" expanded="true" />
+            <element signature="e#6985#6986#0" expanded="true" />
+            <element signature="e#7026#7027#0" expanded="true" />
+            <element signature="e#7063#7064#0" expanded="true" />
+            <element signature="e#7871#7872#0" expanded="true" />
+            <element signature="e#7898#7899#0" expanded="true" />
+            <element signature="e#7936#7937#0" expanded="true" />
+            <element signature="e#7968#7969#0" expanded="true" />
+            <element signature="e#14753#14754#0" expanded="true" />
+            <element signature="e#14793#14794#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/HelpFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
+        <state relative-caret-position="448">
           <caret line="39" selection-start-line="39" selection-end-line="39" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/FileProperties.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="86" lean-forward="true" selection-start-line="15" selection-start-column="86" selection-end-line="15" selection-end-column="86" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#757#758#0" expanded="true" />
+            <element signature="e#788#789#0" expanded="true" />
+            <element signature="e#1116#1117#0" expanded="true" />
+            <element signature="e#1148#1149#0" expanded="true" />
+            <element signature="e#1264#1265#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1343#1344#0" expanded="true" />
+            <element signature="e#1383#1384#0" expanded="true" />
+            <element signature="e#1484#1485#0" expanded="true" />
+            <element signature="e#1514#1515#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -865,75 +984,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/SwingWorker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3217">
-          <caret line="224" column="22" selection-start-line="224" selection-start-column="22" selection-end-line="224" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
+        <state relative-caret-position="-148">
           <caret line="228" column="16" selection-start-line="228" selection-start-column="16" selection-end-line="228" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="201" selection-start-line="201" selection-end-line="201" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#6215#6216#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/MainFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5358">
-          <caret line="371" selection-start-line="371" selection-end-line="371" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="147" selection-start-line="147" selection-end-line="147" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/FileProperties.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
+        <state relative-caret-position="143">
+          <caret line="487" column="9" selection-start-line="487" selection-start-column="9" selection-end-line="487" selection-end-column="9" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#757#758#0" expanded="true" />
-            <element signature="e#788#789#0" expanded="true" />
-            <element signature="e#1116#1117#0" expanded="true" />
-            <element signature="e#1148#1149#0" expanded="true" />
-            <element signature="e#1514#1515#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="264" column="100" selection-start-line="264" selection-start-column="100" selection-end-line="264" selection-end-column="100" />
-          <folding>
-            <element signature="e#6269#6270#0" expanded="true" />
-            <element signature="e#6300#6301#0" expanded="true" />
-            <element signature="e#6349#6350#0" expanded="true" />
-            <element signature="e#6386#6387#0" expanded="true" />
-            <element signature="e#6696#6697#0" expanded="true" />
-            <element signature="e#6735#6736#0" expanded="true" />
-            <element signature="e#6776#6777#0" expanded="true" />
-            <element signature="e#6813#6814#0" expanded="true" />
-            <element signature="e#6859#6860#0" expanded="true" />
-            <element signature="e#6898#6899#0" expanded="true" />
+            <element signature="e#18251#18252#0" expanded="true" />
+            <element signature="e#18299#18300#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -941,9 +1005,80 @@
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Java Code</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>org.apache.commons.io</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

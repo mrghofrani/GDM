@@ -16,7 +16,6 @@ import java.util.Date;
 
 public class NewDownloadFrame {
     // Main Basis
-    private static NewDownloadFrame instance;
     private JFrame downloadFrame;
 
     // Web Page Part
@@ -46,12 +45,6 @@ public class NewDownloadFrame {
 
     private ActionHandler actionHandler = new ActionHandler();
 
-//    public static NewDownloadFrame getInstance(){
-//        if(instance == null){
-//            instance = new NewDownloadFrame();
-//        }
-//        return instance;
-//    }
 
     public NewDownloadFrame(){
         downloadFrame = new JFrame("New Download");
@@ -185,9 +178,15 @@ public class NewDownloadFrame {
         }
     }
     private boolean isValid(String url){
+        String item;
         ArrayList<String> invalidURLs = Manager.getInvalidURLs();
         for (String invalidURL:invalidURLs) {
-            if (url.startsWith(invalidURL))
+            item = invalidURL.replaceAll("www.","");
+            item = item.replaceAll("https://","");
+            item = item.replaceAll("http://","");
+            item = item.substring(0,item.indexOf('/'));
+            System.out.println(item);
+            if (url.contains(item))
                 return false;
         }
         return true;

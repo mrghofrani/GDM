@@ -188,7 +188,10 @@ public class NewDownloadPanel implements Serializable {
     }
 
     public void startDownload(){
+        resumeButton.setIcon(new ImageIcon("pause.png"));
+        worker = new Worker();
         worker.execute();
+        isPaused = false;
     }
 
     public boolean isSelected() {
@@ -227,6 +230,11 @@ public class NewDownloadPanel implements Serializable {
     public boolean isCompleted() {
         return completed;
     }
+    public void pauseDownload(){
+        System.out.println("Canceled");
+        isPaused = true;
+        resumeButton.setIcon(resumeIcon);
+    }
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
@@ -250,15 +258,10 @@ public class NewDownloadPanel implements Serializable {
                     JOptionPane.showMessageDialog(newDownloadPanel,"File not found","open",JOptionPane.ERROR_MESSAGE);
                 else{
                     if(resumeButton.getIcon().equals(resumeIcon)){
-                        resumeButton.setIcon(new ImageIcon("pause.png"));
-                        worker = new Worker();
-                        worker.execute();
-                        isPaused = false;
+                        startDownload();
                     }
                     else {
-                        System.out.println("Canceled");
-                        isPaused = true;
-                        resumeButton.setIcon(resumeIcon);
+                        pauseDownload();
                     }
                 }
             }

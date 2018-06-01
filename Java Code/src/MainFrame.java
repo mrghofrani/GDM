@@ -7,6 +7,8 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class MainFrame {
 //    private static MainFrame mainFrame;
@@ -16,8 +18,11 @@ public class MainFrame {
     private CheckListener checkListener = new CheckListener();
     private MouseImplement mouseListener = new MouseImplement();
     private ArrayList<NewDownloadPanel> processingNewDownloads = new ArrayList<>();
+    private boolean processingIsAscending;
     private ArrayList<NewDownloadPanel> queueNewDownloads = new ArrayList<>();
+    private boolean queueIsAscending;
     private ArrayList<NewDownloadPanel> completedDownloads = new ArrayList<>();
+    private boolean completedIsAscending;
     private ArrayList<NewDownloadPanel> holder;
     private int numberOfAddedToProcessing = 0;
     private FileInputStream fileInputStream;
@@ -39,6 +44,7 @@ public class MainFrame {
     private JMenuItem cancelItem;
     private JMenuItem removeItem;
     private JMenuItem settingItem;
+    private JMenuItem exportItem;
     private JMenuItem exitItem;
     private JMenu helpMenu;
     private JMenuItem aboutItem;
@@ -64,8 +70,8 @@ public class MainFrame {
     private JCheckBox byStatus;
     private JCheckBox byName;
     private JCheckBox bySize;
-    private JButton ascendingButton;
-    private JButton descendingButton;
+    private JMenuItem ascendingItem;
+    private JMenuItem descendingItem;
 //    private ButtonGroup sortBy;
     private JPopupMenu sortPopUp;
     private JTextField searchText;
@@ -184,18 +190,18 @@ public class MainFrame {
         byName.addItemListener(checkListener);
         byStatus = new JCheckBox("By Status");
         byStatus.addItemListener(checkListener);
-        ascendingButton = new JButton("Ascending");
-        ascendingButton.addActionListener(actionListener);
-        descendingButton = new JButton("Descending");
-        descendingButton.addActionListener(actionListener);
+        ascendingItem = new JMenuItem("Ascending");
+        ascendingItem.addMouseListener(mouseListener);
+        descendingItem = new JMenuItem("Descending");
+        descendingItem.addMouseListener(mouseListener);
         sortPopUp.add( byDate);
         sortPopUp.add( bySize);
         sortPopUp.add( byName);
         sortPopUp.add( byStatus);
-        sortPopUp.add(ascendingButton);
-        sortPopUp.add(descendingButton);
-        descendingButton.addActionListener(actionListener);
-        ascendingButton.addActionListener(actionListener);
+        sortPopUp.add(ascendingItem);
+        sortPopUp.add(descendingItem);
+        descendingItem.addActionListener(actionListener);
+        ascendingItem.addActionListener(actionListener);
 
 
         searchText = new JTextField("Search Here ...");
@@ -266,15 +272,21 @@ public class MainFrame {
         settingItem.setAccelerator(KeyStroke.getKeyStroke("control S"));
         settingItem.addActionListener(actionListener);
 
-        exitItem = new JMenuItem("Exit",KeyEvent.VK_E);
-        exitItem.setAccelerator(KeyStroke.getKeyStroke("control E"));
+        exitItem = new JMenuItem("Exit",KeyEvent.VK_X);
+        exitItem.setAccelerator(KeyStroke.getKeyStroke("control X"));
         exitItem.addActionListener(actionListener);
+
+        exportItem = new JMenuItem("Export",KeyEvent.VK_E);
+        exportItem.setAccelerator(KeyStroke.getKeyStroke("control E"));
+        exportItem.addActionListener(actionListener);
+
 
         download.add(resumeItem);
         download.add(pauseItem);
         download.add(cancelItem);
         download.add(removeItem);
         download.add(settingItem);
+        download.add(exportItem);
         download.add(exitItem);
 
         helpMenu = new JMenu("Help");
@@ -401,7 +413,7 @@ public class MainFrame {
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, (int)processingPanel.getSize().getWidth());
         processingPanel.add(tmp.getPanel());
         processingNewDownloads.add(tmp);
-        tmp.startDownload();
+//       TODO  tmp.startDownload();
         background.revalidate();
         mainPanel.revalidate();
     }
@@ -451,7 +463,8 @@ public class MainFrame {
         queueNewDownloads.add(tmp);
         if(keepGoing) {
             processingNewDownloads.add(tmp);
-            tmp.startDownload();
+//            tmp.startDownload();
+            // TODO UP
         }
         updateQueuePanel();
         updateProcessingDownloads();
@@ -527,6 +540,7 @@ public class MainFrame {
         }
         updateQueuePanel();
     }
+
     /**
      * This method at first clears the processingNewDownloads
      * from null values then invokes the updateProcessingPanel
@@ -720,6 +734,27 @@ public class MainFrame {
             }
         }
     }
+    private void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
+        if (fileToZip.isHidden()) {
+            return;
+        }
+        if (fileToZip.isDirectory()) {
+            File[] children = fileToZip.listFiles();
+            for (File childFile : children) {
+                zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
+            }
+            return;
+        }
+        FileInputStream fis = new FileInputStream(fileToZip);
+        ZipEntry zipEntry = new ZipEntry(fileName);
+        zipOut.putNextEntry(zipEntry);
+        byte[] bytes = new byte[1024];
+        int length;
+        while ((length = fis.read(bytes)) >= 0) {
+            zipOut.write(bytes, 0, length);
+        }
+        fis.close();
+    }
 
     private void sort(){
         if(!sortFactors.isEmpty()) {
@@ -754,9 +789,65 @@ public class MainFrame {
         }
     }
 
+    public void searchText(String key){
+        if (mainPanel.isAncestorOf(processingPanel)) {
+            processingNewDownloads.clear();
+            for (NewDownloadPanel item : holder) {
+                if (item.getFileProperties().getFileUrl().contains(key)) {
+                    processingNewDownloads.add(item);
+                }
+            }
+            updateProcessingDownloads();
+        }
+        else if (mainPanel.isAncestorOf(queuePanel)) {
+            queueNewDownloads.clear();
+            for (NewDownloadPanel item : holder) {
+                if (item.getFileProperties().getFileUrl().contains(key)) {
+                    queueNewDownloads.add(item);
+                }
+            }
+            updateQueueDownloads();
+        }
+        else{
+            completedDownloads.clear();
+            for (NewDownloadPanel item : holder) {
+                if (item.getFileProperties().getFileUrl().contains(key)) {
+                    completedDownloads.add(item);
+                }
+            }
+            updateCompletedDownloads();
+        }
+    }
+
     private class MainFrameActionListener implements ActionListener,DocumentListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if(e.getSource().equals(resume)) {
+                ArrayList<NewDownloadPanel> tmpNewDownloads;
+                if (mainPanel.isAncestorOf(processingPanel))
+                    tmpNewDownloads = processingNewDownloads;
+                 else if (mainPanel.isAncestorOf(queuePanel))
+                    tmpNewDownloads = queueNewDownloads;
+                 else
+                    tmpNewDownloads = completedDownloads;
+                for (NewDownloadPanel item: tmpNewDownloads) {
+                    if(item.isSelected())
+                        item.startDownload();
+                }
+            }
+            else if(e.getSource().equals(pause)){
+                ArrayList<NewDownloadPanel> tmpNewDownloads;
+                if (mainPanel.isAncestorOf(processingPanel))
+                    tmpNewDownloads = processingNewDownloads;
+                else if (mainPanel.isAncestorOf(queuePanel))
+                    tmpNewDownloads = queueNewDownloads;
+                else
+                    tmpNewDownloads = completedDownloads;
+                for (NewDownloadPanel item: tmpNewDownloads) {
+                    if(item.isSelected())
+                        item.pauseDownload();
+                }
+            }
             if (e.getSource().equals(setting) || e.getSource().equals(settingItem) ) {
                 Manager.getAction("setting.show");
             }
@@ -769,30 +860,35 @@ public class MainFrame {
             else if(e.getSource().equals(aboutItem)){
                 Manager.showAbout();
             }
-            else if(e.getSource().equals(ascendingButton)){
-                if(mainPanel.isAncestorOf(processingPanel)){
-                    System.out.println("processing Panel " + " ascending Item");;
-                    Collections.reverse(processingNewDownloads);
-                    updateProcessingPanel();
+            else if(e.getSource().equals(exportItem)){
+                String sourceFile = "files";
+                FileOutputStream fos = null;
+                File fileToZip = null;
+                ZipOutputStream zipOut = null;
+                try {
+                    fos = new FileOutputStream("Files.zip");
+                    zipOut = new ZipOutputStream(fos);
+                    fileToZip = new File(sourceFile);
+                    zipFile(fileToZip, fileToZip.getName(), zipOut);
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
-                else if(mainPanel.isAncestorOf(queuePanel)){
-                    System.out.println("queuePanel " + " ascending Item");
-                    Collections.reverse(queueNewDownloads);
-                    updateQueuePanel();
+                finally {
+                    try {
+                        zipOut.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    try {
+                        fos.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
-            else if(e.getSource().equals(descendingButton)) {
-                if(mainPanel.isAncestorOf(processingPanel)){
-                    System.out.println("processing Panel " + " descending Item");;
-                    Collections.reverse(processingNewDownloads);
-                    updateProcessingPanel();
-                }
-                else if(mainPanel.isAncestorOf(queuePanel)){
-                    System.out.println("queuePanel " + " descending Item");
-                    Collections.reverse(queueNewDownloads);
-                    updateQueuePanel();
-                }
-            }
+
             else if(e.getSource().equals(processing)){
                 BorderLayout layout = (BorderLayout)mainPanel.getLayout();
                 mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
@@ -886,10 +982,6 @@ public class MainFrame {
                 mainPanel.revalidate();
                 background.revalidate();
             }
-            else if(e.getSource().equals(searchText)){
-                searchText.setText("");
-                System.out.println("set");
-            }
             else if(e.getSource().equals(remove)){
                 boolean completely = false;
                 Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
@@ -925,33 +1017,7 @@ public class MainFrame {
         @Override
         public void insertUpdate(DocumentEvent e) {
             String key = searchText.getText();
-            if (mainPanel.isAncestorOf(processingPanel)) {
-                processingNewDownloads.clear();
-                for (NewDownloadPanel item : holder) {
-                    if (item.getFileProperties().getFileUrl().contains(key)) {
-                        processingNewDownloads.add(item);
-                    }
-                }
-                updateProcessingDownloads();
-            }
-            else if (mainPanel.isAncestorOf(queuePanel)) {
-                queueNewDownloads.clear();
-                for (NewDownloadPanel item : holder) {
-                    if (item.getFileProperties().getFileUrl().contains(key)) {
-                        queueNewDownloads.add(item);
-                    }
-                }
-                updateQueueDownloads();
-            }
-            else{
-                completedDownloads.clear();
-                for (NewDownloadPanel item : holder) {
-                    if (item.getFileProperties().getFileUrl().contains(key)) {
-                        completedDownloads.add(item);
-                    }
-                }
-                updateCompletedDownloads();
-            }
+            searchText(key);
         }
 
         @Override
@@ -972,34 +1038,8 @@ public class MainFrame {
                     updateCompletedDownloads();
                 }
             }
-            else{
-                if (mainPanel.isAncestorOf(processingPanel)) {
-                    processingNewDownloads.clear();
-                    for (NewDownloadPanel item : holder) {
-                        if (item.getFileProperties().getFileUrl().contains(key)) {
-                            processingNewDownloads.add(item);
-                        }
-                    }
-                    updateProcessingDownloads();
-                }
-                else if (mainPanel.isAncestorOf(queuePanel)) {
-                    queueNewDownloads.clear();
-                    for (NewDownloadPanel item : holder) {
-                        if (item.getFileProperties().getFileUrl().contains(key)) {
-                            queueNewDownloads.add(item);
-                        }
-                    }
-                    updateQueueDownloads();
-                }
-                else{
-                    completedDownloads.clear();
-                    for (NewDownloadPanel item : holder) {
-                        if (item.getFileProperties().getFileUrl().contains(key)) {
-                            completedDownloads.add(item);
-                        }
-                    }
-                    updateCompletedDownloads();
-                }
+            else {
+                searchText(key);
             }
         }
 
@@ -1018,9 +1058,49 @@ public class MainFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if(e.getSource().equals(sort))
+            if(e.getSource().equals(sort)){
+                if(mainPanel.isAncestorOf(processingPanel) && !processingIsAscending){
+                    System.out.println("processing Panel " + " ascending Item");;
+                    Collections.reverse(processingNewDownloads);
+                    processingIsAscending = true;
+                    updateProcessingDownloads();
+                }
+                else if(mainPanel.isAncestorOf(queuePanel) && !queueIsAscending){
+                    System.out.println("queuePanel " + " ascending Item");
+                    Collections.reverse(queueNewDownloads);
+                    queueIsAscending = true;
+                    updateQueueDownloads();
+                }
+                else if(mainPanel.isAncestorOf(completePanel) && !completedIsAscending){
+                    System.out.println("completePanel ascending Item");
+                    Collections.reverse(completedDownloads);
+                    completedIsAscending = true;
+                    updateProcessingDownloads();
+                }
+            }
+            else if(e.getSource().equals(descendingItem)){
+                if(mainPanel.isAncestorOf(processingPanel) && processingIsAscending){
+                    System.out.println("processing Panel " + " ascending Item");;
+                    Collections.reverse(processingNewDownloads);
+                    processingIsAscending = false;
+                    updateProcessingDownloads();
+                }
+                else if(mainPanel.isAncestorOf(queuePanel) && queueIsAscending){
+                    System.out.println("queuePanel " + " ascending Item");
+                    Collections.reverse(queueNewDownloads);
+                    queueIsAscending = false;
+                    updateQueueDownloads();
+                }
+                else if(mainPanel.isAncestorOf(completePanel) && completedIsAscending){
+                    System.out.println("completePanel ascending Item");
+                    Collections.reverse(completedDownloads);
+                    completedIsAscending = false;
+                    updateProcessingDownloads();
+                }
+            }
+            else if(e.getSource().equals(sort)){
                 sortPopUp.show(e.getComponent(),e.getX(),e.getY());
-            ascendingButton.doClick();
+            }
         }
 
         @Override
@@ -1036,6 +1116,23 @@ public class MainFrame {
         @Override
         public void mouseExited(MouseEvent e) {
 
+        }
+        private void reverse(){
+            if(mainPanel.isAncestorOf(processingPanel)){
+                System.out.println("processing Panel " + " ascending Item");;
+                Collections.reverse(processingNewDownloads);
+                updateProcessingDownloads();
+            }
+            else if(mainPanel.isAncestorOf(queuePanel)){
+                System.out.println("queuePanel " + " ascending Item");
+                Collections.reverse(queueNewDownloads);
+                updateQueueDownloads();
+            }
+            else if(mainPanel.isAncestorOf(completePanel)){
+                System.out.println("completePanel ascending Item");
+                Collections.reverse(completedDownloads);
+                updateProcessingDownloads();
+            }
         }
     }
     private class CheckListener implements  ItemListener{

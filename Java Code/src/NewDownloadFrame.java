@@ -74,7 +74,7 @@ public class NewDownloadFrame {
         volumePanel.setLayout(new BoxLayout(volumePanel,BoxLayout.X_AXIS));
         volumeTitle = new JLabel("Volume:");
         volumeTitle.setAlignmentY(Component.LEFT_ALIGNMENT);
-        volumeValue = new JTextField("100 GB");
+        volumeValue = new JTextField("100");
         volumeValue.setBackground(Color.WHITE);
         volumeValue.setEditable(false);
         volumePanel.add(volumeTitle);

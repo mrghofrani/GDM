@@ -13,7 +13,7 @@ public class FileProperties implements Serializable {
 
     public FileProperties(String fileUrl, String status, String size, String created, String address) {
         this.fileUrl = fileUrl;
-        fileName = Integer.toString(counter++) + fileUrl.substring(fileUrl.lastIndexOf('.'));
+        fileName = System.currentTimeMillis() + fileUrl.substring(fileUrl.lastIndexOf('.'));
         this.status = "not completed"; // Statuses are completed and pending and pause
         this.size = size;
         this.created = created;

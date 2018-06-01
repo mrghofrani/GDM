@@ -1,5 +1,6 @@
 import com.sun.javafx.binding.StringFormatter;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -44,6 +45,7 @@ public class NewDownloadPanel implements Serializable {
 
     private JPanel rightBottomSideOfCentral;
     private JButton resumeButton;
+    private ImageIcon resumeIcon;
     private JButton cancelButton;
     private JButton directoryButton;
 
@@ -92,7 +94,8 @@ public class NewDownloadPanel implements Serializable {
         bottomSideOfCentral = new JPanel(new BorderLayout());
         rightBottomSideOfCentral = new JPanel();
         rightBottomSideOfCentral.setLayout(new BoxLayout(rightBottomSideOfCentral,BoxLayout.X_AXIS));
-        resumeButton = new JButton(new ImageIcon("resume.png"));
+        resumeIcon = new ImageIcon("resume.png");
+        resumeButton = new JButton(resumeIcon);
         resumeButton.setMaximumSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
         resumeButton.addActionListener(actionHandler);
         cancelButton = new JButton(new ImageIcon("cancel.png"));
@@ -209,6 +212,7 @@ public class NewDownloadPanel implements Serializable {
     }
 
     public void deleteFileProperties(){
+        worker.cancel(true);
         fileProperties = null;
     }
 
@@ -218,6 +222,14 @@ public class NewDownloadPanel implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     private class ActionHandler implements ActionListener{
@@ -234,8 +246,21 @@ public class NewDownloadPanel implements Serializable {
                         }
                     }
                 }
-                else
+                else if(completed && !file.exists())
                     JOptionPane.showMessageDialog(newDownloadPanel,"File not found","open",JOptionPane.ERROR_MESSAGE);
+                else{
+                    if(resumeButton.getIcon().equals(resumeIcon)){
+                        resumeButton.setIcon(new ImageIcon("pause.png"));
+                        worker = new Worker();
+                        worker.execute();
+                        isPaused = false;
+                    }
+                    else {
+                        System.out.println("Canceled");
+                        isPaused = true;
+                        resumeButton.setIcon(resumeIcon);
+                    }
+                }
             }
             else if(e.getSource().equals(cancelButton)) {
                 ImageIcon tmp = new ImageIcon("cross.png");
@@ -282,68 +307,77 @@ public class NewDownloadPanel implements Serializable {
         }
     }
 
-    private class Worker extends SwingWorker<Void, String>{
-
+    private class Worker extends SwingWorker<String, Double>{
         @Override
-        protected Void doInBackground() throws Exception {
-            BufferedInputStream bufferedInputStream = null;
-            FileOutputStream fileOutputStream = null;
-            BufferedOutputStream bufferedOutputStream = null;
-            try {
-                URL url = new URL(fileProperties.getFileUrl());
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                if(httpURLConnection.getResponseCode() != 200) {
-                    JOptionPane.showMessageDialog(newDownloadPanel, "Error downloading file from " + fileProperties.getFileUrl(), "Error", JOptionPane.ERROR_MESSAGE);
-                    statusField.setText("Error Downloading file");
-                }
-                else {
-                    fileProperties.setSize(Long.toString(httpURLConnection.getContentLength()));
-                    bufferedInputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-                    fileOutputStream = new FileOutputStream(file);
-                    bufferedOutputStream = new BufferedOutputStream(fileOutputStream,BUFFER_SIZE);
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int read;
-                    System.out.println("reached");
-                    while ((read = bufferedInputStream.read(buffer, 0, BUFFER_SIZE)) >= 0 && !isPaused) {
-                        Long startingTime = System.nanoTime();
-                        bufferedOutputStream.write(buffer, 0, read);
-                        downloadedValue += read;
-                        Long endingTime = System.nanoTime();
-                        publish(Double.toString(downloadedValue));
-                        Double duration = endingTime.doubleValue() - startingTime.doubleValue();
-                        publish(duration.toString());
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
+        protected String doInBackground() throws Exception {
+            BufferedInputStream input;
+            RandomAccessFile output;
+            HttpURLConnection connection;
+            Long downloadedSize = file.length();
+            URL url = new URL(fileProperties.getFileUrl());
+            connection = (HttpURLConnection) url.openConnection();
+            if (file.exists()) {
+                connection.setAllowUserInteraction(true);
+                connection.setRequestProperty("Range", "bytes=" + file.length() + "-");
             }
-            finally {
-                if(bufferedInputStream != null)
-                    bufferedInputStream.close();
-                if(bufferedOutputStream != null)
-                    bufferedOutputStream.close();
-            }
+            connection.setConnectTimeout(14000);
+            connection.setReadTimeout(20000);
+            connection.connect();
 
-            return null;
+            if (connection.getResponseCode() / 100 != 2) {
+                JOptionPane.showMessageDialog(newDownloadPanel, "Error downloading file from " + fileProperties.getFileUrl(), "Error", JOptionPane.ERROR_MESSAGE);
+                statusField.setText("Error Downloading file");
+            }
+            else {
+                String connectionField = connection.getHeaderField("content-range");
+                if (connectionField != null) {
+                    String[] connectionRanges = connectionField.substring("bytes=".length()).split("-");
+                    downloadedSize = Long.valueOf(connectionRanges[0]);
+                }
+
+                if (connectionField == null && file.exists())
+                    file.delete();
+
+                fileProperties.setSize(Long.toString(connection.getContentLength() + downloadedSize));
+                input = new BufferedInputStream(connection.getInputStream());
+                output = new RandomAccessFile(file, "rw");
+                output.seek(downloadedSize);
+                resumeButton.setIcon(new ImageIcon("pause.png"));
+                byte data[] = new byte[BUFFER_SIZE];
+                int count = 0;
+
+                while ((count = input.read(data, 0, BUFFER_SIZE)) != -1) {
+                    if(isPaused)
+                        return "Paused";
+                    Long startingTime = System.nanoTime();
+                    downloadedSize += count;
+                    output.write(data, 0, count);
+                    publish(downloadedSize.doubleValue());
+                    Long finishingTime = System.nanoTime();
+                    publish( finishingTime.doubleValue() - startingTime.doubleValue());
+                }
+                output.close();
+                input.close();
+            }
+            return "Finished";
         }
 
         @Override
-        protected void process(List<String> chunks) {
+        protected void process(List<Double> chunks) {
             statusField.setText("");
             int level;
             // Size part
-            String downloadedString = chunks.get(chunks.size() - 2);
-            Double downloadedDouble = Double.parseDouble(downloadedString);
+            Double downloadedSize = chunks.get(chunks.size() - 2);
             Double fileSize = Double.parseDouble(fileProperties.getSize());
-            progressBar.setValue((int)((downloadedDouble*100)/fileSize));
+            progressBar.setValue((int)((downloadedSize*100)/fileSize));
             String firstPart;
             String secondPart;
             level = 0;
-            while(downloadedDouble> BUFFER_SIZE && level < UNITS.size()){
+            while(downloadedSize> BUFFER_SIZE && level < UNITS.size()){
                 level++;
-                downloadedDouble /= BUFFER_SIZE;
+                downloadedSize /= BUFFER_SIZE;
             }
-            firstPart = String.format( "%.2f %s", downloadedDouble,UNITS.get(level));
+            firstPart = String.format( "%.2f %s", downloadedSize,UNITS.get(level));
             level = 0;
             while(fileSize > BUFFER_SIZE && level < UNITS.size()){
                 level++;
@@ -354,12 +388,11 @@ public class NewDownloadPanel implements Serializable {
             volumeField.setText("Downloaded " + firstPart + " of " + secondPart);
 
             // Speed part
-            String durationString = chunks.get(chunks.size()-1);
-            Double durationDouble = Double.parseDouble(durationString);
-            durationDouble /= Math.pow(10,9);
-            Double speed = BUFFER_SIZE/durationDouble;
-            System.out.println(" speed " + speed);
-            System.out.println("Time "+ durationDouble);
+            Double duration = chunks.get(chunks.size()-1);
+            duration /= Math.pow(10,9);
+            Double speed = BUFFER_SIZE/duration;
+//            System.out.println(" speed " + speed);
+//            System.out.println("Time "+ duration);
             level = 0;
             while(speed > BUFFER_SIZE && level < UNITS.size()){
                 speed /= BUFFER_SIZE;
@@ -371,7 +404,24 @@ public class NewDownloadPanel implements Serializable {
 
         @Override
         protected void done() {
-            completed = true;
+            try {
+                switch (get()) {
+                    case "Paused":
+                        statusField.setText("Paused");
+                        fileProperties.setStatus("Pause");
+                        completed = false;
+                        break;
+                    case "Finished":
+                        completed = true;
+                        fileProperties.setStatus("Completed");
+                        Manager.updateCompleted();
+                        break;
+                        default:
+                            throw new Exception("Item not found");
+                }
+            }
+            catch(Exception e){ }
         }
+
     }
 }

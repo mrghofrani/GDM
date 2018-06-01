@@ -197,6 +197,10 @@ public class Manager {
         return instance;
     }
 
+    public static void updateCompleted(){
+        main.updateCompleted();
+    }
+
     public static void addNewDownload(FileProperties fileProperties){
         main.setNewDownload(fileProperties);
     }

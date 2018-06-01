@@ -16,7 +16,8 @@ public class MainFrame {
     private CheckListener checkListener = new CheckListener();
     private MouseImplement mouseListener = new MouseImplement();
     private ArrayList<NewDownloadPanel> processingNewDownloads = new ArrayList<>();
-    private ArrayList<NewDownloadPanel> queueNewDownload = new ArrayList<>();
+    private ArrayList<NewDownloadPanel> queueNewDownloads = new ArrayList<>();
+    private ArrayList<NewDownloadPanel> completedDownloads = new ArrayList<>();
     private ArrayList<NewDownloadPanel> holder;
     private int numberOfAddedToProcessing = 0;
     private FileInputStream fileInputStream;
@@ -109,6 +110,8 @@ public class MainFrame {
     private JPanel queuePanel;
     private JScrollPane queueScrollPane;
 
+    private JPanel completePanel;
+    private JScrollPane completeScrollPane;
 
     public MainFrame() {
         background = new JFrame("GDM");
@@ -120,13 +123,16 @@ public class MainFrame {
         leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.Y_AXIS));
         processing = new JButton("Processing");
+        processing.setIcon(new ImageIcon("time-left.png"));
         processing.addActionListener(actionListener);
         int buttonWidth = processing.getPreferredSize().width + 100;
         completed = new JButton("completed");
+        completed.setIcon(new ImageIcon("correct-mark.png"));
         completed.setMaximumSize(new Dimension(buttonWidth,completed.getPreferredSize().height));
         completed.addActionListener(actionListener);
         queue = new JButton("Queue");
         queue.setMaximumSize(new Dimension(buttonWidth,queue.getPreferredSize().height));
+        queue.setIcon(new ImageIcon("rectangles.png"));
         queue.addActionListener(actionListener);
         leftPanel.add(processing);
         leftPanel.add(Box.createRigidArea(new Dimension(0,5)));// for having a gap to
@@ -190,15 +196,10 @@ public class MainFrame {
         sortPopUp.add(descendingButton);
         descendingButton.addActionListener(actionListener);
         ascendingButton.addActionListener(actionListener);
-//        sortBy = new ButtonGroup();
-//        sortBy.add(byDate);
-//        sortBy.add(bySize);
-//        sortBy.add(byName);
-//        sortBy.add(byStatus);
+
 
         searchText = new JTextField("Search Here ...");
         searchText.setAlignmentY(JComponent.RIGHT_ALIGNMENT);
-//        searchText.getDocument().addDocumentListener(actionListener);
         searchText.setPreferredSize(new Dimension((int)searchText.getPreferredSize().getWidth(),(int)searchText.getPreferredSize().getHeight()));
         searchText.addFocusListener(new FocusListener() {
             @Override
@@ -207,7 +208,7 @@ public class MainFrame {
                 if(mainPanel.isAncestorOf(processingPanel))
                     holder = new ArrayList<>(processingNewDownloads);
                 else if(mainPanel.isAncestorOf(queuePanel))
-                    holder = queueNewDownload;
+                    holder = queueNewDownloads;
                 searchText.setText("");
                 searchText.getDocument().addDocumentListener(actionListener);
             }
@@ -220,7 +221,7 @@ public class MainFrame {
                     updateProcessingDownloads();
                 }
                 else if(mainPanel.isAncestorOf(queuePanel)) {
-                    queueNewDownload = new ArrayList<>(holder);
+                    queueNewDownloads = new ArrayList<>(holder);
                     updateQueuePanel();
                 }
                 searchText.setText("Search Here");
@@ -290,14 +291,24 @@ public class MainFrame {
         // Processing Panel
         processingPanel = new JPanel();
         processingPanel.setLayout(new BoxLayout(processingPanel,BoxLayout.Y_AXIS));
-        nothing = new JLabel(" Nothing is here :) " + "\n" +  " Hit the download button.");
+        nothing = new JLabel(" <html> Nothing is here :) <br/> Hit the download button. </html>",SwingUtilities.CENTER);
         nothing.setHorizontalTextPosition(JLabel.CENTER);
         nothing.setVerticalTextPosition(JLabel.BOTTOM);
         nothing.setForeground(Color.GRAY);
-        nothing.setIcon(new ImageIcon("sunbed.png"));
+        ImageIcon imageIcon = new ImageIcon("sunbed.png"); // load the image to a imageIcon
+        Image image = imageIcon.getImage(); // transform it
+        Image newImage = image.getScaledInstance(120, 120,  Image.SCALE_DEFAULT); // scale it the smooth way
+        imageIcon = new ImageIcon(newImage);  // transform it back
+        nothing.setIcon(imageIcon);
         nothing.setAlignmentX(Component.CENTER_ALIGNMENT);
         processingScrollPane = new JScrollPane(processingPanel);
         processingPanel.add(nothing);
+
+        // Complete Panel
+        completePanel = new JPanel();
+        completePanel .setLayout(new BoxLayout(completePanel,BoxLayout.Y_AXIS));
+        completeScrollPane = new JScrollPane(completePanel);
+        completePanel.setVisible(true);
 
         // Queue Panel
         queuePanel = new JPanel();
@@ -370,8 +381,7 @@ public class MainFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-                if(!processingNewDownloads.isEmpty())
-                    comfortableResize();
+                comfortableResize();
             }
         });
     }
@@ -436,7 +446,7 @@ public class MainFrame {
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
         queuePanel.remove(nothing);
         queuePanel.add(tmp.getPanel());
-        queueNewDownload.add(tmp);
+        queueNewDownloads.add(tmp);
         if(keepGoing) {
             processingNewDownloads.add(tmp);
             tmp.startDownload();
@@ -445,11 +455,6 @@ public class MainFrame {
         updateProcessingDownloads();
         SwingUtilities.updateComponentTreeUI(mainPanel);
         SwingUtilities.updateComponentTreeUI(queuePanel);
-    }
-
-
-    public Dimension getCentralPanelSize(){
-        return processingPanel.getSize();
     }
 
 
@@ -475,16 +480,19 @@ public class MainFrame {
 
     private void comfortableResize(){
         if(mainPanel.isAncestorOf(processingPanel)) {
-            for (NewDownloadPanel item : processingNewDownloads) {
+            for (NewDownloadPanel item : processingNewDownloads)
                 item.setSize(processingPanel.getWidth());
-            }
             processingPanel.revalidate();
         }
         if(mainPanel.isAncestorOf(queuePanel)) {
-            for (NewDownloadPanel item : queueNewDownload) {
+            for (NewDownloadPanel item : queueNewDownloads)
                 item.setSize(queuePanel.getWidth());
-            }
             SwingUtilities.updateComponentTreeUI(queuePanel);
+        }
+        if(mainPanel.isAncestorOf(completePanel)){
+            for (NewDownloadPanel item: completedDownloads)
+                item.setSize(completePanel.getWidth());
+            SwingUtilities.updateComponentTreeUI(completePanel);
         }
     }
 
@@ -508,7 +516,7 @@ public class MainFrame {
     }
 
     private void updateQueueDownloads(){
-        Iterator iterator = queueNewDownload.iterator();
+        Iterator iterator = queueNewDownloads.iterator();
         while(iterator.hasNext()){
             NewDownloadPanel tmp =(NewDownloadPanel)iterator.next();
             if(tmp.getFileProperties() == null) {
@@ -540,15 +548,72 @@ public class MainFrame {
     private void updateQueuePanel(){
         queuePanel.removeAll();
         queuePanel.setLayout(new BoxLayout(queuePanel,BoxLayout.Y_AXIS));
-        if(queueNewDownload.isEmpty()){
+        if(queueNewDownloads.isEmpty()){
             queuePanel.add(nothing);
         }
         else {
-            for (NewDownloadPanel item : queueNewDownload) {
+            for (NewDownloadPanel item : queueNewDownloads) {
                 queuePanel.add(item.getPanel());
             }
         }
         SwingUtilities.updateComponentTreeUI(queuePanel);
+    }
+
+    /**
+     * This method always invoked when a download is
+     * completed and needs to move into completed Part
+     */
+    public void updateCompleted(){
+        Iterator<NewDownloadPanel> iteratorProcessing = processingNewDownloads.iterator();
+        Iterator<NewDownloadPanel> iteratorQueue;
+        NewDownloadPanel tmp;
+        while(iteratorProcessing.hasNext()){
+            tmp = iteratorProcessing.next();
+            if(tmp.isCompleted()){
+                completedDownloads.add(tmp);
+                iteratorQueue = queueNewDownloads.iterator();
+                while(iteratorQueue.hasNext()) {
+                    if (iteratorQueue.next() == tmp)
+                        iteratorQueue.remove();
+                }
+                iteratorProcessing.remove();
+            }
+        }
+        updateCompletedDownloads();
+        updateQueueDownloads();
+        updateProcessingDownloads();
+    }
+
+    /**
+     * This method checks whether a download
+     * has been deleted or not. if it was deleted
+     * deletes it from completedDownload list
+     */
+    private void updateCompletedDownloads(){
+        Iterator iterator = completedDownloads.iterator();
+        while(iterator.hasNext()){
+            NewDownloadPanel tmp =(NewDownloadPanel)iterator.next();
+            if(tmp.getFileProperties() == null)
+                iterator.remove();
+        }
+        updateCompletedPanel();
+    }
+
+    /**
+     * This method update the completed Panel. According to completedDownload list
+     * if the list was empty adds the rest logo.
+     */
+    private void updateCompletedPanel(){
+        completePanel.removeAll();
+        completePanel.setLayout(new BoxLayout(completePanel,BoxLayout.Y_AXIS));
+        if(completedDownloads.isEmpty()){
+            completePanel.add(nothing);
+        }
+        else {
+            for (NewDownloadPanel item : completedDownloads)
+                completePanel.add(item.getPanel());
+        }
+        SwingUtilities.updateComponentTreeUI(completePanel);
     }
 
     /**
@@ -581,7 +646,7 @@ public class MainFrame {
             FileOutputStream fileOutputStream = new FileOutputStream(QUEUE_PATH,false);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             ArrayList<FileProperties> files = new ArrayList<>();
-            for (NewDownloadPanel item: queueNewDownload)
+            for (NewDownloadPanel item: queueNewDownloads)
                 files.add(item.getFileProperties());
             objectOutputStream.writeObject(files);
             objectOutputStream.flush();
@@ -608,8 +673,11 @@ public class MainFrame {
                 FileInputStream fileInputStream = new FileInputStream(PROCESSING_PATH);
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
                 ArrayList<FileProperties> downloadPanels = (ArrayList<FileProperties>) objectInputStream.readObject();
+                NewDownloadPanel tmp;
                 for (FileProperties item : downloadPanels) {
-                    processingNewDownloads.add(new NewDownloadPanel(item, processingPanel.getWidth()));
+                    tmp = new NewDownloadPanel(item, processingPanel.getWidth());
+                    processingNewDownloads.add(tmp);
+                    tmp.startDownload();
                 }
                 comfortableResize();
                 updateProcessingPanel();
@@ -630,7 +698,7 @@ public class MainFrame {
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
                 ArrayList<FileProperties> downloadPanels = (ArrayList) objectInputStream.readObject();
                 for (FileProperties item : downloadPanels) {
-                    queueNewDownload.add(new NewDownloadPanel(item, processingPanel.getWidth()));
+                    queueNewDownloads.add(new NewDownloadPanel(item, processingPanel.getWidth()));
                 }
                 comfortableResize();
                 updateProcessingPanel();
@@ -653,7 +721,7 @@ public class MainFrame {
                 for (NewDownloadPanel item : processingNewDownloads)
                     downloadFiles.add(item);
             } else if (mainPanel.isAncestorOf(queuePanel)) {
-                for (NewDownloadPanel item : queueNewDownload)
+                for (NewDownloadPanel item : queueNewDownloads)
                     downloadFiles.add(item);
             }
             TreeMap<String, NewDownloadPanel> sortHashMap = new TreeMap<>();
@@ -673,11 +741,12 @@ public class MainFrame {
                 processingNewDownloads = new ArrayList<>(downloadFiles);
                 updateProcessingDownloads();
             } else if (mainPanel.isAncestorOf(queuePanel)) {
-                queueNewDownload = new ArrayList<>(downloadFiles);
+                queueNewDownloads = new ArrayList<>(downloadFiles);
                 updateQueuePanel();
             }
         }
     }
+
     private class MainFrameActionListener implements ActionListener,DocumentListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -701,7 +770,7 @@ public class MainFrame {
                 }
                 else if(mainPanel.isAncestorOf(queuePanel)){
                     System.out.println("queuePanel " + " ascending Item");
-                    Collections.reverse(queueNewDownload);
+                    Collections.reverse(queueNewDownloads);
                     updateQueuePanel();
                 }
             }
@@ -713,7 +782,7 @@ public class MainFrame {
                 }
                 else if(mainPanel.isAncestorOf(queuePanel)){
                     System.out.println("queuePanel " + " descending Item");
-                    Collections.reverse(queueNewDownload);
+                    Collections.reverse(queueNewDownloads);
                     updateQueuePanel();
                 }
             }
@@ -721,21 +790,24 @@ public class MainFrame {
                 BorderLayout layout = (BorderLayout)mainPanel.getLayout();
                 mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
                 mainPanel.add(processingScrollPane, BorderLayout.CENTER);
-                updateProcessingPanel();
+                updateProcessingDownloads();
                 SwingUtilities.updateComponentTreeUI(mainPanel);
             }
             else if(e.getSource().equals(completed)){
-                queuePanel.setVisible(false);
-                processingPanel.setVisible(false);
+                BorderLayout layout = (BorderLayout)mainPanel.getLayout();
+                mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+                mainPanel.add(completeScrollPane,BorderLayout.CENTER);
+                updateCompletedDownloads();
+                SwingUtilities.updateComponentTreeUI(mainPanel);
             }
             else if(e.getSource().equals(queue)){
                 BorderLayout layout = (BorderLayout)mainPanel.getLayout();
                 mainPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
                 mainPanel.add(queueScrollPane, BorderLayout.CENTER);
-                updateQueuePanel();
+                updateQueueDownloads();
                 SwingUtilities.updateComponentTreeUI(mainPanel);
             }
-            else if(e.getSource().equals(cancel)){ // TODO: I should implement the cancel button working for each panel that is open DONE
+            else if(e.getSource().equals(cancel)){
                 boolean  completely = false;
                 Iterator iterator;
                 Object[] options = {"Yes, please", "And also delete the file", "No, keep the file"};
@@ -754,7 +826,7 @@ public class MainFrame {
                         }
                         else if(mainPanel.isAncestorOf(queuePanel)){
                             tmpPanel = queuePanel;
-                            tmpNewDownloads = queueNewDownload;
+                            tmpNewDownloads = queueNewDownloads;
                         }
 
                         if (tmpNewDownloads.isEmpty())
@@ -787,7 +859,7 @@ public class MainFrame {
                                 }
                                 backupRemovedFiles(removed);
                                 if(mainPanel.isAncestorOf(queuePanel))
-                                    queueNewDownload = tmpNewDownloads;
+                                    queueNewDownloads = tmpNewDownloads;
                                 if(mainPanel.isAncestorOf(processingPanel))
                                     processingNewDownloads = tmpNewDownloads;
                                 updateProcessingDownloads();
@@ -826,12 +898,12 @@ public class MainFrame {
                             item.deleteFileProperties();
                         }
                         processingNewDownloads.clear();
-                        for (NewDownloadPanel item: queueNewDownload) {
+                        for (NewDownloadPanel item: queueNewDownloads) {
                             if(completely)
                                 item.getFile().delete();
                             item.deleteFileProperties();
                         }
-                        queueNewDownload.clear();
+                        queueNewDownloads.clear();
                         break;
 
                     default:
@@ -846,7 +918,6 @@ public class MainFrame {
         @Override
         public void insertUpdate(DocumentEvent e) {
             String key = searchText.getText();
-            System.out.println("key " + key);
             if (mainPanel.isAncestorOf(processingPanel)) {
                 processingNewDownloads.clear();
                 for (NewDownloadPanel item : holder) {
@@ -856,10 +927,10 @@ public class MainFrame {
                 }
                 updateProcessingPanel();
             } else if (mainPanel.isAncestorOf(queuePanel)) {
-                queueNewDownload.clear();
+                queueNewDownloads.clear();
                 for (NewDownloadPanel item : holder) {
                     if (item.getFileProperties().getFileUrl().contains(key)) {
-                        queueNewDownload.add(item);
+                        queueNewDownloads.add(item);
                     }
                 }
                 updateQueuePanel();
@@ -876,7 +947,7 @@ public class MainFrame {
                     updateProcessingPanel();
                 }
                 else if(mainPanel.isAncestorOf(queuePanel)) {
-                    queueNewDownload = new ArrayList<>(holder);
+                    queueNewDownloads = new ArrayList<>(holder);
                     updateQueuePanel();
                 }
             }

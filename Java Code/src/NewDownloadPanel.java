@@ -268,8 +268,11 @@ public class NewDownloadPanel implements Serializable {
                 int n = JOptionPane.showOptionDialog(newDownloadPanel, "Would you like to delete this download?", "Delete", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, tmp, options,options[2]);
                 switch(n){
                     case 1:
-                        if(file.exists())
+                        if(file.exists()) {
+                            isPaused = true;
+                            worker.cancel(true);
                             file.delete();
+                        }
                         else
                             JOptionPane.showMessageDialog(newDownloadPanel,"File not found deleting from panel","delete",JOptionPane.INFORMATION_MESSAGE);
                     case 0:
@@ -414,13 +417,15 @@ public class NewDownloadPanel implements Serializable {
                     case "Finished":
                         completed = true;
                         fileProperties.setStatus("Completed");
+                        System.out.println(completed);
+                        System.out.println("Finished");
                         Manager.updateCompleted();
                         break;
                         default:
                             throw new Exception("Item not found");
                 }
             }
-            catch(Exception e){ }
+            catch(Exception e){}
         }
 
     }

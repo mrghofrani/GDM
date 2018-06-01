@@ -208,7 +208,9 @@ public class MainFrame {
                 if(mainPanel.isAncestorOf(processingPanel))
                     holder = new ArrayList<>(processingNewDownloads);
                 else if(mainPanel.isAncestorOf(queuePanel))
-                    holder = queueNewDownloads;
+                    holder = new ArrayList<>(queueNewDownloads);
+                else
+                    holder = new ArrayList<>(completedDownloads);
                 searchText.setText("");
                 searchText.getDocument().addDocumentListener(actionListener);
             }
@@ -573,8 +575,13 @@ public class MainFrame {
                 completedDownloads.add(tmp);
                 iteratorQueue = queueNewDownloads.iterator();
                 while(iteratorQueue.hasNext()) {
-                    if (iteratorQueue.next() == tmp)
+                    if (iteratorQueue.next() == tmp) {
                         iteratorQueue.remove();
+                        numberOfAddedToProcessing--;
+                        if(numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads()))
+                            processingNewDownloads.add(queueNewDownloads.get(0));
+                    }
+
                 }
                 iteratorProcessing.remove();
             }
@@ -925,15 +932,25 @@ public class MainFrame {
                         processingNewDownloads.add(item);
                     }
                 }
-                updateProcessingPanel();
-            } else if (mainPanel.isAncestorOf(queuePanel)) {
+                updateProcessingDownloads();
+            }
+            else if (mainPanel.isAncestorOf(queuePanel)) {
                 queueNewDownloads.clear();
                 for (NewDownloadPanel item : holder) {
                     if (item.getFileProperties().getFileUrl().contains(key)) {
                         queueNewDownloads.add(item);
                     }
                 }
-                updateQueuePanel();
+                updateQueueDownloads();
+            }
+            else{
+                completedDownloads.clear();
+                for (NewDownloadPanel item : holder) {
+                    if (item.getFileProperties().getFileUrl().contains(key)) {
+                        completedDownloads.add(item);
+                    }
+                }
+                updateCompletedDownloads();
             }
         }
 
@@ -950,11 +967,45 @@ public class MainFrame {
                     queueNewDownloads = new ArrayList<>(holder);
                     updateQueuePanel();
                 }
+                else{
+                    completedDownloads = new ArrayList<>(holder);
+                    updateCompletedDownloads();
+                }
+            }
+            else{
+                if (mainPanel.isAncestorOf(processingPanel)) {
+                    processingNewDownloads.clear();
+                    for (NewDownloadPanel item : holder) {
+                        if (item.getFileProperties().getFileUrl().contains(key)) {
+                            processingNewDownloads.add(item);
+                        }
+                    }
+                    updateProcessingDownloads();
+                }
+                else if (mainPanel.isAncestorOf(queuePanel)) {
+                    queueNewDownloads.clear();
+                    for (NewDownloadPanel item : holder) {
+                        if (item.getFileProperties().getFileUrl().contains(key)) {
+                            queueNewDownloads.add(item);
+                        }
+                    }
+                    updateQueueDownloads();
+                }
+                else{
+                    completedDownloads.clear();
+                    for (NewDownloadPanel item : holder) {
+                        if (item.getFileProperties().getFileUrl().contains(key)) {
+                            completedDownloads.add(item);
+                        }
+                    }
+                    updateCompletedDownloads();
+                }
             }
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
+
         }
     }
 

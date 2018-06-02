@@ -4,6 +4,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,7 +31,7 @@ public class MainFrame {
     private FileOutputStream fileOutputStream;
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
-    private LinkedList<String> sortFactors = new LinkedList<>();
+    private ArrayList<String> sortFactors = new ArrayList<>();
     private final String PROCESSING_PATH = "files/list.gdm";
     private final String REMOVED_PATH = "files/removed.gdm";
     private final String QUEUE_PATH = "files/queue.gdm";
@@ -202,6 +204,7 @@ public class MainFrame {
         sortPopUp.add(descendingItem);
         descendingItem.addActionListener(actionListener);
         ascendingItem.addActionListener(actionListener);
+        sort.addMouseListener(mouseListener);
 
 
         searchText = new JTextField("Search Here ...");
@@ -595,7 +598,6 @@ public class MainFrame {
                         if(numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads()))
                             processingNewDownloads.add(queueNewDownloads.get(0));
                     }
-
                 }
                 iteratorProcessing.remove();
             }
@@ -757,38 +759,110 @@ public class MainFrame {
     }
 
     private void sort(){
-        if(!sortFactors.isEmpty()) {
-            ArrayList<NewDownloadPanel> downloadFiles = new ArrayList<>();
-            if (mainPanel.isAncestorOf(processingPanel)) {
-                for (NewDownloadPanel item : processingNewDownloads)
-                    downloadFiles.add(item);
-            } else if (mainPanel.isAncestorOf(queuePanel)) {
-                for (NewDownloadPanel item : queueNewDownloads)
-                    downloadFiles.add(item);
+        ArrayList<NewDownloadPanel> downloadFiles = new ArrayList<>();
+        if (mainPanel.isAncestorOf(processingPanel)) {
+            for (NewDownloadPanel item : processingNewDownloads)
+                downloadFiles.add(item);
+        } else if (mainPanel.isAncestorOf(queuePanel)) {
+            for (NewDownloadPanel item : queueNewDownloads)
+                downloadFiles.add(item);
+        } else if(mainPanel.isAncestorOf(completePanel)){
+            for (NewDownloadPanel item: completedDownloads)
+                downloadFiles.add(item);
+        }
+        NewDownloadPanel tmp = downloadFiles.get(0);
+        for(int i = 0; i < downloadFiles.size(); i++) {
+            boolean is_sorted = true;
+            for(int j = 0; j < downloadFiles.size() - i - 1; j++) { // skip the already sorted largest elements
+                if(advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(0)),downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(0))) > 0) {
+                    Collections.swap(downloadFiles,j,j+1);
+                    is_sorted = false;
+                }
             }
-            TreeMap<String, NewDownloadPanel> sortHashMap = new TreeMap<>();
-            for (NewDownloadPanel file : downloadFiles)
-                sortHashMap.put(file.getFileProperties().get(sortFactors.getFirst()), file);
-            if (sortFactors.size() != 1) {
-                for (int i = 1; i<sortFactors.size() ; i++) {
-                    for (int j = 0; j < downloadFiles.size(); j++) {
-                        if(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i-1)).equals(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i-1)))){
-                            if(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i-1)).compareTo(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i-1)))>0) // Ascending order
-                                Collections.swap(downloadFiles,j,j+1);
+            if(is_sorted)
+                break;
+        }
+        int currentFoundIndex;
+        if (sortFactors.size() != 1) {
+            for (int i = 1; i<sortFactors.size() ; i++) {
+                for (int j = 0; j < downloadFiles.size() - 1; j++) {
+                    if(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i-1)).equals(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i-1)))){
+                        if(advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i)),(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i))))>0) { // Ascending order
+                            currentFoundIndex = j + 1;
+                            while (currentFoundIndex != 1) {
+//                                System.out.println("Before if "+ downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i-1)) + " " + downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i-1)));
+                                if(downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i-1)).equals(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i-1)))) {
+                                    if(advancedCompare(downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i)),(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i)))) > 0) {
+//                                        System.out.println("Before swap " + downloadFiles.get(currentFoundIndex - 1) + " " + downloadFiles.get(currentFoundIndex));
+                                        Collections.swap(downloadFiles, currentFoundIndex - 1, currentFoundIndex);
+//                                        System.out.println("After swap " + downloadFiles.get(currentFoundIndex - 1) + " " + downloadFiles.get(currentFoundIndex));
+                                        currentFoundIndex--;
+                                    }
+                                }
+                                else
+                                    break;
+                            }
                         }
                     }
                 }
             }
-            if (mainPanel.isAncestorOf(processingPanel)) {
-                processingNewDownloads = new ArrayList<>(downloadFiles);
-                updateProcessingDownloads();
-            } else if (mainPanel.isAncestorOf(queuePanel)) {
-                queueNewDownloads = new ArrayList<>(downloadFiles);
-                updateQueuePanel();
+        }
+        System.out.println(downloadFiles);
+        if (mainPanel.isAncestorOf(processingPanel)) {
+            processingNewDownloads = new ArrayList<>(downloadFiles);
+            completedIsAscending = true;
+            updateProcessingDownloads();
+        } else if (mainPanel.isAncestorOf(queuePanel)) {
+            queueNewDownloads = new ArrayList<>(downloadFiles);
+            queueIsAscending = true;
+            updateQueueDownloads();
+        } else if(mainPanel.isAncestorOf(completePanel)){
+            completedDownloads = new ArrayList<>(downloadFiles);
+            completedIsAscending = true;
+            updateCompletedDownloads();
+        }
+    }
+    private int advancedCompare(String argument1,String argument2){
+        String typeDeterminer = argument1;
+        if(isValidDate(argument1)){
+            try {
+                Date date1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(argument1);
+                Date date2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(argument2);
+                return date1.compareTo(date2);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return -1;
             }
+        }
+        else if(isValidDouble(argument1)){
+            Double double1 = Double.parseDouble(argument1);
+            Double double2 = Double.parseDouble(argument2);
+            return double1.compareTo(double2);
+        }
+        else{
+            return argument1.compareTo(argument2);
         }
     }
 
+    private boolean isValidDate(String inDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(inDate.trim());
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
+    }
+    private boolean isValidDouble(String inString){
+        try {
+            Double.parseDouble(inString);
+        }
+        catch(NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
     public void searchText(String key){
         if (mainPanel.isAncestorOf(processingPanel)) {
             processingNewDownloads.clear();
@@ -1058,7 +1132,7 @@ public class MainFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if(e.getSource().equals(sort)){
+            if(e.getSource().equals(ascendingItem)){
                 if(mainPanel.isAncestorOf(processingPanel) && !processingIsAscending){
                     System.out.println("processing Panel " + " ascending Item");;
                     Collections.reverse(processingNewDownloads);
@@ -1117,52 +1191,39 @@ public class MainFrame {
         public void mouseExited(MouseEvent e) {
 
         }
-        private void reverse(){
-            if(mainPanel.isAncestorOf(processingPanel)){
-                System.out.println("processing Panel " + " ascending Item");;
-                Collections.reverse(processingNewDownloads);
-                updateProcessingDownloads();
-            }
-            else if(mainPanel.isAncestorOf(queuePanel)){
-                System.out.println("queuePanel " + " ascending Item");
-                Collections.reverse(queueNewDownloads);
-                updateQueueDownloads();
-            }
-            else if(mainPanel.isAncestorOf(completePanel)){
-                System.out.println("completePanel ascending Item");
-                Collections.reverse(completedDownloads);
-                updateProcessingDownloads();
-            }
-        }
     }
     private class CheckListener implements  ItemListener{
 
         @Override
         public void itemStateChanged(ItemEvent e) {
             // For byDate
-            if(byDate.isSelected())
-                sortFactors.add("date");
-            else
-                sortFactors.remove("date");
+            if(e.getItem().equals(byDate)) {
+                if(byDate.isSelected())
+                    sortFactors.add("date");
+                else
+                    sortFactors.remove("date");
+                System.out.println("date");
+            }
 
             // For bySize
-            if(bySize.isSelected())
-                sortFactors.add("size");
-            else
-                sortFactors.remove("date");
+            if(e.getItem().equals(bySize)) {
+                if (bySize.isSelected())
+                    sortFactors.add("size");
+                else
+                    sortFactors.remove("size");
+            }
 
             // For byName
-            if(byName.isSelected())
-                sortFactors.add("name");
-            else
-                sortFactors.remove("name");
+            if(e.getItem().equals(byName)) {
+                if(byName.isSelected())
+                    sortFactors.add("name");
+                else
+                    sortFactors.remove("name");
+            }
 
-            // For byStatus
-            if(byStatus.isSelected())
-                sortFactors.add("status");
-            else
-                sortFactors.remove("status");
-            sort();
+            System.out.println(sortFactors);
+            if(!sortFactors.isEmpty())
+                sort();
         }
     }
 }

@@ -69,7 +69,7 @@ public class NewDownloadFrame {
         volumeTitle.setAlignmentY(Component.LEFT_ALIGNMENT);
         volumeValue = new JTextField("100");
         volumeValue.setBackground(Color.WHITE);
-        volumeValue.setEditable(false);
+//     TODO   volumeValue.setEditable(false);
         volumePanel.add(volumeTitle);
         volumePanel.add(volumeValue);
         downloadFrame.add(volumePanel);

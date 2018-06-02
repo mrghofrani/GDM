@@ -2,9 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ee1e1db1-73ff-47b2-87d1-4052c715e8e8" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/GDM-logo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GDM-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/correct-mark.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cross.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/folder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/left-arrow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rectangles.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/remove.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sort.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sunbed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/time-left.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,14 +35,15 @@
       <file leaf-file-name="Manager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1411">
-              <caret line="89" column="23" selection-start-line="89" selection-start-column="23" selection-end-line="89" selection-end-column="23" />
+            <state relative-caret-position="120">
+              <caret line="205" selection-start-line="205" selection-end-line="205" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5837#5838#0" expanded="true" />
                 <element signature="e#5889#5890#0" expanded="true" />
                 <element signature="e#6187#6188#0" expanded="true" />
                 <element signature="e#6225#6226#0" expanded="true" />
+                <element signature="e#6296#6297#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,10 +76,15 @@
       <file leaf-file-name="FileProperties.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/FileProperties.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="89" selection-start-line="89" selection-end-line="89" />
+            <state relative-caret-position="120">
+              <caret line="24" selection-start-line="24" selection-end-line="24" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#946#947#0" expanded="true" />
+                <element signature="e#1336#1337#0" expanded="true" />
+                <element signature="e#1367#1368#0" expanded="true" />
+                <element signature="e#1791#1792#0" expanded="true" />
+                <element signature="e#1821#1822#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -74,8 +93,8 @@
       <file leaf-file-name="SettingFrame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6783">
-              <caret line="417" column="16" selection-start-line="417" selection-start-column="16" selection-end-line="417" selection-end-column="16" />
+            <state relative-caret-position="171">
+              <caret line="409" selection-start-line="409" selection-end-line="409" />
               <folding>
                 <element signature="e#12044#12045#0" expanded="true" />
                 <element signature="e#12106#12107#0" expanded="true" />
@@ -87,10 +106,12 @@
       <file leaf-file-name="MainFrame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Java Code/src/MainFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="1219" column="20" lean-forward="true" selection-start-line="1212" selection-start-column="39" selection-end-line="1219" selection-end-column="20" />
+            <state relative-caret-position="341">
+              <caret line="1022" column="49" lean-forward="true" selection-start-line="1022" selection-start-column="49" selection-end-line="1022" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#16357#16568#0" expanded="true" />
+                <element signature="e#16567#16568#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -99,8 +120,12 @@
       <file leaf-file-name="NewDownloadFrame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2108">
-              <caret line="138" column="82" selection-start-line="134" selection-start-column="44" selection-end-line="138" selection-end-column="82" />
+            <state relative-caret-position="370">
+              <caret line="74" column="37" lean-forward="true" selection-start-line="74" selection-start-column="37" selection-end-line="74" selection-end-column="37" />
+              <folding>
+                <element signature="e#6098#6099#0" expanded="true" />
+                <element signature="e#6134#6135#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -108,10 +133,13 @@
       <file leaf-file-name="NewDownloadPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="201" selection-start-line="201" selection-end-line="201" />
+            <state relative-caret-position="493">
+              <caret line="244" column="24" lean-forward="true" selection-start-line="244" selection-start-column="24" selection-end-line="244" selection-end-column="24" />
               <folding>
-                <element signature="e#7594#7595#0" expanded="true" />
+                <element signature="e#7979#7980#0" expanded="true" />
+                <element signature="e#8018#8019#0" expanded="true" />
+                <element signature="e#8579#8580#0" expanded="true" />
+                <element signature="e#8621#8622#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -146,6 +174,10 @@
       <find>Queue</find>
       <find>sort</find>
       <find>compareTo</find>
+      <find>addedToProcess</find>
+      <find>update</find>
+      <find>updateComple</find>
+      <find>backupRE</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -166,8 +198,8 @@
         <option value="$PROJECT_DIR$/Java Code/src/Main.java" />
         <option value="$PROJECT_DIR$/Java Code/src/Manager.java" />
         <option value="$PROJECT_DIR$/Java Code/src/FileProperties.java" />
-        <option value="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" />
         <option value="$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java" />
+        <option value="$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java" />
         <option value="$PROJECT_DIR$/Java Code/src/MainFrame.java" />
       </list>
     </option>
@@ -192,7 +224,22 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="GDM_new3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java Code" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="sort&#9;PSI&#9;JAVA://MainFrame#sort&#10;exit&#9;PSI&#9;JAVA://Manager#safelyExit&#10;update&#9;PSI&#9;JAVA://MainFrame#updateCompleted&#10;comple&#9;PSI&#9;JAVA://MainFrame#completedDownloads&#10;completedD&#9;PSI&#9;JAVA://MainFrame#updateCompletedDownloads&#10;completedDo&#9;PSI&#9;JAVA://MainFrame#updateCompletedDownloads&#10;comp&#9;PSI&#9;JAVA://MainFrame#completedDownloads&#10;completed&#9;PSI&#9;JAVA://MainFrame#updateCompleted&#10;complete&#9;PSI&#9;JAVA://MainFrame#completed&#10;setNewD&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;setNew&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;MainFrame&#9;PSI&#9;JAVA://MainFrame.MainFrameActionListener&#10;queue&#9;PSI&#9;JAVA://MainFrame#updateQueuePanel&#10;sort &#9;PSI&#9;JAVA://MainFrame#sort&#10;setnew&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;initialize&#9;PSI&#9;JAVA://MainFrame#initialize&#10;initia&#9;PSI&#9;JAVA://SettingFrame#initialize&#10;init&#9;PSI&#9;JAVA://MainFrame#initialize&#10;finite&#9;PSI&#9;JAVA://SettingFrame#finiteDownloads&#10;scrollPan&#9;PSI&#9;JAVA://MainFrame#processingScrollPane&#10;initi&#9;PSI&#9;JAVA://SettingFrame#initialize&#10;getDownloadPath&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;GETdo&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;getDownload&#9;PSI&#9;JAVA://SettingFrame#getDownloadPath&#10;setD&#9;PSI&#9;JAVA://Manager#setDownloadPath&#10;getDown&#9;PSI&#9;JAVA://Manager#getDownloadPath&#10;backup&#9;PSI&#9;JAVA://SettingFrame#backup&#10;Comfo&#9;PSI&#9;JAVA://MainFrame#comfortableResize&#10;newqueu&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;setque&#9;PSI&#9;JAVA://MainFrame#setNewDownloadQueue&#10;showri&#9;PSI&#9;JAVA://MainFrame#showRightPanel&#10;setN&#9;PSI&#9;JAVA://MainFrame#setNewDownload&#10;comfor&#9;PSI&#9;JAVA://MainFrame#comfortableResize&#10;nothing&#9;PSI&#9;JAVA://MainFrame#nothing&#10;central&#9;PSI&#9;JAVA://NewDownloadPanel#centralPanel&#10;cent&#9;PSI&#9;JAVA://NewDownloadPanel#centralPanel&#10;cen&#9;PSI&#9;JAVA://MainFrame#centralPanel" />
@@ -308,7 +355,8 @@
       <workItem from="1527849204926" duration="6596000" />
       <workItem from="1527856213482" duration="28832000" />
       <workItem from="1527922969332" duration="5223000" />
-      <workItem from="1527932143206" duration="1317000" />
+      <workItem from="1527932143206" duration="3038000" />
+      <workItem from="1527950945220" duration="2141000" />
     </task>
     <task id="LOCAL-00001" summary="top part of MainFrame changed to toolbar">
       <created>1526563709075</created>
@@ -492,11 +540,18 @@
       <option name="project" value="LOCAL" />
       <updated>1527886307232</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Implementation of sort is completely done">
+      <created>1527933512917</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1527933512917</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="223926000" />
+    <option name="totallyTimeSpent" value="227788000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -521,13 +576,12 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.40960452" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.50706214" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32909605" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.39243808" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.39194632" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.33050847" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -540,36 +594,37 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.33050847" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.33105335" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27086183" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.40960452" />
       <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.39243808" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.32768363" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.39194632" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Designer" order="2" />
-      <window_info id="UI Designer" order="5" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" order="7" />
-      <window_info anchor="right" id="Palette&#9;" order="8" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32909605" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.33050847" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.32857144" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4514364" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info id="Capture Tool" order="4" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.41666666" />
+      <window_info id="Capture Tool" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32831737" />
-      <window_info anchor="right" id="Maven Projects" order="6" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32909605" />
+      <window_info anchor="right" id="Maven Projects" order="8" />
       <window_info id="Favorites" order="6" side_tool="true" />
     </layout-to-restore>
   </component>
@@ -604,7 +659,8 @@
     <MESSAGE value="Implementation of Download when starting and closing is almost done" />
     <MESSAGE value="Implementation of search box is completed." />
     <MESSAGE value="Implementation of sort" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementation of sort" />
+    <MESSAGE value="Implementation of sort is completely done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementation of sort is completely done" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -616,13 +672,19 @@
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Java Code/src/MainFrame.java</url>
-          <line>785</line>
+          <url>file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java</url>
+          <line>344</line>
           <properties />
-          <option name="timeStamp" value="167" />
+          <option name="timeStamp" value="168" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java</url>
+          <line>138</line>
+          <properties />
+          <option name="timeStamp" value="169" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="168" />
+      <option name="time" value="170" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -657,6 +719,7 @@
             <element signature="e#5889#5890#0" expanded="true" />
             <element signature="e#6187#6188#0" expanded="true" />
             <element signature="e#6225#6226#0" expanded="true" />
+            <element signature="e#6296#6297#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -901,35 +964,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="1924" column="16" selection-start-line="1924" selection-start-column="16" selection-end-line="1924" selection-end-column="16" />
-          <folding>
-            <element signature="e#68197#68198#0" expanded="true" />
-            <element signature="e#68254#68255#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6783">
-          <caret line="417" column="16" selection-start-line="417" selection-start-column="16" selection-end-line="417" selection-end-column="16" />
-          <folding>
-            <element signature="e#12044#12045#0" expanded="true" />
-            <element signature="e#12106#12107#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1411">
-          <caret line="89" column="23" selection-start-line="89" selection-start-column="23" selection-end-line="89" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5837#5838#0" expanded="true" />
-            <element signature="e#5889#5890#0" expanded="true" />
-            <element signature="e#6187#6188#0" expanded="true" />
-            <element signature="e#6225#6226#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -943,39 +977,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
+    <entry file="file://$PROJECT_DIR$/Java Code/src/Manager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2108">
-          <caret line="138" column="82" selection-start-line="134" selection-start-column="44" selection-end-line="138" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="201" selection-start-line="201" selection-end-line="201" />
+        <state relative-caret-position="120">
+          <caret line="205" selection-start-line="205" selection-end-line="205" />
           <folding>
-            <element signature="e#7594#7595#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#5837#5838#0" expanded="true" />
+            <element signature="e#5889#5890#0" expanded="true" />
+            <element signature="e#6187#6188#0" expanded="true" />
+            <element signature="e#6225#6226#0" expanded="true" />
+            <element signature="e#6296#6297#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/FileProperties.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="89" selection-start-line="89" selection-end-line="89" />
+        <state relative-caret-position="120">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#946#947#0" expanded="true" />
+            <element signature="e#1336#1337#0" expanded="true" />
+            <element signature="e#1367#1368#0" expanded="true" />
+            <element signature="e#1791#1792#0" expanded="true" />
+            <element signature="e#1821#1822#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/SettingFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="409" selection-start-line="409" selection-end-line="409" />
+          <folding>
+            <element signature="e#12044#12045#0" expanded="true" />
+            <element signature="e#12106#12107#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="74" column="37" lean-forward="true" selection-start-line="74" selection-start-column="37" selection-end-line="74" selection-end-column="37" />
+          <folding>
+            <element signature="e#6098#6099#0" expanded="true" />
+            <element signature="e#6134#6135#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java Code/src/NewDownloadPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="244" column="24" lean-forward="true" selection-start-line="244" selection-start-column="24" selection-end-line="244" selection-end-column="24" />
+          <folding>
+            <element signature="e#7979#7980#0" expanded="true" />
+            <element signature="e#8018#8019#0" expanded="true" />
+            <element signature="e#8579#8580#0" expanded="true" />
+            <element signature="e#8621#8622#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Java Code/src/MainFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="1219" column="20" lean-forward="true" selection-start-line="1212" selection-start-column="39" selection-end-line="1219" selection-end-column="20" />
+        <state relative-caret-position="341">
+          <caret line="1022" column="49" lean-forward="true" selection-start-line="1022" selection-start-column="49" selection-end-line="1022" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#16357#16568#0" expanded="true" />
+            <element signature="e#16567#16568#0" expanded="true" />
           </folding>
         </state>
       </provider>

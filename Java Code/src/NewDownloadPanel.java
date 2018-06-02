@@ -10,6 +10,8 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +93,7 @@ public class NewDownloadPanel implements Serializable {
         centralPanel.add(progressBar);
 
         // bottom Part of the NewDownloadPanel
-        bottomSideOfCentral = new JPanel(new BorderLayout());
+        bottomSideOfCentral = new JPanel(new BorderLayout(5,5));
         rightBottomSideOfCentral = new JPanel();
         rightBottomSideOfCentral.setLayout(new BoxLayout(rightBottomSideOfCentral,BoxLayout.X_AXIS));
         resumeIcon = new ImageIcon("resume.png");
@@ -184,7 +186,7 @@ public class NewDownloadPanel implements Serializable {
 
             }
         });
-        worker = new Worker();
+
     }
 
     public void startDownload(){
@@ -214,10 +216,10 @@ public class NewDownloadPanel implements Serializable {
         return newDownloadPanel;
     }
 
-    public void deleteFileProperties(){
-        worker.cancel(true);
-        fileProperties = null;
-    }
+//    public void deleteFileProperties(){
+//        worker.cancel(true);
+//        fileProperties = null;
+//    }
 
     public File getFile() {
         return file;
@@ -236,6 +238,14 @@ public class NewDownloadPanel implements Serializable {
         resumeButton.setIcon(resumeIcon);
     }
 
+    public void delete(boolean completed){
+        if(completed)
+            if(file.exists())
+                file.delete();
+        isPaused = true;
+        worker.cancel(true);
+        fileProperties = null;
+    }
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
@@ -272,15 +282,31 @@ public class NewDownloadPanel implements Serializable {
                 switch(n){
                     case 1:
                         if(file.exists()) {
-                            isPaused = true;
-                            worker.cancel(true);
                             file.delete();
                         }
                         else
                             JOptionPane.showMessageDialog(newDownloadPanel,"File not found deleting from panel","delete",JOptionPane.INFORMATION_MESSAGE);
                     case 0:
-                        fileProperties = null;
+                        String tmpString;
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                        LocalDateTime now = LocalDateTime.now();
+                        try(BufferedWriter writer =  new BufferedWriter(new FileWriter(new File("files/removed.gdm"),true))){
+                                tmpString = "\n";
+                                tmpString += "****** Removed On Date " + dtf.format(now) + "******" + "\n";
+                                tmpString += "File Properties" + "\n";
+                                tmpString += "File URL : " + fileProperties.getFileUrl() + "\n";
+                                tmpString += "File Name : " + fileProperties.getFileName()+ "\n";
+                                tmpString += "File Created Time :" +fileProperties.getCreated() + "\n";
+                                tmpString += "File Size : "    + fileProperties.getSize() + "\n";
+                                tmpString += "File Download Address : " +fileProperties.getAddress() + "\n";
+                                tmpString += "File Status At While Removing : " + fileProperties.getStatus() + "\n";
+                                writer.write(tmpString);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        isPaused = true;
                         worker.cancel(true);
+                        fileProperties = null;
                         Manager.getAction("main.update");
                         break;
 

@@ -27,6 +27,7 @@ public class MainFrame {
     private boolean completedIsAscending;
     private ArrayList<NewDownloadPanel> holder;
     private int numberOfAddedToProcessing = 0;
+    private boolean addedToProcess = false;
     private FileInputStream fileInputStream;
     private FileOutputStream fileOutputStream;
     private ObjectOutputStream objectOutputStream;
@@ -416,7 +417,12 @@ public class MainFrame {
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, (int)processingPanel.getSize().getWidth());
         processingPanel.add(tmp.getPanel());
         processingNewDownloads.add(tmp);
-//       TODO  tmp.startDownload();
+        if(Manager.getNumberOfDownloads().equals("infinitive"))
+            tmp.startDownload();
+        else if(numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads())) {
+            tmp.startDownload();
+            numberOfAddedToProcessing++;
+        }
         background.revalidate();
         mainPanel.revalidate();
     }
@@ -437,7 +443,8 @@ public class MainFrame {
                 tmpString = "\n";
                 tmpString += "****** Removed On Date " + dtf.format(now) + "******" + "\n";
                 tmpString += "File Properties" + "\n";
-                tmpString += "File Name : " + item.getFileUrl() + "\n";
+                tmpString += "File URL : " + item.getFileUrl() + "\n";
+                tmpString += "File Name : " + item.getFileName() + "\n" ;
                 tmpString += "File Created Time :" +item.getCreated() + "\n";
                 tmpString += "File Size : "    + item.getSize() + "\n";
                 tmpString += "File Download Address : " +item.getAddress() + "\n";
@@ -452,22 +459,14 @@ public class MainFrame {
     }
 
     public void setNewDownloadQueue(FileProperties fileProperties){
-        boolean keepGoing = false;
-        if(Manager.getNumberOfDownloads().equals("infinitive") ){
-            keepGoing = true;
-        }
-        else if ( numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads())){
-            keepGoing = true;
-            numberOfAddedToProcessing++;
-        }
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
         queuePanel.remove(nothing);
         queuePanel.add(tmp.getPanel());
         queueNewDownloads.add(tmp);
-        if(keepGoing) {
+        if(!addedToProcess) {
             processingNewDownloads.add(tmp);
-//            tmp.startDownload();
-            // TODO UP
+            tmp.startDownload();
+            addedToProcess = true;
         }
         updateQueuePanel();
         updateProcessingDownloads();
@@ -594,13 +593,14 @@ public class MainFrame {
                 while(iteratorQueue.hasNext()) {
                     if (iteratorQueue.next() == tmp) {
                         iteratorQueue.remove();
-                        numberOfAddedToProcessing--;
-                        if(numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads()))
-                            processingNewDownloads.add(queueNewDownloads.get(0));
                     }
                 }
+                processingNewDownloads.add(queueNewDownloads.get(0));
+                queueNewDownloads.get(0).startDownload();
                 iteratorProcessing.remove();
             }
+            if(Manager.getNumberOfDownloads().equals("infinitive"));
+            else numberOfAddedToProcessing--;
         }
         updateCompletedDownloads();
         updateQueueDownloads();
@@ -790,12 +790,9 @@ public class MainFrame {
                         if(advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i)),(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i))))>0) { // Ascending order
                             currentFoundIndex = j + 1;
                             while (currentFoundIndex != 1) {
-//                                System.out.println("Before if "+ downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i-1)) + " " + downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i-1)));
                                 if(downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i-1)).equals(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i-1)))) {
                                     if(advancedCompare(downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i)),(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i)))) > 0) {
-//                                        System.out.println("Before swap " + downloadFiles.get(currentFoundIndex - 1) + " " + downloadFiles.get(currentFoundIndex));
                                         Collections.swap(downloadFiles, currentFoundIndex - 1, currentFoundIndex);
-//                                        System.out.println("After swap " + downloadFiles.get(currentFoundIndex - 1) + " " + downloadFiles.get(currentFoundIndex));
                                         currentFoundIndex--;
                                     }
                                 }
@@ -823,7 +820,6 @@ public class MainFrame {
         }
     }
     private int advancedCompare(String argument1,String argument2){
-        String typeDeterminer = argument1;
         if(isValidDate(argument1)){
             try {
                 Date date1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(argument1);
@@ -1015,10 +1011,8 @@ public class MainFrame {
                                 NewDownloadPanel item = (NewDownloadPanel) iterator.next();
                                 if (item.isSelected()) {
                                     found = true;
-                                    if(completely)
-                                        item.getFile().delete();
                                     removed.add(item.getFileProperties());
-                                    (item).deleteFileProperties();
+                                    item.delete(completely);
                                     iterator.remove();
                                     break;
                                 }
@@ -1028,9 +1022,7 @@ public class MainFrame {
                                     NewDownloadPanel item = (NewDownloadPanel) iterator.next();
                                     if (item.isSelected()) {
                                         removed.add(item.getFileProperties());
-                                        if(completely)
-                                            item.getFile().delete();
-                                        item.deleteFileProperties();
+                                        item.delete(completely);
                                         iterator.remove();
                                     }
                                 }
@@ -1066,15 +1058,11 @@ public class MainFrame {
                         completely = true;
                     case 0:
                         for (NewDownloadPanel item:processingNewDownloads) {
-                            if(completely)
-                                item.getFile().delete();
-                            item.deleteFileProperties();
+                            item.delete(completely);
                         }
                         processingNewDownloads.clear();
                         for (NewDownloadPanel item: queueNewDownloads) {
-                            if(completely)
-                                item.getFile().delete();
-                            item.deleteFileProperties();
+                            item.delete(completely);
                         }
                         queueNewDownloads.clear();
                         break;

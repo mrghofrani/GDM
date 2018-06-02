@@ -57,6 +57,7 @@ public class NewDownloadFrame {
         webPageAddress = new JTextField("https://google.com");
         webPageAddress.setEditable(true);
         webPageAddress.getDocument().addDocumentListener(actionHandler);
+        webPageAddress.addActionListener(actionHandler);
         webPageAddress.setBackground(Color.WHITE);
         webPagePanel.add(webPageTitle);
         webPagePanel.add(webPageAddress);
@@ -69,7 +70,7 @@ public class NewDownloadFrame {
         volumeTitle.setAlignmentY(Component.LEFT_ALIGNMENT);
         volumeValue = new JTextField("100");
         volumeValue.setBackground(Color.WHITE);
-//     TODO   volumeValue.setEditable(false);
+        volumeValue.setEditable(false);
         volumePanel.add(volumeTitle);
         volumePanel.add(volumeValue);
         downloadFrame.add(volumePanel);
@@ -147,6 +148,9 @@ public class NewDownloadFrame {
                 Manager.addNewDownloadQueue(new FileProperties(webPageAddress.getText(),"not completed",volumeValue.getText(),dateFormat.format(date),locationText.getText()));
                 downloadFrame.dispose();
                 System.out.println("Action");
+            }
+            else if(e.getSource().equals(webPageAddress)){
+                downloadButton.doClick();
             }
         }
 

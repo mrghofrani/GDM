@@ -14,6 +14,11 @@ public class HelpFrame {
     private JLabel dateLabel1;
     private JLabel dateLabel2;
 
+    /**
+     * help Frame's constructor
+     * which is work like other constructor of
+     * class's
+     */
     public HelpFrame(){
         helpFrame = new JFrame("About");
         helpFrame.setLayout(new BorderLayout(5,5));
@@ -39,6 +44,9 @@ public class HelpFrame {
         helpFrame.add(bottomPanel,BorderLayout.SOUTH);
     }
 
+    /**
+     * shows the help Frame
+     */
     public void show(){
         helpFrame.pack();
         helpFrame.setVisible(true);

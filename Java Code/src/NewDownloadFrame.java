@@ -45,7 +45,10 @@ public class NewDownloadFrame {
 
     private ActionHandler actionHandler = new ActionHandler();
 
-
+    /**
+     * This is the Constructor of NewDownloadFrame which
+     * creates and adds their corresponding actionListener
+     */
     public NewDownloadFrame(){
         downloadFrame = new JFrame("New Download");
         downloadFrame.setLayout(new BoxLayout(downloadFrame.getContentPane(),BoxLayout.Y_AXIS));
@@ -111,17 +114,29 @@ public class NewDownloadFrame {
 
     }
 
+    /**
+     * This method shows the object of
+     * this class and packs it to have a good
+     * look
+     */
     public void show(){
         reset();
         downloadFrame.pack();
         downloadFrame.setVisible(true);
     }
 
+    /**
+     * This method sets the Text and directory of NewDownloadFrame
+     */
     private void reset(){
         locationText.setText(Manager.getDownloadPath());
         locationChooser.setCurrentDirectory(new File(Manager.getDownloadPath()));
     }
 
+    /**
+     * This is the Action listener of the class
+     * Which implements ActionListener and DocumentListener Interfaces
+     */
     private class ActionHandler implements ActionListener,DocumentListener {
 
         @Override
@@ -181,6 +196,14 @@ public class NewDownloadFrame {
             }
         }
     }
+
+    /**
+     * This method is used to check if an
+     * Entered site is filtered or not by the
+     * user
+     * @param url input url in webPage Field area
+     * @return true if the url was valid otherwise false
+     */
     private boolean isValid(String url){
         String item;
         ArrayList<String> invalidURLs = Manager.getInvalidURLs();

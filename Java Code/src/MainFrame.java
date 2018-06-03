@@ -36,6 +36,7 @@ public class MainFrame {
     private final String PROCESSING_PATH = "files/list.gdm";
     private final String REMOVED_PATH = "files/removed.gdm";
     private final String QUEUE_PATH = "files/queue.gdm";
+    private final String COMPLETE_PATH = "files/complete.gdm";
 
 
     //menuBar and its related elements
@@ -58,9 +59,9 @@ public class MainFrame {
     private JButton processing;
     private JButton completed;
     private JButton queue;
+    private JButton swap;
 
     // left panel and its related components
-//    private JPanel topPanel;
     private final int BUTTON_SIZE_ON_TOP_PANEL = 40;
     private JButton newDownload;
     private JButton pause;
@@ -70,12 +71,10 @@ public class MainFrame {
     private JButton sort;
     private JToolBar toolBar;
     private JCheckBox byDate;
-    private JCheckBox byStatus;
     private JCheckBox byName;
     private JCheckBox bySize;
     private JMenuItem ascendingItem;
     private JMenuItem descendingItem;
-//    private ButtonGroup sortBy;
     private JPopupMenu sortPopUp;
     private JTextField searchText;
 
@@ -89,6 +88,10 @@ public class MainFrame {
     private JPanel fileNamePanel;
     private JLabel fileNameLabel;
     private JLabel fileName;
+
+    private JPanel fileURLPanel;
+    private JLabel fileURLLabel;
+    private JLabel fileURL;
 
     private JPanel statusPanel;
     private JLabel statusLabel;
@@ -122,6 +125,11 @@ public class MainFrame {
     private JPanel completePanel;
     private JScrollPane completeScrollPane;
 
+    /**
+     * This is the constructor of mainFrame it creates
+     * the components and adds their actionListener to
+     * them
+     */
     public MainFrame() {
         background = new JFrame("GDM");
         background.setIconImage(Toolkit.getDefaultToolkit().getImage("GDM-logo.jpg"));
@@ -143,11 +151,19 @@ public class MainFrame {
         queue.setMaximumSize(new Dimension(buttonWidth,queue.getPreferredSize().height));
         queue.setIcon(new ImageIcon("rectangles.png"));
         queue.addActionListener(actionListener);
+        swap = new JButton("Swap");
+        swap.setMaximumSize(new Dimension(buttonWidth,swap.getPreferredSize().height));
+        swap.setIcon(new ImageIcon("vertical.png"));
+        swap.setToolTipText("This button only works in queue area.");
+        swap.addActionListener(actionListener);
+
         leftPanel.add(processing);
         leftPanel.add(Box.createRigidArea(new Dimension(0,5)));// for having a gap to
         leftPanel.add(completed);
         leftPanel.add(Box.createRigidArea(new Dimension(0,5)));
         leftPanel.add(queue);
+        leftPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        leftPanel.add(swap);
 
         // initializing topPanel
         title = new JLabel("Faster download with GDM");
@@ -160,10 +176,12 @@ public class MainFrame {
         pause.setIcon(new ImageIcon("pause.png"));
         pause.setToolTipText("Hit me if you want to pause your download.");
         pause.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        pause.addActionListener(actionListener);
         resume = new JButton();
         resume.setToolTipText("Hit me if you want to resume your download.");
         resume.setIcon(new ImageIcon("resume.png"));
         resume.setPreferredSize(new Dimension(BUTTON_SIZE_ON_TOP_PANEL,BUTTON_SIZE_ON_TOP_PANEL));
+        resume.addActionListener(actionListener);
         cancel = new JButton();
         cancel.setToolTipText("Hit me if you want to cancel your donwload.");
         cancel.setIcon(new ImageIcon("cancel.png"));
@@ -191,8 +209,6 @@ public class MainFrame {
         bySize.addItemListener(checkListener);
         byName = new JCheckBox("By Name");
         byName.addItemListener(checkListener);
-        byStatus = new JCheckBox("By Status");
-        byStatus.addItemListener(checkListener);
         ascendingItem = new JMenuItem("Ascending");
         ascendingItem.addMouseListener(mouseListener);
         descendingItem = new JMenuItem("Descending");
@@ -200,13 +216,11 @@ public class MainFrame {
         sortPopUp.add( byDate);
         sortPopUp.add( bySize);
         sortPopUp.add( byName);
-        sortPopUp.add( byStatus);
         sortPopUp.add(ascendingItem);
         sortPopUp.add(descendingItem);
         descendingItem.addActionListener(actionListener);
         ascendingItem.addActionListener(actionListener);
         sort.addMouseListener(mouseListener);
-
 
         searchText = new JTextField("Search Here ...");
         searchText.setAlignmentY(JComponent.RIGHT_ALIGNMENT);
@@ -340,11 +354,18 @@ public class MainFrame {
         rightScrollPane = new JScrollPane(rightPanel);
 
         fileNamePanel  = new JPanel(new BorderLayout());
-        fileNameLabel = new JLabel("File name : ");
+        fileNameLabel = new JLabel("File Name : ");
         fileNameLabel.setBackground(Color.GRAY);
         fileName = new JLabel();
         fileNamePanel.add(fileNameLabel,BorderLayout.WEST);
         fileNamePanel.add(fileName,BorderLayout.CENTER);
+
+        fileURLPanel = new JPanel(new BorderLayout());
+        fileURLLabel = new JLabel("File URL : ");
+        fileURLLabel.setBackground(Color.GRAY);
+        fileURL = new JLabel();
+        fileURLPanel.add(fileURLLabel,BorderLayout.WEST);
+        fileURLPanel.add(fileURL,BorderLayout.CENTER);
 
         statusPanel = new JPanel(new BorderLayout());
         statusLabel = new JLabel("Status : ");
@@ -393,7 +414,6 @@ public class MainFrame {
         mainPanel.add(toolBar,BorderLayout.NORTH);
         mainPanel.add(leftPanel,BorderLayout.WEST);
         mainPanel.add(processingScrollPane,BorderLayout.CENTER);
-//        mainPanel.add(queueScrollPane,BorderLayout.CENTER);
         background.add(mainPanel);
         background.addComponentListener(new ComponentAdapter() {
             @Override
@@ -404,29 +424,90 @@ public class MainFrame {
         });
     }
 
+    /**
+     * This method is used to
+     * show this Frama
+     */
     public void show(){
         background.pack();
         background.setVisible(true);
     }
 
+    /**
+     * This method at first creates a download via passed parameter
+     * then adds it to processing Downloads
+     * @param fileProperties file suppposed to be downloaded
+     */
     public void setNewDownload(FileProperties fileProperties) {
         if(processingPanel.isAncestorOf(nothing)){
             processingPanel.remove(nothing);
             SwingUtilities.updateComponentTreeUI(processingPanel);
         }
         NewDownloadPanel tmp = new NewDownloadPanel(fileProperties, (int)processingPanel.getSize().getWidth());
-        processingPanel.add(tmp.getPanel());
         processingNewDownloads.add(tmp);
-        if(Manager.getNumberOfDownloads().equals("infinitive"))
-            tmp.startDownload();
-        else if(numberOfAddedToProcessing < Integer.parseInt(Manager.getNumberOfDownloads())) {
-            tmp.startDownload();
-            numberOfAddedToProcessing++;
-        }
+        QueueManager();
+        updateProcessingDownloads();
         background.revalidate();
         mainPanel.revalidate();
     }
 
+    /**
+     * This method is used to set a new downloa to downlaod
+     * @param newDownloadPanel passed arugumetn which is going to get into processing
+     */
+    public void setNewDownload(NewDownloadPanel newDownloadPanel) {
+        if(processingPanel.isAncestorOf(nothing)){
+            processingPanel.remove(nothing);
+            SwingUtilities.updateComponentTreeUI(processingPanel);
+        }
+        processingNewDownloads.add(newDownloadPanel);
+        updateProcessingDownloads();
+        QueueManager();
+        background.revalidate();
+        mainPanel.revalidate();
+    }
+    /**
+     * This is the method of adding to queue
+     * at first it evaluates whether can add to
+     * process or not. Then adds to queue
+     * @param fileProperties file supposed to be added to queue
+     */
+    public void setNewDownloadQueue(FileProperties fileProperties){
+        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
+        if(!addedToProcess){
+            setNewDownload(tmp);
+            addedToProcess = true;
+        }
+        if(queuePanel.isAncestorOf(nothing))
+            queuePanel.remove(nothing);
+        queueNewDownloads.add(tmp);
+        updateQueueDownloads();
+        SwingUtilities.updateComponentTreeUI(mainPanel);
+        SwingUtilities.updateComponentTreeUI(queuePanel);
+    }
+    /**
+     * This method implements the limitation of number of
+     * limitation of number of processing downloads
+     */
+    public void QueueManager(){
+        if(Manager.getNumberOfDownloads().equals("infinitive")) {
+            for (NewDownloadPanel item : processingNewDownloads)
+                item.startDownload();
+        }
+        else {
+            int limit = Integer.parseInt(Manager.getNumberOfDownloads());
+            if (processingNewDownloads.size() < limit) {
+                for (NewDownloadPanel item : processingNewDownloads)
+                    item.startDownload();
+            }
+            else {
+                for (int i = 0; i <= limit - 1; i++)
+                    processingNewDownloads.get(i).startDownload();
+                for (int i = limit ; i < processingNewDownloads.size(); i++)
+                    processingNewDownloads.get(i).pauseDownload();
+            }
+        }
+    }
     /**
      * This method builds a String from removed files then
      * writes it into a file
@@ -458,25 +539,14 @@ public class MainFrame {
         }
     }
 
-    public void setNewDownloadQueue(FileProperties fileProperties){
-        NewDownloadPanel tmp = new NewDownloadPanel(fileProperties,(int)processingPanel.getSize().getWidth());
-        queuePanel.remove(nothing);
-        queuePanel.add(tmp.getPanel());
-        queueNewDownloads.add(tmp);
-        if(!addedToProcess) {
-            processingNewDownloads.add(tmp);
-            tmp.startDownload();
-            addedToProcess = true;
-        }
-        updateQueuePanel();
-        updateProcessingDownloads();
-        SwingUtilities.updateComponentTreeUI(mainPanel);
-        SwingUtilities.updateComponentTreeUI(queuePanel);
-    }
-
-
+    /**
+     * this method is implemented to show the rightPanel which
+     * is showing the information of file
+     * @param fileProperties which info should be shown to the user
+     */
     public void showRightPanel (FileProperties fileProperties){
-        fileName.setText(fileProperties.getFileUrl());
+        fileName.setText(fileProperties.getFileName());
+        fileURL.setText(fileProperties.getFileUrl());
         status.setText(fileProperties.getStatus());
         size.setText(fileProperties.getSize());
         created.setText(fileProperties.getCreated());
@@ -487,6 +557,10 @@ public class MainFrame {
         mainPanel.revalidate();
     }
 
+    /**
+     * this method is used to hide right side
+     * Panel which shows the information of download
+     */
     public void hideRightPanel(){
         BorderLayout layout = (BorderLayout) mainPanel.getLayout();
         mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
@@ -495,6 +569,10 @@ public class MainFrame {
         comfortableResize();
     }
 
+    /**
+     * This method helps us to resize more comfortably
+     * by assigning a size for each of the download panels
+     */
     private void comfortableResize(){
         if(mainPanel.isAncestorOf(processingPanel)) {
             for (NewDownloadPanel item : processingNewDownloads)
@@ -581,30 +659,34 @@ public class MainFrame {
      * This method always invoked when a download is
      * completed and needs to move into completed Part
      */
-    public void updateCompleted(){
+    public void updateCompleted() {
         Iterator<NewDownloadPanel> iteratorProcessing = processingNewDownloads.iterator();
         Iterator<NewDownloadPanel> iteratorQueue;
         NewDownloadPanel tmp;
-        while(iteratorProcessing.hasNext()){
+        while (iteratorProcessing.hasNext()) {
             tmp = iteratorProcessing.next();
-            if(tmp.isCompleted()){
+            if (tmp.isCompleted()) {
                 completedDownloads.add(tmp);
                 iteratorQueue = queueNewDownloads.iterator();
-                while(iteratorQueue.hasNext()) {
+                while (iteratorQueue.hasNext()) {
                     if (iteratorQueue.next() == tmp) {
                         iteratorQueue.remove();
                     }
                 }
-                processingNewDownloads.add(queueNewDownloads.get(0));
-                queueNewDownloads.get(0).startDownload();
                 iteratorProcessing.remove();
             }
-            if(Manager.getNumberOfDownloads().equals("infinitive"));
-            else numberOfAddedToProcessing--;
         }
+        if (queueNewDownloads.isEmpty())
+            addedToProcess = false;
+        else
+            setNewDownload(queueNewDownloads.get(0));
+        QueueManager();
         updateCompletedDownloads();
+        SwingUtilities.updateComponentTreeUI(processingPanel);
         updateQueueDownloads();
+        SwingUtilities.updateComponentTreeUI(queuePanel);
         updateProcessingDownloads();
+        SwingUtilities.updateComponentTreeUI(completePanel);
     }
 
     /**
@@ -680,6 +762,22 @@ public class MainFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        try{
+            FileOutputStream fileOutputStream = new FileOutputStream(COMPLETE_PATH,false);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            ArrayList<FileProperties> files = new ArrayList<>();
+            for (NewDownloadPanel item: completedDownloads)
+                files.add(item.getFileProperties());
+            objectOutputStream.writeObject(files);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -702,6 +800,7 @@ public class MainFrame {
                     processingNewDownloads.add(tmp);
                     tmp.startDownload();
                 }
+                byDate.doClick();
                 comfortableResize();
                 updateProcessingPanel();
                 fileInputStream.close();
@@ -724,7 +823,32 @@ public class MainFrame {
                     queueNewDownloads.add(new NewDownloadPanel(item, processingPanel.getWidth()));
                 }
                 comfortableResize();
-                updateProcessingPanel();
+                updateQueueDownloads();
+                fileInputStream.close();
+                objectInputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        file = new File(COMPLETE_PATH);
+        if(file.exists()){
+            try {
+                FileInputStream fileInputStream = new FileInputStream(COMPLETE_PATH);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                ArrayList<FileProperties> downloadPanels = (ArrayList<FileProperties>) objectInputStream.readObject();
+                NewDownloadPanel tmp;
+                for (FileProperties item : downloadPanels) {
+                    tmp = new NewDownloadPanel(item, processingPanel.getWidth());
+                    completedDownloads.add(tmp);
+                    tmp.initialize();
+                }
+                byDate.doClick();
+                comfortableResize();
+                updateCompletedDownloads();
                 fileInputStream.close();
                 objectInputStream.close();
             } catch (FileNotFoundException e) {
@@ -736,6 +860,14 @@ public class MainFrame {
             }
         }
     }
+
+    /**
+     * This method is used to be archive our .gdm files
+     * @param fileToZip which file is going to be zipped
+     * @param fileName
+     * @param zipOut
+     * @throws IOException
+     */
     private void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
         if (fileToZip.isHidden()) {
             return;
@@ -758,6 +890,11 @@ public class MainFrame {
         fis.close();
     }
 
+    /**
+     * This is my sort method which is invoked when one of the
+     * sort factors is selected. This is a advanced sort which
+     * sorts with multiple sort factors.
+     */
     private void sort(){
         ArrayList<NewDownloadPanel> downloadFiles = new ArrayList<>();
         if (mainPanel.isAncestorOf(processingPanel)) {
@@ -766,59 +903,68 @@ public class MainFrame {
         } else if (mainPanel.isAncestorOf(queuePanel)) {
             for (NewDownloadPanel item : queueNewDownloads)
                 downloadFiles.add(item);
-        } else if(mainPanel.isAncestorOf(completePanel)){
-            for (NewDownloadPanel item: completedDownloads)
+        } else if (mainPanel.isAncestorOf(completePanel)) {
+            for (NewDownloadPanel item : completedDownloads)
                 downloadFiles.add(item);
         }
-        NewDownloadPanel tmp = downloadFiles.get(0);
-        for(int i = 0; i < downloadFiles.size(); i++) {
-            boolean is_sorted = true;
-            for(int j = 0; j < downloadFiles.size() - i - 1; j++) { // skip the already sorted largest elements
-                if(advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(0)),downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(0))) > 0) {
-                    Collections.swap(downloadFiles,j,j+1);
-                    is_sorted = false;
+        if(!downloadFiles.isEmpty()) {
+            NewDownloadPanel tmp = downloadFiles.get(0);
+            for (int i = 0; i < downloadFiles.size(); i++) {
+                boolean is_sorted = true;
+                for (int j = 0; j < downloadFiles.size() - i - 1; j++) { // skip the already sorted largest elements
+                    if (advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(0)), downloadFiles.get(j + 1).getFileProperties().get(sortFactors.get(0))) > 0) {
+                        Collections.swap(downloadFiles, j, j + 1);
+                        is_sorted = false;
+                    }
                 }
+                if (is_sorted)
+                    break;
             }
-            if(is_sorted)
-                break;
-        }
-        int currentFoundIndex;
-        if (sortFactors.size() != 1) {
-            for (int i = 1; i<sortFactors.size() ; i++) {
-                for (int j = 0; j < downloadFiles.size() - 1; j++) {
-                    if(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i-1)).equals(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i-1)))){
-                        if(advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i)),(downloadFiles.get(j+1).getFileProperties().get(sortFactors.get(i))))>0) { // Ascending order
-                            currentFoundIndex = j + 1;
-                            while (currentFoundIndex != 1) {
-                                if(downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i-1)).equals(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i-1)))) {
-                                    if(advancedCompare(downloadFiles.get(currentFoundIndex-1).getFileProperties().get(sortFactors.get(i)),(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i)))) > 0) {
-                                        Collections.swap(downloadFiles, currentFoundIndex - 1, currentFoundIndex);
-                                        currentFoundIndex--;
-                                    }
+            int currentFoundIndex;
+            if (sortFactors.size() != 1) {
+                for (int i = 1; i < sortFactors.size(); i++) {
+                    for (int j = 0; j < downloadFiles.size() - 1; j++) {
+                        if (downloadFiles.get(j).getFileProperties().get(sortFactors.get(i - 1)).equals(downloadFiles.get(j + 1).getFileProperties().get(sortFactors.get(i - 1)))) {
+                            if (advancedCompare(downloadFiles.get(j).getFileProperties().get(sortFactors.get(i)), (downloadFiles.get(j + 1).getFileProperties().get(sortFactors.get(i)))) > 0) { // Ascending order
+                                currentFoundIndex = j + 1;
+                                while (currentFoundIndex != 1) {
+                                    if (downloadFiles.get(currentFoundIndex - 1).getFileProperties().get(sortFactors.get(i - 1)).equals(downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i - 1)))) {
+                                        if (advancedCompare(downloadFiles.get(currentFoundIndex - 1).getFileProperties().get(sortFactors.get(i)), (downloadFiles.get(currentFoundIndex).getFileProperties().get(sortFactors.get(i)))) > 0) {
+                                            Collections.swap(downloadFiles, currentFoundIndex - 1, currentFoundIndex);
+                                            currentFoundIndex--;
+                                        }
+                                    } else
+                                        break;
                                 }
-                                else
-                                    break;
                             }
                         }
                     }
                 }
             }
-        }
-        System.out.println(downloadFiles);
-        if (mainPanel.isAncestorOf(processingPanel)) {
-            processingNewDownloads = new ArrayList<>(downloadFiles);
-            completedIsAscending = true;
-            updateProcessingDownloads();
-        } else if (mainPanel.isAncestorOf(queuePanel)) {
-            queueNewDownloads = new ArrayList<>(downloadFiles);
-            queueIsAscending = true;
-            updateQueueDownloads();
-        } else if(mainPanel.isAncestorOf(completePanel)){
-            completedDownloads = new ArrayList<>(downloadFiles);
-            completedIsAscending = true;
-            updateCompletedDownloads();
+            if (mainPanel.isAncestorOf(processingPanel)) {
+                processingNewDownloads = new ArrayList<>(downloadFiles);
+                processingIsAscending = true;
+                System.out.println(completedIsAscending + " Completed");
+                updateProcessingDownloads();
+            } else if (mainPanel.isAncestorOf(queuePanel)) {
+                queueNewDownloads = new ArrayList<>(downloadFiles);
+                queueIsAscending = true;
+                updateQueueDownloads();
+            } else if (mainPanel.isAncestorOf(completePanel)) {
+                completedDownloads = new ArrayList<>(downloadFiles);
+                completedIsAscending = true;
+                updateCompletedDownloads();
+            }
         }
     }
+
+    /**
+     * This method gets two argument in String then compares them by
+     * detect the type of them then return a value
+     * @param argument1 the first arg
+     * @param argument2 the second arg
+     * @return if they were the same return zero else if the first was greater returns a positive value and vice versa.
+     */
     private int advancedCompare(String argument1,String argument2){
         if(isValidDate(argument1)){
             try {
@@ -840,6 +986,11 @@ public class MainFrame {
         }
     }
 
+    /**
+     * This method checks whether the input String is really a date or not
+     * @param inDate input String
+     * @return true if the input String is instance of date and false otherwise.
+     */
     private boolean isValidDate(String inDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         dateFormat.setLenient(false);
@@ -859,11 +1010,14 @@ public class MainFrame {
         }
         return true;
     }
+    /**
+     * This method help us handle the searchText box function
+     */
     public void searchText(String key){
         if (mainPanel.isAncestorOf(processingPanel)) {
             processingNewDownloads.clear();
             for (NewDownloadPanel item : holder) {
-                if (item.getFileProperties().getFileUrl().contains(key)) {
+                if (item.getFileProperties().getFileUrl().contains(key) || item.getFileProperties().getFileName().contains(key)) {
                     processingNewDownloads.add(item);
                 }
             }
@@ -872,7 +1026,7 @@ public class MainFrame {
         else if (mainPanel.isAncestorOf(queuePanel)) {
             queueNewDownloads.clear();
             for (NewDownloadPanel item : holder) {
-                if (item.getFileProperties().getFileUrl().contains(key)) {
+                if (item.getFileProperties().getFileUrl().contains(key) || item.getFileProperties().getFileName().contains(key)) {
                     queueNewDownloads.add(item);
                 }
             }
@@ -881,7 +1035,7 @@ public class MainFrame {
         else{
             completedDownloads.clear();
             for (NewDownloadPanel item : holder) {
-                if (item.getFileProperties().getFileUrl().contains(key)) {
+                if (item.getFileProperties().getFileUrl().contains(key) || item.getFileProperties().getFileName().contains(key)) {
                     completedDownloads.add(item);
                 }
             }
@@ -889,10 +1043,14 @@ public class MainFrame {
         }
     }
 
+    /**
+     * This is the class for action listeners and DocumentListeners
+     */
     private class MainFrameActionListener implements ActionListener,DocumentListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource().equals(resume)) {
+                boolean isSelected = false;
                 ArrayList<NewDownloadPanel> tmpNewDownloads;
                 if (mainPanel.isAncestorOf(processingPanel))
                     tmpNewDownloads = processingNewDownloads;
@@ -901,11 +1059,16 @@ public class MainFrame {
                  else
                     tmpNewDownloads = completedDownloads;
                 for (NewDownloadPanel item: tmpNewDownloads) {
-                    if(item.isSelected())
+                    if(item.isSelected()) {
                         item.startDownload();
+                        isSelected = true;
+                    }
                 }
+                if(!isSelected)
+                    JOptionPane.showMessageDialog(background,"You haven't selected anything.","Resume",JOptionPane.WARNING_MESSAGE);
             }
             else if(e.getSource().equals(pause)){
+                boolean isSelected = false;
                 ArrayList<NewDownloadPanel> tmpNewDownloads;
                 if (mainPanel.isAncestorOf(processingPanel))
                     tmpNewDownloads = processingNewDownloads;
@@ -914,9 +1077,13 @@ public class MainFrame {
                 else
                     tmpNewDownloads = completedDownloads;
                 for (NewDownloadPanel item: tmpNewDownloads) {
-                    if(item.isSelected())
+                    if(item.isSelected()) {
+                        isSelected = true;
                         item.pauseDownload();
+                    }
                 }
+                if(!isSelected)
+                    JOptionPane.showMessageDialog(background,"You haven't selected anything.","Resume",JOptionPane.WARNING_MESSAGE);
             }
             if (e.getSource().equals(setting) || e.getSource().equals(settingItem) ) {
                 Manager.getAction("setting.show");
@@ -1071,8 +1238,23 @@ public class MainFrame {
                         // Do nothing
                         break;
                 }
-                updateQueuePanel();
-                updateProcessingPanel();
+                updateQueueDownloads();
+                updateProcessingDownloads();
+                updateCompletedDownloads();
+            }
+            else if(e.getSource().equals(swap)){
+                ArrayList<Integer> indexes = new ArrayList<>();
+                for (int i = 0; i < queueNewDownloads.size(); i++) {
+                    if(queueNewDownloads.get(i).isSelected()){
+                        indexes.add(i);
+                    }
+                }
+                if(indexes.size() == 2)
+                    Collections.swap(queueNewDownloads,indexes.get(0),indexes.get(1));
+                else
+                    JOptionPane.showMessageDialog(background,"Please select exactly two download and try again","swap",JOptionPane.WARNING_MESSAGE);
+
+                updateQueueDownloads();
             }
         }
 

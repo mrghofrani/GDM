@@ -171,6 +171,11 @@ public class NewDownloadPanel implements Serializable {
                     selected = false;
                     newDownloadPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
                 }
+                if( e.getClickCount() >= 2){
+                    resumeButton.doClick();
+                }
+                if(SwingUtilities.isRightMouseButton(e))
+                    informationButton.doClick();
             }
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -189,6 +194,36 @@ public class NewDownloadPanel implements Serializable {
 
     }
 
+    /**
+     * This method is used to check if
+     * two objects are equal or not by our
+     * assignment two object of this type are the same
+     * if have the same fileProperty
+     * @param obj the object supposed to be checked
+     * @return true if two objects are the same false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+
+        if (!(obj instanceof NewDownloadPanel))
+            return false;
+
+        NewDownloadPanel newDownloadPanel = (NewDownloadPanel) obj;
+
+        return this.fileProperties.getFileName().equals(newDownloadPanel.fileProperties.getFileName()) &&
+                this.fileProperties.getSize().equals(newDownloadPanel.fileProperties.getSize()) &&
+                this.fileProperties.getFileUrl().equals(newDownloadPanel.fileProperties.getFileUrl()) &&
+                this.fileProperties.getStatus().equals(newDownloadPanel.fileProperties.getStatus()) &&
+                this.fileProperties.getCreated().equals(newDownloadPanel.fileProperties.getCreated()) &&
+                this.fileProperties.getAddress().equals(newDownloadPanel.fileProperties.getAddress());
+    }
+
+    /**
+     * This method creates a SwingWorker class
+     * and changes the state of the buttons to have a better look
+     */
     public void startDownload(){
         resumeButton.setIcon(new ImageIcon("pause.png"));
         worker = new Worker();
@@ -196,60 +231,81 @@ public class NewDownloadPanel implements Serializable {
         isPaused = false;
     }
 
+    /**
+     * Using this method we determine if the
+     * panel is selected or not
+     * @return true if panel was selected
+     */
     public boolean isSelected() {
         return selected;
     }
 
+    /**
+     * This method pushes the fileProperty of NewDownloadPanel
+     * @return FileProperty field of the object
+     */
     public FileProperties getFileProperties() {
         return fileProperties;
     }
 
-    public void setFileProperties(FileProperties fileProperties) {
-        this.fileProperties = fileProperties;
-    }
-
+    /**
+     * Using this method we have a better look and feel:)
+     * @param width the efficient width of panel
+     */
     public void setSize(int width){
         newDownloadPanel.setMaximumSize(new Dimension(width,(int)newDownloadPanel.getPreferredSize().getHeight()));
     }
 
+    /**
+     * @return panel field
+     */
     public JPanel getPanel(){
         return newDownloadPanel;
     }
 
-//    public void deleteFileProperties(){
-//        worker.cancel(true);
-//        fileProperties = null;
-//    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
-
+    /**
+     * @return true if the process of download was completed successfully
+     */
     public boolean isCompleted() {
         return completed;
     }
+
+    /**
+     * using this method process of download
+     * is stopped
+     */
     public void pauseDownload(){
-        System.out.println("Canceled");
         isPaused = true;
         resumeButton.setIcon(resumeIcon);
     }
 
+    /**
+     * This method is used to delete the file {@param completed}
+     * is used to check whether we need to delete the file either or not
+     */
     public void delete(boolean completed){
+        if(worker != null)
+            worker.cancel(true);
+        isPaused = true;
+        fileProperties = null;
         if(completed)
             if(file.exists())
                 file.delete();
-        isPaused = true;
-        worker.cancel(true);
-        fileProperties = null;
-    }
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 
+    /**
+     * This method initializes the
+     * NewDownloadPanel
+     */
+    public void initialize() {
+        progressBar.setValue(100);
+        statusField.setText("");
+    }
+
+    /**
+     * This the Listener Class of the class which implements
+     * only the ActionListener class
+     */
     private class ActionHandler implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -339,7 +395,11 @@ public class NewDownloadPanel implements Serializable {
         }
     }
 
+    /**
+     * Corresponding SwingWorker of the class
+     */
     private class Worker extends SwingWorker<String, Double>{
+        Double fileSize;
         @Override
         protected String doInBackground() throws Exception {
             BufferedInputStream input;
@@ -369,8 +429,9 @@ public class NewDownloadPanel implements Serializable {
 
                 if (connectionField == null && file.exists())
                     file.delete();
-
+                fileSize = (new Long(connection.getContentLength())).doubleValue() + downloadedSize;
                 fileProperties.setSize(Long.toString(connection.getContentLength() + downloadedSize));
+                System.out.println(fileProperties.getSize());
                 input = new BufferedInputStream(connection.getInputStream());
                 output = new RandomAccessFile(file, "rw");
                 output.seek(downloadedSize);
@@ -400,7 +461,7 @@ public class NewDownloadPanel implements Serializable {
             int level;
             // Size part
             Double downloadedSize = chunks.get(chunks.size() - 2);
-            Double fileSize = Double.parseDouble(fileProperties.getSize());
+            Double fileSize = this.fileSize;
             progressBar.setValue((int)((downloadedSize*100)/fileSize));
             String firstPart;
             String secondPart;
@@ -421,7 +482,7 @@ public class NewDownloadPanel implements Serializable {
 
             // Speed part
             Double duration = chunks.get(chunks.size()-1);
-            duration /= Math.pow(10,9);
+            duration /= 1000000000;
             Double speed = BUFFER_SIZE/duration;
 //            System.out.println(" speed " + speed);
 //            System.out.println("Time "+ duration);
@@ -431,7 +492,7 @@ public class NewDownloadPanel implements Serializable {
                 level++;
             }
 
-            speedField.setText(String.format("Download Speed: %.2f %s ", speed , (UNITS.get(level) + "/s")));
+            speedField.setText(String.format("Download Speed: %.2f %s ", speed , (UNITS.get(level-1) + "/s")));
         }
 
         @Override
@@ -444,6 +505,7 @@ public class NewDownloadPanel implements Serializable {
                         completed = false;
                         break;
                     case "Finished":
+                        resumeButton.setIcon(new ImageIcon("resume.png"));
                         completed = true;
                         fileProperties.setStatus("Completed");
                         System.out.println(completed);

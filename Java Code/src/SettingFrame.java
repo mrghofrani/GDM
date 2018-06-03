@@ -68,6 +68,11 @@ public class SettingFrame implements Serializable {
 
     private ActionHandler actionHandler = new ActionHandler();
 
+    /**
+     * This is teh constructor of the class
+     * which creates the components and add
+     * corresponding ActionListener
+     */
     public SettingFrame(){
         settingFrame = new JFrame();
         settingFrame.setLayout(new BoxLayout(settingFrame.getContentPane(),BoxLayout.PAGE_AXIS));
@@ -149,12 +154,8 @@ public class SettingFrame implements Serializable {
         locationButton = new JButton("...");
         locationButton.addActionListener(actionHandler);
         locationChooser = new JFileChooser();
-//        locationChooser.setCurrentDirectory(new File(Manager.getDownloadPath())); TODO : I should add implement this part
-//        locationChooser.setCurrentDirectory(new File(locationString));
         locationChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         locationChooser.setAcceptAllFileFilterUsed(false);
-//        locationText.setText(Manager.getDownloadPath()); TODO : I should add implement this part
-//        locationText.setText(locationString); TODO : I should add implement this part
         locationText.setBackground(Color.WHITE);
         locationPanel.add(locationLabel);
         locationPanel.add(locationText);
@@ -186,6 +187,10 @@ public class SettingFrame implements Serializable {
         settingFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
+    /**
+     * As its names shows it intializes the
+     * Setting Frame from the passed file
+     */
     public void initialize(){
         File file = new File(SETTING_PATH);
         if(file.exists()){
@@ -234,11 +239,7 @@ public class SettingFrame implements Serializable {
 
                 // Preparing illegal websites
                 index++;
-                if(!arrayList.get(index).isEmpty()) {
-                    String[] illegalWebSites = ((String) arrayList.get(index)).split(" ");
-                    for (String illegalWebSite : illegalWebSites)
-                        filterListModel.addElement(illegalWebSite);
-                }
+                initializeFilter();
 
                 // Preparing location of the download
                 index++;
@@ -287,9 +288,20 @@ public class SettingFrame implements Serializable {
         initializingComponentsLanguage();
         initializingComponentsActionListener();
     }
-    public String getUI(){
-        return (String)themeComboBox.getSelectedItem();
+    private void initializeFilter(){
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("files/filtered.gdm")))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                filterListModel.addElement(line);
+                deleteListButton.setEnabled(true);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
     /**
      * this class initialize the component's language
      */
@@ -445,10 +457,8 @@ public class SettingFrame implements Serializable {
 
         returnValue.add((String)themeComboBox.getSelectedItem());
 
-        String tmp = "";
-        for (String item: getInvalidURLs())
-            tmp += item + " " ;
-        returnValue.add(tmp);
+        backupFiltered();
+        returnValue.add("");
 
         returnValue.add(locationString);
         for (String value: returnValue) {
@@ -458,7 +468,28 @@ public class SettingFrame implements Serializable {
         returnValue.add(chosenLanguage);
         return returnValue;
     }
-    
+
+    /**
+     * This method backs up the Setting class
+     */
+    private void backupFiltered(){
+        File file = new File("files/filtered.gdm");
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            String tmp = "";
+            for (String item: getInvalidURLs())
+                tmp += item + "\n" ;
+            bufferedWriter.write(tmp);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * This method passes the invalid urls to the invoker function
+     * @return invalidURLs
+     */
     public ArrayList<String> getInvalidURLs(){
         ArrayList<String> returnStrings = new ArrayList<>();
         for (int i = 0; i < filterListModel.size(); i++)
@@ -482,7 +513,8 @@ public class SettingFrame implements Serializable {
             else if(e.getSource().equals(locationButton)){
                 locationChooser.setVisible(true);
                 locationChooser.showOpenDialog(settingFrame);
-                locationString = locationChooser.getSelectedFile().getAbsolutePath();
+                if(locationChooser.getSelectedFile().getAbsolutePath() != null)
+                    locationString = locationChooser.getSelectedFile().getAbsolutePath();
 //                Manager.setDownloadPath(locationString);
                 locationText.setText(locationString);
                 locationText.revalidate();

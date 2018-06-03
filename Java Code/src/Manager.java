@@ -28,6 +28,10 @@ public class Manager {
 
     private ActionHandler actionListener = new ActionHandler();
 
+    /**
+     * constructor of the class which is private becuase we are
+     * usign Singlton
+     */
     private Manager() {
 
         try {
@@ -87,6 +91,10 @@ public class Manager {
         }
     }
 
+    /**
+     * A repository of action desired by the classes
+     * @param action invoked by the user
+     */
     public static void getAction(String action){
         String part[] = action.split("[.]");
         // class finder switch case
@@ -164,32 +172,42 @@ public class Manager {
         public void mouseExited(MouseEvent e) {}
     }
 
-
+    /**
+     * a request for showing the right panel information on the mainFrame
+     * @param fileProperties
+     */
     public static void showRightPanel(FileProperties fileProperties){
         main.showRightPanel(fileProperties);
     }
+
+    /**
+     * a request for hiding the information panel located in mainPanel
+     */
     public static void hideRightPanel(){
         main.hideRightPanel();
     }
 
+    /**
+     * @return download path of the downlaod file
+     */
     public static String getDownloadPath(){
         return setting.getDownloadPath();
     }
 
-//    public static void setDownloadPath(String path){
-//        downloadPath = path;
-//    }
 
-
+    /**
+     * @return the number of downloads in each queue
+     * in real asks it from Setting Frame
+     */
     public static String getNumberOfDownloads(){
         return setting.getNumberOfDownload();
     }
 
-    public static void setNumberOfDownloads(String number){
-        numberOfDownloads = number;
-    }
 
-
+    /**
+     * @return an instance of the class which
+     * help us have only one object of the class
+     */
     public static Manager getInstance(){
         if(instance == null){
             instance = new Manager();
@@ -197,18 +215,33 @@ public class Manager {
         return instance;
     }
 
+    /**
+     * updates the completed panel
+     */
     public static void updateCompleted(){
         main.updateCompleted();
     }
-
+    /**
+     * adds a new download to Processing
+     * @param fileProperties properties of file
+     */
     public static void addNewDownload(FileProperties fileProperties){
         main.setNewDownload(fileProperties);
     }
 
+    /**
+     * adds a new download to Queue
+     * @param fileProperties properties of file
+     */
     public static void addNewDownloadQueue(FileProperties fileProperties){
         main.setNewDownloadQueue(fileProperties);
     }
 
+    /**
+     * this method exits the
+     * program by writing the
+     * state of program into hardware
+     */
     public static void safelyExit(){
 //        ObjectOutput input
         systemTray.remove(trayIcon);
@@ -216,12 +249,26 @@ public class Manager {
         setting.backup();
         System.exit(0);
     }
+
+    /**
+     * shows the help frames components
+     */
     public static void showAbout(){
         helpFrame.show();
     }
+
+    /**
+     * @return inValid urls stored in the Setting
+     */
     public static ArrayList<String> getInvalidURLs(){
         return setting.getInvalidURLs();
     }
+
+    /**
+     * updates and set the look and feel to
+     * desired look and feel
+     * @param lookAndFeel desired look and feel
+     */
     public static void updateUI(String lookAndFeel){
         try {
             UIManager.setLookAndFeel(lookAndFeel);
@@ -239,6 +286,12 @@ public class Manager {
             window.pack();
         }
     }
+
+    /**
+     * This method is used to
+     * initialize the first state
+     * of programme which is running
+     */
     private void initialState(){
         main.initialize();
         setting.initialize();
